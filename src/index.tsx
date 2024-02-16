@@ -8,8 +8,17 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './Components/Header/Header';
+import { MainMenuItem, Menu } from './Components/MainMenu/Menu';
+import { HomePage } from './Components/HomePage/HomePage';
+
+const generateMenuItems = ():MainMenuItem[] =>{
+  return[
+    {text: 'Home', link: '/'},
+    {text: 'Kontakt', link: '/contact'},
+  ]
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,6 +27,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Header/>
+      <Menu items={generateMenuItems()}/>
+
+      <Routes>
+        <Route path='/' element={<HomePage/>}/>
+      </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );
