@@ -8,13 +8,17 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+import { BrowserRouter } from 'react-router-dom';
+import Header from './Components/Header/Header';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Header/>
+    </BrowserRouter>
   </React.StrictMode>
 );
 reportWebVitals();
