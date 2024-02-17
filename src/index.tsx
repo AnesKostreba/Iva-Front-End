@@ -14,6 +14,7 @@ import { MainMenuItem, Menu } from './Components/MainMenu/Menu';
 import { HomePage } from './Components/HomePage/HomePage';
 import { UserLoginPage } from './Components/UserLoginPage/UserLoginPage';
 import { UserRegistrationPage } from './Components/UserRegistrationPage/UserRegistrationPage';
+import { CategoryPage } from './Components/CategoryPage/CategoryPage';
 
 const generateMenuItems = ():MainMenuItem[] =>{
   return[
@@ -34,6 +35,7 @@ root.render(
         <Route path='/' element={<HomePage/>}/>
         <Route path='/user/login' element={<UserLoginPage/>}/>
         <Route path='/user/register' element={<UserRegistrationPage/>}/>
+        <Route path='/category/:id' element={<CategoryPage/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
