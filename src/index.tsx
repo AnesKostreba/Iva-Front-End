@@ -12,6 +12,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './Components/Header/Header';
 import { MainMenuItem, Menu } from './Components/MainMenu/Menu';
 import { HomePage } from './Components/HomePage/HomePage';
+import { UserLoginPage } from './Components/UserLoginPage/UserLoginPage';
+import { UserRegistrationPage } from './Components/UserRegistrationPage/UserRegistrationPage';
 
 const generateMenuItems = ():MainMenuItem[] =>{
   return[
@@ -28,9 +30,10 @@ root.render(
     <BrowserRouter>
       <Header/>
       <Menu items={generateMenuItems()}/>
-
       <Routes>
         <Route path='/' element={<HomePage/>}/>
+        <Route path='/user/login' element={<UserLoginPage/>}/>
+        <Route path='/user/register' element={<UserRegistrationPage/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
