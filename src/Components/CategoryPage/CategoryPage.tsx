@@ -23,7 +23,7 @@ export const CategoryPage = () =>{
                     items: []
                 }
                 setCategoryState({category: data})
-            }, 210)
+            })
         }
     },[id,categoryState.category?.categoryId])
 

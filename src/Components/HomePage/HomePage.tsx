@@ -39,11 +39,11 @@ export const HomePage = () =>{
     const getCategories = () =>{
         api('api/category/','get',{})
             .then((res: ApiResponse | undefined) =>{
-                if(res?.status === 'error' || res?.status === 'login'){
+                if(res?.status === 'error' || res?.status === 'login' || !Array.isArray(res?.data)){
                     setLogginState(false);
                     return;
                 }
-                putCategoriesInState(res?.data)
+                putCategoriesInState(res?.data as ApiCategoryDto[])
             })
     }
 
