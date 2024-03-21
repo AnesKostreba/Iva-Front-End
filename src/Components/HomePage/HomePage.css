@@ -1,0 +1,27 @@
+.HomePage{
+    justify-content: center;
+    align-items: center;
+}
+.divBody{
+    width: 100%;
+    height: 20vh;
+    text-align: center;
+}
+.baneriImg img{
+    width: 100%;
+}
+
+.react-multi-carousel-list{
+    border-radius: 20px;
+}
+.kategorije{
+    width: 90%;
+    margin: 0 auto;
+}
+.baneri{
+    width: 90%;
+    margin: 0 auto;
+}
+.banerImg{
+    width: 100%;
+}

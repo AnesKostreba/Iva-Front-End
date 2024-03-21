@@ -18,7 +18,7 @@ export const Menu: React.FC<MainMenuProperties> = ({items}) =>{
     }
 
     return(
-        <Navbar className='bg-success' data-bs-theme="dark">
+        <Navbar className='navbar' data-bs-theme="dark">
             <Container>
                 <Nav className="me-auto">
                     {state.map((item,index) =>(
