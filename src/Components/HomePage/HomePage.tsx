@@ -3,7 +3,11 @@ import { CategoryType } from '../../types/CategoryType';
 import './HomePage.css'
 import { useEffect, useState } from 'react';
 import api, { ApiResponse } from '../../api/api';
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
+import 'react-multi-carousel/lib/styles.css';
+import banerPopust from './Image/BanerPopustPenzioneriDesktop.jpg'
+import Carousel from 'react-bootstrap/Carousel';
+import Carousell from "react-multi-carousel";
 
 interface HomePageState{
     isUserLoggedIn: boolean;
@@ -29,7 +33,7 @@ export const HomePage = () =>{
     // }
 
     useEffect(()=>{
-        if(!homePageState.isUserLoggedIn){
+        if(homePageState.isUserLoggedIn === false){
             navigate('/user/login');
         }else if(homePageState.categories.length === 0){ // Provera da li su kategorije vec ucitane
             getCategories();
@@ -71,35 +75,68 @@ export const HomePage = () =>{
 
     const singleCategory = (category: CategoryType) =>{
         return(
-            <Col md='3'>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            {category.name}
-                        </Card.Title>
-                        <Link to={`/category/${category.categoryId}`} className='btn btn-primary'>
-                            Open category
-                        </Link>
-                    </Card.Body>
-                </Card>
-            </Col>
+            <div className='divBody'>
+                <Link to={`/category/${category.categoryId}`} className=''>
+                    <Card.Title>
+                        {category.name}
+                    </Card.Title>
+                </Link>
+            </div>
         )
     }
+    const responsive = {
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 3,
+            },
+            tablet: {
+            breakpoint: { max: 1024, min: 664 },
+            items: 2,
+            },
+            mobile: {
+            breakpoint: { max: 664, min: 0 },
+            items: 2,
+            },
+    }
+
+    const baneri =[
+        {name: 'stavka 1', id: 1},
+    ];
 
     return(
         <div className="HomePage">
-            <Container>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            <p>Top level categories</p>
-                        </Card.Title>
-                    </Card.Body>
-                    <Row>
-                        {homePageState.categories.map(category => singleCategory(category))}
-                    </Row>
-                </Card>
-            </Container>
+            <div className='baneri mt-3'>
+            <Carousel className='carousel'>
+                <Carousel.Item>
+                    <img src={banerPopust} alt="" className='banerImg'/>
+                    
+                </Carousel.Item>
+                <Carousel.Item>
+                    <img src={banerPopust} alt="" className='banerImg'/>
+                    
+                </Carousel.Item>
+                <Carousel.Item>
+                    <img src={banerPopust} alt="" className='banerImg'/>
+                    
+                </Carousel.Item>
+            </Carousel>
+            </div>
+
+            <Card.Title className='text-center m-4'>
+                <p>KATEGORIJE</p>
+            </Card.Title>
+
+            <div className="kategorije">
+                <Carousell
+                    responsive={responsive}
+                    autoPlay= {true}
+                    autoPlaySpeed={4000}
+                    infinite= {true}
+                    arrows={true}
+                >
+                    {homePageState.categories.map(category => singleCategory(category))}
+                </Carousell>
+            </div>
         </div>
     )
 }
