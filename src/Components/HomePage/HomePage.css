@@ -1,6 +1,13 @@
 .HomePage{
     justify-content: center;
     align-items: center;
+    width: 80%;
+    margin: 0 auto;
+}
+@media screen and (max-width: 1280px){
+    .HomePage{
+        width: 100%;
+    }
 }
 .divBody{
     width: 100%;

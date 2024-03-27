@@ -52,7 +52,7 @@ const Header = () =>{
             </div>
 
             <div className="search-mobile">
-                <Form className='d-flex w-85 mt-3'>
+                <Form className='d-flex mt-3'>
                     <Form.Control 
                         type='search'
                         placeholder='Pretraga...'

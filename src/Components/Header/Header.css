@@ -79,6 +79,9 @@ a{
         justify-content: center;
         align-items: center;
     }
+    .search-mobile form{
+        width: 88%;
+    }
     .user{
         margin-left: 10px;
     }

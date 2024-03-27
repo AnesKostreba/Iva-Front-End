@@ -1,0 +1,99 @@
+.cards {
+  border: 0px;
+}
+.cardBody {
+  padding-left: 0;
+  padding-right: 0;
+}
+.containerArticle:hover {
+    -webkit-box-shadow: 0px 0px 20px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 20px -5px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 20px -5px rgba(0,0,0,0.75);
+    transition: 0.3s ease;
+}
+.containerArticle{
+  border-radius: 0%;
+}
+.cardBody {
+  background-color: #f0eeee;
+  border-bottom: 100px;
+}
+.cardPrice{
+    font-size: medium;
+    font-weight: 600;
+}
+.faIcon{
+    margin-right: 10px;
+}
+.btn{
+    border-radius: 0%;
+}
+.prviDiv{
+    width: 48%;
+    border: 1px solid #c7c7c7;
+}
+.drugiDiv{
+    width: 48%;
+    border: 0.5 solid #c7c7c7;
+}
+.wrapper{
+    display: flex;
+    justify-content: space-around;
+}
+.kupi{
+    font-size: 1.2rem;
+}
+.minus{
+    font-size: 1.2rem;
+}
+.plus{
+    font-size: 1.2rem;
+}
+.kupi{
+    background-color: #469919;
+    color: #fff;
+}
+.drugiDiv button:hover {
+    background-color: #318d00; 
+    transition: 0.4s ease;
+}
+.drugiDiv button:active {
+    background-color: #28a745; 
+}
+.btnKupi{
+    border: none;
+    color: #fff;
+    background-color: #28a745;
+    font-size: 1.2rem
+}
+.povecajSmanji:hover{
+    background-color: #28a745;
+    color: #fff;
+    transition: 0.4s ease;
+}
+.povecajSmanji{
+    border: none;
+    background-color: #fff;
+}
+.minusDiv button:active{
+    background-color: #ffffff; 
+    color: black;
+}
+@media screen and (max-width:756px){
+    .articlesCol{
+        width: 100%;
+    }
+    .filter{
+        display: none;
+    }
+    .wrapper{
+        flex-direction: column;
+    }
+    .prviDiv{
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .drugiDiv{
+        width: 100%;
+    }
+}
