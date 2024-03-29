@@ -1,14 +1,15 @@
-import { Link, useParams } from "react-router-dom";
+import { Form, Link, useParams } from "react-router-dom";
 import { CategoryType } from "../../types/CategoryType";
 import { useEffect, useState } from "react";
-import { Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
 import { ArticleType } from "../../types/ArticleType";
 import api, { ApiResponse } from '../../api/api';
 import { ApiConfig } from "../../config/api.config";
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faSearch } from "@fortawesome/free-solid-svg-icons";
 import './CategoryPage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MultiRangeSlider from "multi-range-slider-react";
 
 interface CategoryPageState{
     isUserLoggedIn: boolean;
@@ -16,6 +17,21 @@ interface CategoryPageState{
     subcategories?: CategoryType[];
     articles?: ArticleType[];
     message: string;
+    filters: {
+        keywords: string;
+        priceMinimum: number;
+        priceMaximum: number;
+        order: "name asc" | "name desc" | "price asc" | "price desc";
+        selectedFeatures: {
+            featureId: number;
+            value: string;
+        }[];
+    };
+    features:{
+        featureId: number;
+        name: string;
+        values: string[];
+    }[];
 }
 
 interface ArticleDto{
@@ -37,8 +53,23 @@ export const CategoryPage = () =>{
 
     const [categoryState, setCategoryState] = useState<CategoryPageState>({
         isUserLoggedIn: true,
-        message: ''
+        message: '',
+        filters: {
+            keywords: '',
+            priceMinimum: 0.10,
+            priceMaximum: 650,
+            order: "price asc",
+            selectedFeatures: [],
+        },
+        features: [],
     }) 
+
+    const setFeatures = (features: any) =>{
+        setCategoryState(prevState =>({
+            ...prevState,
+            features: features
+        }))
+    }
 
     const setLogginState = (isLoggedIn: boolean) =>{
         setCategoryState(prevState =>({
@@ -95,6 +126,180 @@ export const CategoryPage = () =>{
             </div>
         )
     }
+    const setNewFilter =(newFilter: any) =>{
+        setCategoryState(prevState =>({
+            ...prevState,
+            filters: newFilter
+        }))
+    }
+
+    const filterKeywordsChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        setNewFilter({
+            ...categoryState.filters,
+            keywords: event.target.value
+        })
+    }
+
+    const filterPriceMinChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        setNewFilter({
+            ...categoryState.filters,
+            priceMinimum: Number(event.target.value)
+        })
+    }
+
+    const filterPriceMaxChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        // setNewFilter(Object.assign(setCategoryState,{
+        //     priceMaximum: Number(event.target.value),
+        // }));
+        setNewFilter({
+            ...categoryState.filters,
+            priceMaximum: Number(event.target.value)
+        })
+    }
+
+    const filterOrderChanged = (event: React.ChangeEvent<HTMLSelectElement>) =>{
+        // setNewFilter(Object.assign(setCategoryState,{
+        //     order: event.target.value,
+        // }));
+        setNewFilter({
+            ...categoryState.filters,
+            order: event.target.value
+        })
+    }
+
+    const featureFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        const featureId = Number(event.target.dataset.featureId);
+        const value = event.target.value;
+
+        if(event.target.checked){
+            addFeatureFilterValue(featureId, value)
+        }else{
+            removeFeatureFilterValue(featureId, value)
+        }
+    }
+
+    const addFeatureFilterValue = (featureId: number, value: string) =>{
+        const newSelectedFeatures = [... categoryState.filters.selectedFeatures];
+        newSelectedFeatures.push({
+            featureId: featureId,
+            value: value,
+        })
+        
+        setSelectedFeatures(newSelectedFeatures)
+    }
+
+    const removeFeatureFilterValue = (featureId: number, value: string) =>{
+        const newSelectedFeatures = categoryState.filters.selectedFeatures.filter(record =>{
+           return !(record.featureId === featureId && record.value === value)
+        });
+        
+        setSelectedFeatures(newSelectedFeatures)
+    }
+
+    const setSelectedFeatures = (newSelectedFeatures: any) =>{
+        setCategoryState(Object.assign(categoryState,{
+            filters: Object.assign(categoryState.filters,{
+                selectedFeatures: newSelectedFeatures
+            })
+        }))
+        // setNewFilter({
+        //     ...categoryState.filters,
+        //     selectedFeatures :newSelectedFeatures
+        // })
+
+        console.log(categoryState)
+    }
+
+    const applyFilters = () =>{
+        getCategoryData()
+    }
+    
+
+    
+
+    const printFilters = ()=>{
+
+        return(
+            <>
+                <FormGroup>
+                    <FormLabel htmlFor="keywords">Search keywords:</FormLabel>
+                    <FormControl type="text" id="keywords" 
+                                 value={ categoryState.filters.keywords }
+                                 onChange={(e)=> filterKeywordsChanged(e as any)}>
+                    </FormControl>
+                </FormGroup>
+                <FormGroup>
+                    <Row>
+                        <Col sm='12' xs='12'>
+                        <FormLabel htmlFor="priceMin">Minimalna cena:</FormLabel>
+                            <FormControl type="number" id="priceMin"
+                                         step='0.01' min='0.01' max='9999.99'
+                                         value={categoryState.filters.priceMinimum}
+                                         onChange={(e)=> filterPriceMinChanged(e as any)}>
+
+                            </FormControl>
+                        </Col>
+                        <Col sm='12' xs='12'>
+                            <FormLabel htmlFor="priceMax">Maksimalna cena:</FormLabel>
+                            <FormControl type="number" id="priceMax"
+                                         step='0.01' min='0.02' max='10000'
+                                         value={categoryState.filters.priceMaximum}
+                                         onChange={(e)=> filterPriceMaxChanged(e as any)}>
+
+                            </FormControl>
+                        </Col>
+                    </Row>
+                </FormGroup>
+                <FormGroup>
+                    <FormControl as='select' id='sortOrder'
+                                 value={categoryState.filters.order}
+                                 onChange={(e)=> filterOrderChanged(e as any)}>
+
+                        <option value="name asc">Sort by name - ascending</option>
+                        <option value="name desc">Sort by name - descending</option>
+                        <option value="price asc">Sort by price - ascending</option>
+                        <option value="price desc">Sort by price - descending</option>
+                    </FormControl>
+                </FormGroup>
+
+                { categoryState.features && categoryState.features.map(printFeatureFilterComponent, this) }
+
+                <FormGroup>
+                    <Button variant="primary" className="w-100" onClick={() => applyFilters()}>
+                        <FontAwesomeIcon icon={faSearch}/> Search
+                    </Button>
+                    
+                </FormGroup>
+            </>
+        );
+    }
+
+    const printFeatureFilterComponent =(feature: {
+        featureId: number;
+        name: string;
+        values: string[];})=>{
+
+            return(
+                <FormGroup>
+                    <FormLabel>
+                        <strong>{feature.name}</strong>
+                    </FormLabel>
+                    { feature.values.map(value => printFeatureFilterCheckBox(feature, value), this) }
+                </FormGroup>
+            );
+    }
+
+    const printFeatureFilterCheckBox = (feature: any, value: string) =>{
+        return (
+            <FormCheck type="checkbox" label={value}
+                                       value={value}
+                                       data-feature-id = {feature.featureId}
+                                       onChange={(event: any)=> featureFilterChanged(event as any)}/>
+        )
+    }
+
+    
+
 
     const singleArticle = (article: ArticleType) =>{
         return(
@@ -145,8 +350,13 @@ export const CategoryPage = () =>{
         )
     }
 
-
     useEffect(()=>{
+        getCategoryData()
+    }, [])
+
+
+    const getCategoryData = () =>{
+        
         api('api/category/'+ id, 'get',{})
         .then((res:ApiResponse | undefined) =>{
             if(res?.status === 'login'){
@@ -163,12 +373,44 @@ export const CategoryPage = () =>{
             setCategoryData(categoryData);
         })
 
+        const orderParts = categoryState.filters.order ? categoryState.filters.order.split(' ') : [];
+        const orderBy = orderParts.length > 0 ? orderParts[0] : '';
+        const orderDirection = orderParts.length > 1 ? orderParts[1].toLocaleUpperCase() : '';
+        // const orderParts = categoryState.filters.order.split(' ');
+        // const orderBy = orderParts[0];
+        // const orderDirection = orderParts[1].toLocaleUpperCase();
+
+        const featureFilters: any[] = [ ];
+        for(const item of categoryState.filters.selectedFeatures){
+            let found = false;
+            let foundReference = null;
+
+            for( const featureFilter of featureFilters){
+                if(featureFilter.featureId === item.featureId){
+                    found = true;
+                    foundReference = featureFilter;
+                    break;
+                }
+            }
+
+            if(!found){
+                featureFilters.push({
+                    featureId: item.featureId,
+                    values: [item.value]
+                })
+            }else{
+                foundReference.values.push(item.value)
+            }
+        }
+
         api('api/article/search/', 'post', {
             categoryId: Number(id),
-            keywords: "",
-            priceMin: 0.01,
-            priceMax: Number.MAX_SAFE_INTEGER,
-            features: []
+            keywords: categoryState.filters.keywords,
+            priceMin: categoryState.filters.priceMinimum,
+            priceMax: categoryState.filters.priceMaximum,
+            features: featureFilters,
+            orderBy: orderBy,
+            orderDirection: orderDirection
         })
         .then((res:ApiResponse | undefined) =>{
             if(res?.status === 'login'){
@@ -202,10 +444,27 @@ export const CategoryPage = () =>{
 
             setArticles(articles)
         }else{
-            console.error('res.data nije niz ili nije definisan')
+            // console.error('res.data nije niz ili nije definisan')
         }
         })
-    },[])
+
+        getFeatures();
+    }
+
+
+    const getFeatures = () =>{
+        api('api/feature/values/' + id, 'get', {})
+        .then((res:ApiResponse | undefined) =>{
+            if(res?.status === 'login'){
+                return setLogginState(false)
+            }
+            if(res?.status === 'error'){
+                return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
+            }
+
+            setFeatures(res?.data.features);
+        })
+    }
 
 
 
@@ -220,10 +479,10 @@ export const CategoryPage = () =>{
                 </div>
                     {printOptionalMessage()}
                 <div className="row">
-                    <div className="col-3 col-md-2 col-sm-3 col-lg-3 filter">
-                        a
+                    <div className=" col-xs-12 col-md-3 col-lg-3 filter">
+                        {printFilters()}
                     </div>
-                    <div className="col-9 col-md-10 col-sm-9 col-lg-9 articlesCol">    
+                    <div className=" col-xs-12 col-md-9 col-lg-9 articlesCol">    
                         {showArticles()}
                     </div>
                 </div>
