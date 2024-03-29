@@ -80,12 +80,12 @@
     color: black;
 }
 @media screen and (max-width:756px){
-    .articlesCol{
+    /* .articlesCol{
         width: 100%;
-    }
-    .filter{
+    } */
+    /* .filter{
         display: none;
-    }
+    } */
     .wrapper{
         flex-direction: column;
     }
