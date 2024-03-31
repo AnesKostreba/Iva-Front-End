@@ -34,6 +34,11 @@ interface CategoryPageState{
     }[];
 }
 
+interface CategoryDto{
+    categoryId: number;
+    name: string;
+}
+
 interface ArticleDto{
     articleId: number;
     name: string;
@@ -92,6 +97,13 @@ export const CategoryPage = () =>{
         }))
     }
 
+    const setSubcategories = (subcategories: CategoryType[]) =>{
+        setCategoryState(prevState =>({
+            ...prevState,
+            subcategories: subcategories
+        }))
+    }
+
     const setArticles = (articles: ArticleType[]) =>{
         setCategoryState(prevState =>({
             ...prevState,
@@ -109,6 +121,35 @@ export const CategoryPage = () =>{
             </CardText>
         );
     }
+
+    const showSubcategories = () =>{
+        if(categoryState.subcategories?.length === 0){
+            return;
+        }
+        return (
+            <Row>
+                {categoryState.subcategories && categoryState.subcategories.map(singleCategory)}
+            </Row>
+        )
+
+    }
+
+    const singleCategory = (category: CategoryType) =>{
+        return(
+            <Col lg='3' md='4' sm='6' xs='12'>
+                <Card className="mb-3">
+                    <CardTitle as='p'>
+                        {category.name}
+                    </CardTitle>
+                    <Link to={`/category/${category.categoryId}`} className="btn btn-primary">
+                        Open category
+                    </Link>
+                </Card>
+            </Col>
+        )
+    }
+
+    
 
     const showArticles = () =>{
         if(categoryState.articles?.length === 0){
@@ -352,7 +393,7 @@ export const CategoryPage = () =>{
 
     useEffect(()=>{
         getCategoryData()
-    }, [])
+    },[id])
 
 
     const getCategoryData = () =>{
@@ -371,6 +412,19 @@ export const CategoryPage = () =>{
                 name: res?.data.name
             }
             setCategoryData(categoryData);
+
+            if(res?.data && res.data.categories){
+            const subcategories: CategoryType[] = 
+                            res?.data.categories.map((category: CategoryDto)=>{
+                                return{
+                                    categoryId: category.categoryId,
+                                    name: category.name
+                                }
+                            });
+            setSubcategories(subcategories)
+            }else{
+                JSON.stringify('No categories found in response data.')
+            }
         })
 
         const orderParts = categoryState.filters.order ? categoryState.filters.order.split(' ') : [];
@@ -478,6 +532,7 @@ export const CategoryPage = () =>{
                     </CardTitle>
                 </div>
                     {printOptionalMessage()}
+                    { showSubcategories() }
                 <div className="row">
                     <div className=" col-xs-12 col-md-3 col-lg-3 filter">
                         {printFilters()}

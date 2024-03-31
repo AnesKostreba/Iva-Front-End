@@ -41,7 +41,7 @@ export const HomePage = () =>{
     },[homePageState.isUserLoggedIn, homePageState.categories.length])
 
     const getCategories = () =>{
-        api('api/category/','get',{})
+        api('api/category/?filter=parentCategoryId||$isnull','get',{})
             .then((res: ApiResponse | undefined) =>{
                 if(res?.status === 'error' || res?.status === 'login' || !Array.isArray(res?.data)){
                     setLogginState(false);
@@ -56,7 +56,7 @@ export const HomePage = () =>{
             return{
                 categoryId: category.categoryId,
                 name:       category.name,
-                items:      []
+                items:      [] // artikli
             };
         });
 
