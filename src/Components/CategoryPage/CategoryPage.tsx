@@ -1,7 +1,7 @@
 import { Form, Link, useParams } from "react-router-dom";
 import { CategoryType } from "../../types/CategoryType";
 import { useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
+import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup, Row } from "react-bootstrap";
 import { ArticleType } from "../../types/ArticleType";
 import api, { ApiResponse } from '../../api/api';
 import { ApiConfig } from "../../config/api.config";
@@ -10,6 +10,7 @@ import { faCartShopping, faSearch } from "@fortawesome/free-solid-svg-icons";
 import './CategoryPage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MultiRangeSlider from "multi-range-slider-react";
+import InputGroupText from "react-bootstrap/esm/InputGroupText";
 
 interface CategoryPageState{
     isUserLoggedIn: boolean;
@@ -262,13 +263,14 @@ export const CategoryPage = () =>{
 
         return(
             <>
-                <FormGroup>
-                    <FormLabel htmlFor="keywords">Search keywords:</FormLabel>
+                <FormGroup className="mt-2">
+                    
+                    <FormLabel htmlFor="keywords">Pretrazi po nazivu:</FormLabel>
                     <FormControl type="text" id="keywords" 
                                  value={ categoryState.filters.keywords }
                                  onChange={(e)=> filterKeywordsChanged(e as any)}>
                     </FormControl>
-                </FormGroup>
+                </FormGroup>  
                 <FormGroup>
                     <Row>
                         <Col sm='12' xs='12'>
@@ -292,23 +294,28 @@ export const CategoryPage = () =>{
                     </Row>
                 </FormGroup>
                 <FormGroup>
-                    <FormControl as='select' id='sortOrder'
+                    <FormLabel className="mt-2">Sortiraj po:</FormLabel>
+                    <FormSelect as='select' id='sortOrder' className=" formSelectSort"
                                  value={categoryState.filters.order}
                                  onChange={(e)=> filterOrderChanged(e as any)}>
 
-                        <option value="name asc">Sort by name - ascending</option>
-                        <option value="name desc">Sort by name - descending</option>
-                        <option value="price asc">Sort by price - ascending</option>
-                        <option value="price desc">Sort by price - descending</option>
-                    </FormControl>
+                        <option value="name asc" selected >Sortiraj po nazivu - rastuce</option>
+                        <option value="name desc">Sortiraj po nazivu - opadajuce</option>
+                        <option value="price asc">Sortiraj po ceni - rastuce</option>
+                        <option value="price desc">Sortiraj po ceni - opadajuce</option>
+                    </FormSelect>
                 </FormGroup>
 
                 { categoryState.features && categoryState.features.map(printFeatureFilterComponent, this) }
 
                 <FormGroup>
-                    <Button variant="primary" className="w-100" onClick={() => applyFilters()}>
+                    {/* <Button variant="primary" className="w-100" onClick={() => applyFilters()}>
                         <FontAwesomeIcon icon={faSearch}/> Search
-                    </Button>
+                    </Button> */}
+                    <div className="divSearchFeatures d-flex w-100">
+                        <button onClick={() => applyFilters()} className="btnSearchFeatures p-1 w-100 d-flex align-items-center justify-content-center ">
+                            <FontAwesomeIcon className="icon" icon={faSearch}/>Pretrazi</button>
+                    </div>
                     
                 </FormGroup>
             </>
@@ -321,22 +328,30 @@ export const CategoryPage = () =>{
         values: string[];})=>{
 
             return(
-                <FormGroup>
-                    <FormLabel>
+                <>
+                <FormLabel className="mt-2">
                         <strong>{feature.name}</strong>
-                    </FormLabel>
+                </FormLabel>
+                <div className="checkbox">
+                <FormGroup className="">
+                    
                     { feature.values.map(value => printFeatureFilterCheckBox(feature, value), this) }
                 </FormGroup>
+                </div>
+                </>
             );
     }
 
     const printFeatureFilterCheckBox = (feature: any, value: string) =>{
         return (
+            
             <FormCheck type="checkbox" label={value}
                                        value={value}
                                        data-feature-id = {feature.featureId}
                                        onChange={(event: any)=> featureFilterChanged(event as any)}/>
+            
         )
+        
     }
 
     

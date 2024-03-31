@@ -1,3 +1,8 @@
+*{
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
 .cards {
   border: 0px;
 }
@@ -78,6 +83,24 @@
 .minusDiv button:active{
     background-color: #ffffff; 
     color: black;
+}
+.checkbox{
+    max-height: 130px;
+    overflow-y: auto;
+}
+.btnSearchFeatures{
+    border: none;
+    color: #fff;
+    background-color: #28a745;
+    font-size: 1.2rem;
+    border-radius: 10px;
+}
+.btnSearchFeatures .icon{
+    margin-right: 5px;
+}
+.divSearchFeatures button:hover {
+    background-color: #318d00; 
+    transition: 0.4s ease;
 }
 @media screen and (max-width:756px){
     /* .articlesCol{
