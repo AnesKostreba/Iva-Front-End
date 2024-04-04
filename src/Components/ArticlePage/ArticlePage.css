@@ -1,0 +1,67 @@
+h2{
+    color: #040272;
+    font-weight: 600;
+}
+.img img{
+    width: 75%;
+}
+.buttonKupi{
+    border-radius: 20px;
+    width: 76%;
+}
+.cenaDiv{
+    font-size: xx-large;
+    font-weight: 500;
+    color: #040272;
+}
+.wrapper{
+    background-color: #eaeded;
+    justify-content: center;
+}
+.kolona{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.kolicina{
+    width: 50%;
+}
+.kupiBtn{
+    width: 75%;
+}
+.articleName{
+    display: none;
+}
+.wrapperFeature{
+    background-color: rgb(0, 166, 0);
+}
+.buttons button{
+    border: none;
+    background-color: rgb(0, 166, 0);
+    padding: 15px;
+    color: #fff;
+}
+.buttons button:hover{
+    background-color: rgb(0, 144, 0);
+    color: #fff;
+}
+.buttons button:active{
+    background-color: rgb(0, 166, 0);
+}
+.titleFeature{
+    color: #040272;
+}
+@media (max-width:567px) {
+    .wrapper{
+        flex-direction: row;
+    }
+    .articleNameMobile{
+        display: none;
+    }
+    .kolicina{
+        width: 80%;
+    }
+    .kupiBtn{
+        width: 100%;
+    }
+}

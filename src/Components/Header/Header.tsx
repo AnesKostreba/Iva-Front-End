@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 const Header = () =>{
     return(
-        <div className='container-fluid'>
+        <div className='container-fluid mb-2'>
             <div className="container-fluid header">
                 <div className="logo">
                     <img src={logo} alt="" className='logoImg'/>
@@ -21,7 +21,7 @@ const Header = () =>{
                             className='me-2'
                             aria-label='Search'    
                         />
-                        <Button variant='outline-success'>
+                        <Button variant='outline-success '>
                             Pretraži
                         </Button>
                     </Form>
@@ -59,7 +59,7 @@ const Header = () =>{
                         className='me-2'
                         aria-label='Search'
                     />
-                    <Button variant='outline-success'>Pretraži</Button>
+                    <Button variant='outline-success '>Pretraži</Button>
                 </Form>
             </div>
         </div>

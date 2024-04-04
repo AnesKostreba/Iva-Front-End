@@ -15,6 +15,7 @@ import { HomePage } from './Components/HomePage/HomePage';
 import { UserLoginPage } from './Components/UserLoginPage/UserLoginPage';
 import { UserRegistrationPage } from './Components/UserRegistrationPage/UserRegistrationPage';
 import { CategoryPage } from './Components/CategoryPage/CategoryPage';
+import { ArticlePage } from './Components/ArticlePage/ArticlePage';
 
 const generateMenuItems = ():MainMenuItem[] =>{
   return[
@@ -36,6 +37,7 @@ root.render(
         <Route path='/user/login' element={<UserLoginPage/>}/>
         <Route path='/user/register' element={<UserRegistrationPage/>}/>
         <Route path='/category/:id' element={<CategoryPage/>}/>
+        <Route path='/article/:id' element={<ArticlePage/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
