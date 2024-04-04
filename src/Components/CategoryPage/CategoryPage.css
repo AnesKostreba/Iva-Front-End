@@ -18,10 +18,14 @@
 }
 .containerArticle{
   border-radius: 0%;
+  cursor: pointer;
 }
 .cardBody {
   background-color: #f0eeee;
   border-bottom: 100px;
+}
+.nameArticle{
+    color: green;
 }
 .cardPrice{
     font-size: medium;

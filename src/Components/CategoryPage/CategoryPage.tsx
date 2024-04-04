@@ -1,4 +1,4 @@
-import { Form, Link, useParams } from "react-router-dom";
+import { Form, Link, unstable_HistoryRouter, useNavigate, useParams } from "react-router-dom";
 import { CategoryType } from "../../types/CategoryType";
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup, Row } from "react-bootstrap";
@@ -11,6 +11,7 @@ import './CategoryPage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MultiRangeSlider from "multi-range-slider-react";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
+import { ArticlePage } from "../ArticlePage/ArticlePage";
 
 interface CategoryPageState{
     isUserLoggedIn: boolean;
@@ -354,24 +355,30 @@ export const CategoryPage = () =>{
         
     }
 
-    
 
+    
+    const navigete = useNavigate();
 
     const singleArticle = (article: ArticleType) =>{
+
+        const handleArticleClick = (articleId: number | undefined)=>{
+            navigete(`/article/${articleId}`)
+        }
+
         return(
             <Col lg='3' md='4' xl='3' xxl='3' sm='6' xs='6' className="cards p-1">
-                <Card className="mb-3 containerArticle">
-                <Link to={`article/${article.articleId}`}
-                      className="btn btn-block btn-sm linkArticle">
+                <Card className="mb-3 containerArticle text-center" onClick={()=>handleArticleClick(article.articleId)}>
+                {/* <Link to={`article/${article.articleId}`}
+                      className="btn btn-block btn-sm linkArticle"> */}
 
                         <img src={ApiConfig.PHOTO_PATH + 'small/' + article.imageUrl} 
                              alt={article.name}
                              className="w-100" />
                     
-                    <CardTitle as='p' className="mt-4">
+                    <CardTitle as='p' className="mt-4 nameArticle">
                             <strong>{article.name}</strong>
                     </CardTitle>
-                </Link>
+                {/* </Link> */}
                     <CardBody className="cardBody">
                         
                         {/* <CardText>
