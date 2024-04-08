@@ -51,6 +51,9 @@ h2{
 .titleFeature{
     color: #040272;
 }
+.slicniProizvodi{
+    color: #040272;
+}
 @media (max-width:567px) {
     .wrapper{
         flex-direction: row;

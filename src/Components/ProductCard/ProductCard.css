@@ -1,0 +1,33 @@
+.cenaArtikla{
+    font-size: medium;
+    font-weight: 600;
+    color: #040272;
+}
+.bodyCard{
+    background-color: #f0eeee;
+    border-bottom: 100px;
+}
+.nazivArtikla{
+    color: #040272;
+}
+.plus{
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.minus{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.plus, 
+.minus{
+    border: none;
+    background-color: #fff;
+}
+.kupi button{
+    border: none;
+    background-color: green;
+    color: #fff;
+}
+.kupi button:hover{
+    background-color: rgb(0, 170, 0);
+}

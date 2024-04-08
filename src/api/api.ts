@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ApiConfig } from "../config/api.config";
 
-export default function api(
+export default async function api(
     path: string,
     method: 'get' | 'post' | 'patch' | 'delete',
     body: any | undefined
@@ -19,7 +19,7 @@ export default function api(
             }
         }
         axios(requestData)
-        .then(res=> responseHandler(res, resolve))
+        .then(res=>responseHandler(res, resolve))
         .catch(async err =>{
             if(err.response.status === 401){
                 const newToken = await refreshToken();
@@ -143,7 +143,7 @@ async function  repeatRequest(
     requestData: AxiosRequestConfig<any>,
     resolve: (value?: ApiResponse) => void
 ) {
-    axios(requestData)
+    await axios(requestData)
         .then(res=>{
             let response: ApiResponse;
 

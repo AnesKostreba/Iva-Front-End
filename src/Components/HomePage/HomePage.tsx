@@ -3,11 +3,12 @@ import { CategoryType } from '../../types/CategoryType';
 import './HomePage.css'
 import { useEffect, useState } from 'react';
 import api, { ApiResponse } from '../../api/api';
-import { Card } from 'react-bootstrap';
+import { Card, CardTitle } from 'react-bootstrap';
 import 'react-multi-carousel/lib/styles.css';
 import banerPopust from './Image/BanerPopustPenzioneriDesktop.jpg'
 import Carousel from 'react-bootstrap/Carousel';
 import Carousell from "react-multi-carousel";
+import { ApiConfig } from '../../config/api.config';
 
 interface HomePageState{
     isUserLoggedIn: boolean;
@@ -17,6 +18,7 @@ interface HomePageState{
 interface ApiCategoryDto{
     categoryId: number;
     name: string;
+    imagePath: string;
 }
 
 export const HomePage = () =>{
@@ -52,10 +54,12 @@ export const HomePage = () =>{
     }
 
     const putCategoriesInState = (data: ApiCategoryDto[]) =>{
+        console.log(data)
         const categories: CategoryType[] = data.map(category =>{
             return{
                 categoryId: category.categoryId,
                 name:       category.name,
+                imagePath: category.imagePath,
                 items:      [] // artikli
             };
         });
@@ -76,24 +80,26 @@ export const HomePage = () =>{
     const singleCategory = (category: CategoryType) =>{
         return(
             <div className='divBody'>
-                <Link to={`/category/${category.categoryId}`} className=''>
-                    <Card.Title>
+                <CardTitle className='mb-2'>
                         {category.name}
-                    </Card.Title>
+                </CardTitle>
+                <Link to={`/category/${category.categoryId}`} className=''>
+                    <img className='' src={ApiConfig.PHOTO_PATH+'category/'+category.imagePath}></img>
                 </Link>
+                
             </div>
         )
     }
     const responsive = {
         desktop: {
-            breakpoint: { max: 3000, min: 1024 },
+            breakpoint: { max: 3000, min: 1432 },
+            items: 5,
+            },
+        tablet: {
+            breakpoint: { max: 1432, min: 664 },
             items: 3,
             },
-            tablet: {
-            breakpoint: { max: 1024, min: 664 },
-            items: 2,
-            },
-            mobile: {
+        mobile: {
             breakpoint: { max: 664, min: 0 },
             items: 2,
             },
@@ -126,7 +132,7 @@ export const HomePage = () =>{
                 <p>KATEGORIJE</p>
             </Card.Title>
 
-            <div className="kategorije">
+            <div className="kategorije mb-4">
                 <Carousell
                     responsive={responsive}
                     autoPlay= {true}
