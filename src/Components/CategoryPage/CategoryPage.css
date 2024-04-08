@@ -25,11 +25,12 @@
   border-bottom: 100px;
 }
 .nameArticle{
-    color: green;
+    color: #040272;
 }
 .cardPrice{
     font-size: medium;
     font-weight: 600;
+    color: #040272;
 }
 .faIcon{
     margin-right: 10px;
@@ -105,6 +106,16 @@
 .divSearchFeatures button:hover {
     background-color: #318d00; 
     transition: 0.4s ease;
+}
+.linkSubcategory{
+    width: 33%;
+}
+.titleSubcategory{
+    font-size: larger;
+    font-weight: 500;
+}
+.subcategoryName{
+    font-size: xx-large;
 }
 @media screen and (max-width:756px){
     /* .articlesCol{

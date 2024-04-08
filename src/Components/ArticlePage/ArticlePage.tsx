@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArticleType } from '../../types/ArticleType';
 import { Container, Row, Col, CardTitle, CardBody, Card} from 'react-bootstrap';
 import { ApiConfig } from '../../config/api.config';
@@ -8,6 +8,7 @@ import './ArticlePage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { CategoryType } from '../../types/CategoryType';
+import { ProductCard } from '../ProductCard/ProductCard';
 
 interface ArticleDto{
     articleId: number,
@@ -29,9 +30,9 @@ export const ArticlePage = ()=>{
     const [article, setArticle] = useState<ArticleType>();
     const [category, setCategory] = useState<CategoryType>();
     const [articles, setArticles] = useState<ArticleType[] >();
-    
+    const navigate = useNavigate()
     console.log(articles)
-    
+
     const setMessage = (message: string)=>{
         setArticle(prevState =>({
             ...prevState,
@@ -39,6 +40,15 @@ export const ArticlePage = ()=>{
         }))
     }
 
+    const slicniProizvodi = () =>{
+        const scrollToSimilar = document.getElementById('slicniProizvodi')
+        scrollToSimilar?.scrollIntoView({behavior: 'smooth'})
+    }
+
+    const opisProizvoda = () =>{
+        const scrollToFeature = document.getElementById('opisProizvoda')
+        scrollToFeature?.scrollIntoView({behavior:'smooth'})
+    }
 
     const showFeatureArticle = () =>{
 
@@ -46,47 +56,45 @@ export const ArticlePage = ()=>{
             <Container className='w-100 d-flex wrapperFeature'>
                 <Row className='rowButtons'>
                     <Col className='p-0 m-0 buttons'>
-                        <button className='buttonOpis'>Opis proizvoda</button>
-                        <button className='buttonOpis'>Slični proizvodi</button>
+                        <button onClick={opisProizvoda} className='buttonOpis'>Opis proizvoda</button>
+                        <button onClick={slicniProizvodi} className='buttonOpis'>Slični proizvodi</button>
                     </Col>
                 </Row>
             </Container>
         )
     }
 
-    const showArticles = () =>{
-        if(articles?.length === 0){
-            return (
-                <div>Nema artikala</div>
-            )
+    const showArticles = () => {
+        
+        if (!articles || articles.length === 0) {
+            return <div>Nema artikala</div>;
         }
-
-        return(
-            <Row>
-                {articles?.map((article, index) => (
-                    <div key={index}> {/* Dodajte ključ za svaki element */}
-                        {singleArticle(article)}
-                    </div>
-                ))}
-            </Row>
-        )
-    }
-
-    const singleArticle = (article: ArticleType) =>{
-        return(
-            <Container>
-                {article.name}
+        const handleClick = (articleId:number | undefined)=>{
+            navigate(`/article/${articleId}`)
+            window.scroll({top: 0, behavior: 'smooth'})
+        }
+    
+        return (
+            <Container >
+                <h3 id='slicniProizvodi' className='text-center mt-3 slicniProizvodi'>Slicni proizvodi</h3>
+                <Row>
+                    {articles.map((article, index) => (
+                        <Col key={index} xs={6} md={3} lg={3} onClick={()=>handleClick(article?.articleId)}>
+                            <ProductCard article={article}/>
+                        </Col>
+                    ))}
+                </Row>
             </Container>
-        )
-    }
+        );
+    };
 
     const showFeature = () =>{
         return(
-            <Container className='border p-4'>
+            <Container className='border p-4' id='opisProizvoda'>
                 <CardTitle className='mb-3 titleFeature'>
                     {article?.name}
                 </CardTitle>
-                <CardBody className='titleFeature'>
+                <CardBody className='titleFeature w-50'>
                     {article?.excerpt}
                     
                 </CardBody>
@@ -157,15 +165,17 @@ export const ArticlePage = ()=>{
                                 if(res?.status === 'error'){
                                     return setMessage('Try to refresh page!')
                                 }
+                                console.log(res?.data)
                                 const fetchArticles: ArticleType[] =
                                     res?.data.map((article: ArticleDto)=>{
+                                        
                                         const object:ArticleType = {
                                             articleId: article.articleId,
                                             name: article.name,
                                             excerpt: article.excerpt,
                                             description: article.description,
                                             imageUrl: '',
-                                            price: 0
+                                            price: 0,
                                         }
 
                                         if(article.photos !== undefined && article.photos.length > 0){
@@ -177,7 +187,7 @@ export const ArticlePage = ()=>{
                                                 article.articlePrices.length-1].price
                                         }
                                         return object;
-                                    })
+                                    }).slice(0,4)
 
                                 setArticles(fetchArticles)
                             })
@@ -241,7 +251,7 @@ export const ArticlePage = ()=>{
             <Row>
                 {showFeature()}
             </Row>
-            <Row>
+            <Row className='border'>   
                 {showArticles()}
             </Row>
         </Container>

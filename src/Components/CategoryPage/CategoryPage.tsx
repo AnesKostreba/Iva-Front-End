@@ -44,6 +44,7 @@ interface CategoryDto{
 interface ArticleDto{
     articleId: number;
     name: string;
+    isPromoted: number;
     excerpt: string;
     description: string;
     articlePrices?: {
@@ -138,15 +139,15 @@ export const CategoryPage = () =>{
 
     const singleCategory = (category: CategoryType) =>{
         return(
-            <Col lg='3' md='4' sm='6' xs='12'>
-                <Card className="mb-3">
-                    <CardTitle as='p'>
+            <Col lg='3' md='4' sm='6' xs='12' className="">
+                <div className="border d-flex">
+                    <Link to={`/category/${category.categoryId}`} className="d-flex justify-content-center ">
+                        <img className="linkSubcategory" src={ApiConfig.PHOTO_PATH+'category/'+'apoteka-iva-pharm-i-bar.jpg'} alt="" />
+                    </Link>
+                    <CardTitle as='p' className="text-center titleSubcategory align-items-center d-flex">
                         {category.name}
                     </CardTitle>
-                    <Link to={`/category/${category.categoryId}`} className="btn btn-primary">
-                        Open category
-                    </Link>
-                </Card>
+                </div>
             </Col>
         )
     }
@@ -385,7 +386,7 @@ export const CategoryPage = () =>{
                             {article.excerpt}
                         </CardText> */}
                         <CardText className="text-center cardPrice">
-                            Price: { Number(article.price)?.toFixed(2)} EUR
+                            Cijena: { Number(article.price)?.toFixed(2)} EUR
                         </CardText>
                         <div className="container wrapper">
                             <div className="prviDiv d-flex align-items-center">
@@ -549,7 +550,7 @@ export const CategoryPage = () =>{
         <div className="container-fluid d-flex mt-3 p-0">
             <Container>
                 <div className="row">
-                    <CardTitle className="mb-3">
+                    <CardTitle className="mb-3 subcategoryName">
                         {categoryState.category?.name}
                     </CardTitle>
                 </div>
