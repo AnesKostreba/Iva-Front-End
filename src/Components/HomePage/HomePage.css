@@ -24,10 +24,22 @@
     width: 90%;
     margin: 0 auto;
 }
+.kategorijeP{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+.izdvajamoP{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
 .baneri{
     width: 90%;
     margin: 0 auto;
 }
 .banerImg{
     width: 100%;
+}
+.izdvajamo{
+    width: 90%;
+    margin: 0 auto;
 }
