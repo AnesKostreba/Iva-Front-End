@@ -16,6 +16,7 @@ import { UserLoginPage } from './Components/UserLoginPage/UserLoginPage';
 import { UserRegistrationPage } from './Components/UserRegistrationPage/UserRegistrationPage';
 import { CategoryPage } from './Components/CategoryPage/CategoryPage';
 import { ArticlePage } from './Components/ArticlePage/ArticlePage';
+import { Footer } from './Components/Footer/Footer';
 
 const generateMenuItems = ():MainMenuItem[] =>{
   return[
@@ -40,6 +41,7 @@ root.render(
         <Route path='/article/:id' element={<ArticlePage/>}/>
       </Routes>
     </BrowserRouter>
+      <Footer/>
   </React.StrictMode>
 );
 reportWebVitals();

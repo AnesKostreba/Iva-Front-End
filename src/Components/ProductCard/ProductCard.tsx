@@ -11,7 +11,7 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
 
     return(
-        <Card className="mt-3 ">
+        <Card className="mt-3 kartica">
             <img className="w-100 mt-2 p-3" src={ApiConfig.PHOTO_PATH+"small/"+article.imageUrl} alt={article.name}></img>
             <CardTitle as='p' className="mt-4 text-center nazivArtikla">
                 <strong>{article.name}</strong>

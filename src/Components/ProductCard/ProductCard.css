@@ -9,6 +9,7 @@
 }
 .nazivArtikla{
     color: #040272;
+    height: 50px;
 }
 .plus{
     padding-left: 8px;
@@ -30,4 +31,7 @@
 }
 .kupi button:hover{
     background-color: rgb(0, 170, 0);
+}
+.kartica{
+    width: 90%;
 }
