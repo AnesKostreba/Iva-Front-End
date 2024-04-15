@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './Menu.css';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { Cart } from '../Cart/Cart';
 
 export interface MainMenuItem{
     text: string;
@@ -24,9 +25,13 @@ export const Menu: React.FC<MainMenuProperties> = ({items}) =>{
                     {state.map((item,index) =>(
                         <Nav.Link key={index} as={Link} to={item.link}>
                             {item.text}
+                            
                         </Nav.Link>
+                        
                     ))}
+                    
                 </Nav>
+                
             </Container>
         </Navbar>
     )

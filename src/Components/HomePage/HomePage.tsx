@@ -210,7 +210,6 @@ export const HomePage = () =>{
                 }
             })
     }
-    console.log(article)
     
     
     return(

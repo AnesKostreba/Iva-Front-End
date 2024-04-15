@@ -3,12 +3,43 @@ import { ApiConfig } from "../../config/api.config";
 import './ProductCard.css';
 import { ArticleType } from "../../types/ArticleType";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import api, {ApiResponse} from '../../api/api';
 
 interface ProductCardProps {
     article : ArticleType
 }
 
+interface SingleARticlePreviewState{
+    quantity: number;
+}
+
 export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
+    const [quantity, setQuantity] = useState<number>(1)
+
+    const decrementQuantity = () =>{
+        if(quantity > 1){
+            setQuantity(prevQuantity => prevQuantity -1)
+        }
+    }
+    const incrementQuantity = () =>{
+        setQuantity(prevQuantity => prevQuantity + 1);
+    }
+    const addToCart = () =>{
+        const data = {
+            articleId: article.articleId,
+            quantity: quantity
+        };
+
+        api('/api/user/cart/addToCart/',"post",data)
+            .then((res: ApiResponse | undefined) =>{
+                if(res?.status === 'error'){
+                    return;
+                }
+                
+            window.dispatchEvent(new CustomEvent('cart.update'));
+        })
+    }
 
     return(
         <Card className="mt-3 kartica">
@@ -23,18 +54,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
                 <div className="omotac d-flex">
                     <div className="w-100 d-flex omotacPovecanje border">
                             <div className="d-flex w-100 ">
-                                <button className="w-100 minus">-</button>
+                                <button onClick={decrementQuantity} className="w-100 minus">-</button>
                             </div>
                             <div className="w-100 text-center  justify-content-center align-items-center d-flex">
-                                <p className="m-0">1</p>
+                                <p className="m-0">{quantity}</p>
                             </div>
                             <div className="d-flex w-100 ">
-                                <button className="w-100 plus">+</button>
+                                <button onClick={incrementQuantity} className="w-100 plus">+</button>
                             </div>
-                        
                     </div> 
                     <div className="w-100 bg-dark d-flex kupi">
-                        <button className="w-100">Kupi</button>
+                        <button onClick={addToCart} className="w-100">Kupi</button>
                     </div>
                 </div>
             </CardBody>
