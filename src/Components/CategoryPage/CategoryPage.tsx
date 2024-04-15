@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MultiRangeSlider from "multi-range-slider-react";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
 import { ArticlePage } from "../ArticlePage/ArticlePage";
+import { ProductCard } from "../ProductCard/ProductCard";
 
 interface CategoryPageState{
     isUserLoggedIn: boolean;
@@ -358,59 +359,66 @@ export const CategoryPage = () =>{
 
 
     
-    const navigete = useNavigate();
+    // const navigete = useNavigate();
 
     const singleArticle = (article: ArticleType) =>{
 
-        const handleArticleClick = (articleId: number | undefined)=>{
-            navigete(`/article/${articleId}`)
-        }
+        // const handleArticleClick = (articleId: number | undefined)=>{
+        //     navigete(`/article/${articleId}`)
+        // }
 
         return(
-            <Col lg='3' md='4' xl='3' xxl='3' sm='6' xs='6' className="cards p-1">
-                <Card className="mb-3 containerArticle text-center" onClick={()=>handleArticleClick(article.articleId)}>
-                {/* <Link to={`article/${article.articleId}`}
-                      className="btn btn-block btn-sm linkArticle"> */}
-
-                        <img src={ApiConfig.PHOTO_PATH + 'small/' + article.imageUrl} 
-                             alt={article.name}
-                             className="w-100" />
-                    
-                    <CardTitle as='p' className="mt-4 nameArticle">
-                            <strong>{article.name}</strong>
-                    </CardTitle>
-                {/* </Link> */}
-                    <CardBody className="cardBody">
-                        
-                        {/* <CardText>
-                            {article.excerpt}
-                        </CardText> */}
-                        <CardText className="text-center cardPrice">
-                            Cijena: { Number(article.price)?.toFixed(2)} EUR
-                        </CardText>
-                        <div className="container wrapper">
-                            <div className="prviDiv d-flex align-items-center">
-                                <div className="minusDiv w-100 align-items-center justify-content-center text-center">
-                                    <button className="povecajSmanji minus p-0 w-100 d-flex justify-content-center">-</button>
-                                    {/* <div className="btn povecajSmanji minus p-0 w-100 d-flex justify-content-center">-</div> */}
-                                </div>
-                                <div className="w-100 text-center">
-                                    <p className="p-0  m-0 text-center">1</p>
-                                </div>
-                                <div className="w-100 minusDiv">
-                                    <button className="povecajSmanji plus p-0 w-100 d-flex justify-content-center">+</button>
-                                    {/* <div className="btn povecajSmanji plus p-0 w-100 d-flex justify-content-center">+</div> */}
-                                </div>
-                            </div>
-                            <div className="drugiDiv d-flex">
-                                <button className="btnKupi p-0 w-100 d-flex align-items-center justify-content-center ">Kupi</button>
-                                {/* <div className="btn p-0 kupi w-100 d-flex justify-content-center">Kupi</div> */}
-                            </div>
-                        </div>
-                    </CardBody>
-                    
-                </Card>
+            <Col className="p-0" lg='3' md='4' xl='3' xs='6'>
+                
+                    <ProductCard article={article}/>
+                
             </Col>
+
+
+            // <Col lg='3' md='4' xl='3' xxl='3' sm='6' xs='6' className="cards p-1">
+            //     <Card className="mb-3 containerArticle text-center" onClick={()=>handleArticleClick(article.articleId)}>
+            //     {/* <Link to={`article/${article.articleId}`}
+            //           className="btn btn-block btn-sm linkArticle"> */}
+
+            //             <img src={ApiConfig.PHOTO_PATH + 'small/' + article.imageUrl} 
+            //                  alt={article.name}
+            //                  className="w-100" />
+                    
+            //         <CardTitle as='p' className="mt-4 nameArticle">
+            //                 <strong>{article.name}</strong>
+            //         </CardTitle>
+            //     {/* </Link> */}
+            //         <CardBody className="cardBody">
+                        
+            //             {/* <CardText>
+            //                 {article.excerpt}
+            //             </CardText> */}
+            //             <CardText className="text-center cardPrice">
+            //                 Cijena: { Number(article.price)?.toFixed(2)} EUR
+            //             </CardText>
+            //             <div className="container wrapper">
+            //                 <div className="prviDiv d-flex align-items-center">
+            //                     <div className="minusDiv w-100 align-items-center justify-content-center text-center">
+            //                         <button className="povecajSmanji minus p-0 w-100 d-flex justify-content-center">-</button>
+            //                         {/* <div className="btn povecajSmanji minus p-0 w-100 d-flex justify-content-center">-</div> */}
+            //                     </div>
+            //                     <div className="w-100 text-center">
+            //                         <p className="p-0  m-0 text-center">1</p>
+            //                     </div>
+            //                     <div className="w-100 minusDiv">
+            //                         <button className="povecajSmanji plus p-0 w-100 d-flex justify-content-center">+</button>
+            //                         {/* <div className="btn povecajSmanji plus p-0 w-100 d-flex justify-content-center">+</div> */}
+            //                     </div>
+            //                 </div>
+            //                 <div className="drugiDiv d-flex">
+            //                     <button className="btnKupi p-0 w-100 d-flex align-items-center justify-content-center ">Kupi</button>
+            //                     {/* <div className="btn p-0 kupi w-100 d-flex justify-content-center">Kupi</div> */}
+            //                 </div>
+            //             </div>
+            //         </CardBody>
+                    
+            //     </Card>
+            // </Col>
         )
     }
 

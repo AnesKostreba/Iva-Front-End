@@ -5,6 +5,7 @@ import user from '../../Images/user.png';
 import cart from '../../Images/shopping-cart.png';
 import { Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { Cart } from '../Cart/Cart';
 
 const Header = () =>{
     return(
@@ -43,9 +44,8 @@ const Header = () =>{
                     </Link>
 
                     <div className="cart">
-                        <img src={cart} alt="Korpa" className='imgKorpa'/>
+                        <Cart/>
                         <div className="korpaP">
-                            <p>Korpa</p>
                         </div>
                     </div>
                 </div>
