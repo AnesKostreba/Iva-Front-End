@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import CartType from "../../types/CartType";
 import api, {ApiResponse} from '../../api/api';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, NavItem, Table } from "react-bootstrap";
+import { Alert, Button, FormControl, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, NavItem, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faCartArrowDown, faCartShopping, faMinusSquare } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import './Cart.css'
 
@@ -11,12 +11,18 @@ interface CartState {
     count: number;
     cart?: CartType;
     cartVisible: boolean;
+    message: string;
+    cartMenuColor: string;
 }
+
+
 
 export const Cart = () =>{
     const[cart, setCart] = useState<CartState>({
         count: 0,
         cartVisible: false,
+        message: '',
+        cartMenuColor: '#000000'
     });
 
     
@@ -32,7 +38,9 @@ export const Cart = () =>{
                 }
                 setStateCart(res?.data);
                 setStateCount(res?.data.cartArticles.length);
-                console.log(res?.data)
+
+                setStateMenuColor('#ff0000')
+                setTimeout(()=> setStateMenuColor('#000000'),2000)
             })
             
         }
@@ -70,6 +78,20 @@ export const Cart = () =>{
         }))
     }
 
+    const setStateMessage = (newMessage:string)=>{
+        setCart(prevState =>({
+            ...prevState,
+            message: newMessage
+        }))
+    }
+
+    const setStateMenuColor = (newColor:string)=>{
+        setCart(prevState =>({
+            ...prevState,
+            cartMenuColor: newColor
+        }))
+    }
+
     const showCart = () =>{
         setStateVisible(true);
     }
@@ -92,15 +114,73 @@ export const Cart = () =>{
 
     const sum = calculateSum();
 
+    const sendCartUpdate = (data:any) =>{
+        api('/api/user/cart/','patch', data)
+        .then((res: ApiResponse | undefined) =>{
+            if(res?.status === 'error'){
+                setStateCount(0);
+                setStateCart(undefined);
+                return
+            }
+
+            setStateCart(res?.data);
+            setStateCount(res?.data.cartArticles.length);
+
+            
+        })
+    }
+
+    const updateQuantity = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        const articleId = event.target.dataset.articleId;
+        const newQuantity = event.target.value;
+
+        const data = {
+            articleId: Number(articleId),
+            quantity: Number(newQuantity),
+        }
+
+        sendCartUpdate(data);
+    }
+
+
+    const removeFromCart = (articleId: number) =>{
+        sendCartUpdate({
+            articleId: Number(articleId),
+            quantity: 0,
+        });
+    }
+
+
+    const makeOrder = () =>{
+        api('/api/user/cart/makeOrder/','post',{})
+            .then((res:ApiResponse | undefined)=>{
+                if(res?.status === 'error'){
+                    setStateCount(0);
+                    setStateCart(undefined);
+                    return
+                }
+
+                setStateMessage('Vaša porudžbina je uspešno izvršena!');
+
+                setStateCart(undefined);
+                setStateCount(0);
+            })
+    }
+
+    const setHideCart = () =>{
+        setStateMessage('');
+        setStateVisible(false)
+    }
 
     return(
         <>
         <NavItem>
-            <NavLink className='iconCart' to={''} onClick={(e)=> {e.preventDefault(); showCart()}}>
-                <FontAwesomeIcon icon={faCartArrowDown}/>({cart.count})
+            <NavLink className='iconCart d-flex' to={''} onClick={(e)=> {e.preventDefault(); showCart()}}
+                style={{color: cart.cartMenuColor}}>
+                <FontAwesomeIcon icon={faCartShopping} className="d-flex"/><div className="cartCount">({cart.count})</div>
             </NavLink>
         </NavItem>
-        <Modal size="lg" centered show={cart.cartVisible} onHide={()=> hideCart()}>
+        <Modal size="lg" centered show={cart.cartVisible} onHide={()=> setHideCart()}>
             <ModalHeader closeButton>
                 <ModalTitle>Vaša korpa</ModalTitle>
             </ModalHeader>
@@ -124,10 +204,21 @@ export const Cart = () =>{
                                 <tr>
                                     <td>{item.article.category.name}</td>
                                     <td>{item.article.name}</td>
-                                    <td className="text-right">{item.quantity}</td>
+                                    <td className="text-right">
+                                        <FormControl type="number" step='1' min='1'
+                                                     value={item.quantity}
+                                                     data-article-id={item.articleId}
+                                                     onChange={(e) => updateQuantity(e as any)}
+                                                     />
+                                        </td>
                                     <td className="text-right">{price} EUR</td>
                                     <td className="text-right">{total} EUR</td>
-                                    <td>...</td>
+                                    <td>
+                                        <FontAwesomeIcon 
+                                                icon={faMinusSquare}             
+                                                onClick={() => removeFromCart(
+                                                item.article.articleId)}/>
+                                    </td>
                                 </tr>
                             )
                         }, this)}
@@ -143,9 +234,11 @@ export const Cart = () =>{
                         </tr>
                     </tfoot>
                 </Table>
+                <Alert variant="success" className={cart.message ? '' : 'd-none'}>{cart.message}</Alert>
             </ModalBody>
             <ModalFooter>
-                <Button variant="primary" >Kupi</Button>
+                <Button variant="primary" onClick={() => makeOrder()}
+                        disabled={cart.cart?.cartArticles.length === 0 }>Kupi</Button>
             </ModalFooter>
         </Modal>
         </>

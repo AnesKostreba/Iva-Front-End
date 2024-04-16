@@ -46,6 +46,7 @@ const Header = () =>{
                     <div className="cart">
                         <Cart/>
                         <div className="korpaP">
+                            <p>Korpa</p>
                         </div>
                     </div>
                 </div>

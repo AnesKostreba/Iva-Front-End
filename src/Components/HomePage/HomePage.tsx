@@ -218,7 +218,6 @@ export const HomePage = () =>{
             <Carousel className='carousel'>
                 <Carousel.Item>
                     <img src={banerPopust} alt="" className='banerImg'/>
-                    
                 </Carousel.Item>
                 <Carousel.Item>
                     <img src={banerPopust} alt="" className='banerImg'/>

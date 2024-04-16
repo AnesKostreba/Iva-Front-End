@@ -23,25 +23,24 @@ export default async function api(
         .catch(async err =>{
             if(err.response.status === 401){
                 const newToken = await refreshToken();
-                if(!newToken){
-                    const response: ApiResponse ={
-                        status: 'login',
-                        data: null,
-                    };
+                    if(!newToken){
+                        const response: ApiResponse ={
+                            status: 'login',
+                            data: null,
+                        };
 
-                    return resolve(response);
-                }
+                        return resolve(response);
+                    }
+                    saveToken(newToken)
+                    
+                    if(requestData.headers){
+                        requestData.headers['Authorization'] = getToken();
 
-                saveToken(newToken)
-
-                if(requestData.headers){
-                    requestData.headers['Authorization'] = getToken();
-
-
-                    // mozda je ovde repeatRequest PROBATI
-                }
-
-                return await repeatRequest(requestData, resolve);
+                        return await repeatRequest(requestData, resolve);
+                        // mozda je ovde repeatRequest PROBATI
+                    }
+            
+                
             }
 
             const response: ApiResponse={
