@@ -431,9 +431,9 @@ export const CategoryPage = () =>{
         
         api('api/category/'+ id, 'get',{})
         .then((res:ApiResponse | undefined) =>{
-            if(res?.status === 'login'){
-                return setLogginState(false)
-            }
+            // if(res?.status === 'login'){
+            //     return setLogginState(false)
+            // }
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page.')
             }
@@ -498,9 +498,9 @@ export const CategoryPage = () =>{
             orderDirection: orderDirection
         })
         .then((res:ApiResponse | undefined) =>{
-            if(res?.status === 'login'){
-                return setLogginState(false)
-            }
+            // if(res?.status === 'login'){
+            //     return setLogginState(false)
+            // }
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
             }
@@ -540,9 +540,9 @@ export const CategoryPage = () =>{
     const getFeatures = () =>{
         api('api/feature/values/' + id, 'get', {})
         .then((res:ApiResponse | undefined) =>{
-            if(res?.status === 'login'){
-                return setLogginState(false)
-            }
+            // if(res?.status === 'login'){
+            //     return setLogginState(false)
+            // }
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
             }

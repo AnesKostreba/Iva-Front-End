@@ -43,3 +43,6 @@
     width: 90%;
     margin: 0 auto;
 }
+.carousel{
+    border-radius: 30px;
+}
