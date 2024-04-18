@@ -16,6 +16,9 @@
 .baneriImg img{
     width: 100%;
 }
+.imageCategory{
+    width: 60%;
+}
 
 .react-multi-carousel-list{
     border-radius: 20px;
@@ -39,10 +42,18 @@
 .banerImg{
     width: 100%;
 }
+.carousel-inner{
+    border-radius: 0 0 30px 30px;
+}
 .izdvajamo{
     width: 90%;
     margin: 0 auto;
 }
 .carousel{
     border-radius: 30px;
+}
+@media(min-width: 664px){
+    .imageCategory{
+        width: 60%;
+    }
 }

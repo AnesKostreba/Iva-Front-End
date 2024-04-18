@@ -117,6 +117,17 @@
 .subcategoryName{
     font-size: xx-large;
 }
+.featuresSearch{
+    background-color: #0878081f;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+/* .omotac :hover{
+    -webkit-box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
+} */
 @media screen and (max-width:756px){
     /* .articlesCol{
         width: 100%;

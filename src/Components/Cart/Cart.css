@@ -4,3 +4,14 @@
 .cartCount{
     font-size: 15px;
 }
+.faSquareXmark{
+    font-size: 30px;
+
+}
+.faSquareXmark :hover{
+    cursor: pointer;
+}
+.vasaKorpa{
+    background-color: rgb(0, 179, 0);
+    color: #fff;
+}

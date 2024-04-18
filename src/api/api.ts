@@ -8,7 +8,7 @@ export default async function api(
 ){
 
     return new Promise<ApiResponse | undefined>((resolve)=>{
-        const requestData ={
+        const requestData = {
             method: method,
             url: path,
             baseURL: ApiConfig.API_URL,
@@ -32,7 +32,7 @@ export default async function api(
                         return resolve(response);
                     }
                     saveToken(newToken)
-                    
+
                     if(requestData.headers){
                         requestData.headers['Authorization'] = getToken();
 

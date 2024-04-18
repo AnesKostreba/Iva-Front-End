@@ -104,14 +104,22 @@ export const HomePage = () =>{
         }))
     }
 
+    const scrollToTop = () =>{
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    }
+
     const singleCategory = (category: CategoryType) =>{
         return(
             <div className='divBody'>
                 <CardTitle className='mb-2'>
                         {category.name}
                 </CardTitle>
-                <Link to={`/category/${category.categoryId}`} className=''>
-                    <img className='' src={ApiConfig.PHOTO_PATH+'category/'+category.imagePath}></img>
+                <Link to={`/category/${category.categoryId}`} onClick={scrollToTop} className=''>
+                    <img className='imageCategory' src={ApiConfig.PHOTO_PATH+'category/'+category.imagePath}></img>
+                    
                 </Link>
                 
             </div>
@@ -124,7 +132,7 @@ export const HomePage = () =>{
             },
         tablet: {
             breakpoint: { max: 1432, min: 664 },
-            items: 3,
+            items: 5,
             },
         mobile: {
             breakpoint: { max: 664, min: 0 },
@@ -161,7 +169,7 @@ export const HomePage = () =>{
                 <Carousell 
                     responsive={responsiveIzdvajamo}
                     autoPlay= {true}
-                    autoPlaySpeed={4000}
+                    autoPlaySpeed={5000}
                     infinite= {true}
                     arrows={true}>
                     {article.map((article, index) => (
@@ -214,20 +222,18 @@ export const HomePage = () =>{
     
     return(
         <div className="HomePage">
-            <div className='baneri mt-3'>
-            <Carousel className='carousel'>
-                <Carousel.Item>
-                    <img src={banerPopust} alt="" className='banerImg'/>
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img src={banerPopust} alt="" className='banerImg'/>
-                    
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img src={banerPopust} alt="" className='banerImg'/>
-                    
-                </Carousel.Item>
-            </Carousel>
+            <div className='baneri '>
+                <Carousel >
+                    <Carousel.Item>
+                        <img src={banerPopust} alt="" className='banerImg'/>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img src={banerPopust} alt="" className='banerImg'/>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img src={banerPopust} alt="" className='banerImg'/>
+                    </Carousel.Item>
+                </Carousel>
             </div>
 
             <Card.Title className='text-center kategorijeP'>

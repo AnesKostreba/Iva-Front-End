@@ -3,7 +3,7 @@ import CartType from "../../types/CartType";
 import api, {ApiResponse} from '../../api/api';
 import { Alert, Button, FormControl, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, NavItem, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartArrowDown, faCartShopping, faMinusSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCartArrowDown, faCartShopping, faMinusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import './Cart.css'
 
@@ -36,13 +36,14 @@ export const Cart = () =>{
                     setStateCart(undefined);
                     return
                 }
-                setStateCart(res?.data);
-                setStateCount(res?.data.cartArticles.length);
 
+                const cartArticlesLength = res?.data.cartArticles?.length ?? 0;
+                setStateCart(res?.data);
+                setStateCount(cartArticlesLength);
+                
                 setStateMenuColor('#ff0000')
-                setTimeout(()=> setStateMenuColor('#000000'),2000)
+                setTimeout(()=> setStateMenuColor('#000000'),1000)
             })
-            
         }
         updateCart();
 
@@ -181,8 +182,8 @@ export const Cart = () =>{
             </NavLink>
         </NavItem>
         <Modal size="lg" centered show={cart.cartVisible} onHide={()=> setHideCart()}>
-            <ModalHeader closeButton>
-                <ModalTitle>Vaša korpa</ModalTitle>
+            <ModalHeader closeButton className="vasaKorpa">
+                <ModalTitle className="">Vaša korpa</ModalTitle>
             </ModalHeader>
             <ModalBody>
                 <Table hover size="sm">
@@ -213,9 +214,9 @@ export const Cart = () =>{
                                         </td>
                                     <td className="text-right">{price} EUR</td>
                                     <td className="text-right">{total} EUR</td>
-                                    <td>
-                                        <FontAwesomeIcon 
-                                                icon={faMinusSquare}             
+                                    <td className="faSquareXmark">
+                                        <FontAwesomeIcon className=""
+                                                icon={faSquareXmark}             
                                                 onClick={() => removeFromCart(
                                                 item.article.articleId)}/>
                                     </td>
