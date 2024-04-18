@@ -2,7 +2,7 @@ import { Card, CardBody, CardText, CardTitle, Col, Container, Row } from "react-
 import { ApiConfig } from "../../config/api.config";
 import './ProductCard.css';
 import { ArticleType } from "../../types/ArticleType";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api, {ApiResponse} from '../../api/api';
 
@@ -36,17 +36,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
                 if(res?.status === 'error'){
                     return;
                 }
-                
+
             window.dispatchEvent(new CustomEvent('cart.update'));
+        })
+    }
+    const scroll = () =>{
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
         })
     }
 
     return(
         <Card className="mt-3 kartica">
-            <img className="w-100 mt-2 p-3" src={ApiConfig.PHOTO_PATH+"small/"+article.imageUrl} alt={article.name}></img>
-            <CardTitle as='p' className="mt-4 text-center nazivArtikla">
-                <strong>{article.name}</strong>
-            </CardTitle>
+            <Link to={`/article/${article.articleId}`} onClick={scroll}>
+                <img className="w-100 mt-2 p-3" src={ApiConfig.PHOTO_PATH+"small/"+article.imageUrl} alt={article.name}></img>
+                <CardTitle as='p' className="mt-4 text-center nazivArtikla p-1">
+                    <strong>{article.name}</strong>
+                </CardTitle>
+            </Link>
             <CardBody className="bodyCard p-3 mt-4">
                 <CardText className="text-center cenaArtikla">
                     Cena:  {Number(article.price).toFixed(2)} EUR

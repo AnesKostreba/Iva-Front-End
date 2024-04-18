@@ -139,10 +139,17 @@ export const CategoryPage = () =>{
     }
 
     const singleCategory = (category: CategoryType) =>{
+        const scroll = () =>{
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+        }
+
         return(
             <Col lg='3' md='4' sm='6' xs='12' className="">
                 <div className="border d-flex">
-                    <Link to={`/category/${category.categoryId}`} className="d-flex justify-content-center ">
+                    <Link to={`/category/${category.categoryId}`} onClick={scroll} className="d-flex justify-content-center ">
                         <img className="linkSubcategory" src={ApiConfig.PHOTO_PATH+'category/'+'apoteka-iva-pharm-i-bar.jpg'} alt="" />
                     </Link>
                     <CardTitle as='p' className="text-center titleSubcategory align-items-center d-flex">
@@ -163,7 +170,7 @@ export const CategoryPage = () =>{
         }
 
         return(
-            <div className="container">
+            <div className="container ">
                 <Row>
                     { categoryState.articles?.map(singleArticle) }
                 </Row>
@@ -265,7 +272,7 @@ export const CategoryPage = () =>{
     const printFilters = ()=>{
 
         return(
-            <>
+            <div className="featuresSearch">
                 <FormGroup className="mt-2">
                     
                     <FormLabel htmlFor="keywords">Pretrazi po nazivu:</FormLabel>
@@ -275,7 +282,7 @@ export const CategoryPage = () =>{
                     </FormControl>
                 </FormGroup>  
                 <FormGroup>
-                    <Row>
+                    {/* <Row>
                         <Col sm='12' xs='12'>
                         <FormLabel htmlFor="priceMin">Minimalna cena:</FormLabel>
                             <FormControl type="number" id="priceMin"
@@ -294,18 +301,26 @@ export const CategoryPage = () =>{
 
                             </FormControl>
                         </Col>
-                    </Row>
+                    </Row> */}
                 </FormGroup>
                 <FormGroup>
-                    <FormLabel className="mt-2">Sortiraj po:</FormLabel>
+                    <FormLabel className="mt-2">Sortiraj po nazivu:</FormLabel>
                     <FormSelect as='select' id='sortOrder' className=" formSelectSort"
                                  value={categoryState.filters.order}
                                  onChange={(e)=> filterOrderChanged(e as any)}>
 
-                        <option value="name asc" selected >Sortiraj po nazivu - rastuce</option>
-                        <option value="name desc">Sortiraj po nazivu - opadajuce</option>
-                        <option value="price asc">Sortiraj po ceni - rastuce</option>
-                        <option value="price desc">Sortiraj po ceni - opadajuce</option>
+                        <option value="name asc" >Sortiraj po nazivu  (A - Z)</option>
+                        <option value="name desc">Sortiraj po nazivu  (Z - A)</option>
+                        
+                    </FormSelect>
+                </FormGroup>
+                <FormGroup>
+                    <FormLabel className="mt-2">Sortiraj po ceni:</FormLabel>
+                    <FormSelect as='select' id='sortOrder' className="formSelectSort mb-2"
+                                value={categoryState.filters.order}
+                                onChange={(e)=> filterOrderChanged(e as any)}>
+                            <option value="price asc">Sortiraj po ceni - rastuce</option>
+                            <option value="price desc">Sortiraj po ceni - opadajuce</option>
                     </FormSelect>
                 </FormGroup>
 
@@ -321,7 +336,7 @@ export const CategoryPage = () =>{
                     </div>
                     
                 </FormGroup>
-            </>
+            </div>
         );
     }
 
@@ -368,12 +383,9 @@ export const CategoryPage = () =>{
         // }
 
         return(
-            <Col className="p-0" lg='3' md='4' xl='3' xs='6'>
-                
-                    <ProductCard article={article}/>
-                
-            </Col>
-
+                <Col className="p-0 omotac" lg='3' md='4' xl='3' xs='6'>
+                        <ProductCard article={article}/>
+                </Col>
 
             // <Col lg='3' md='4' xl='3' xxl='3' sm='6' xs='6' className="cards p-1">
             //     <Card className="mb-3 containerArticle text-center" onClick={()=>handleArticleClick(article.articleId)}>

@@ -210,7 +210,7 @@ export const ArticlePage = ()=>{
                 <CardTitle className=' articleName'>
                         <h2 className=''>{article?.name}</h2>
                     </CardTitle>
-                <Col md='6' lg='6' className='border border-1 justify-content-center d-flex img'>
+                <Col md='6' lg='6' className='border border-1 justify-content-center d-flex img pt-3 pb-3'>
                     <img src={ApiConfig.PHOTO_PATH + 'medium/' + article?.imageUrl} alt={article?.name}/>
                 </Col>
                 <Col md='6' lg='6' className='border border-1 p-0 kolona'>
