@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown, faCartShopping, faMinusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import './Cart.css'
+import { ApiConfig } from "../../config/api.config";
 
 interface CartState {
     count: number;
@@ -103,10 +104,11 @@ export const Cart = () =>{
 
     const calculateSum = () =>{
         let sum: number= 0;
-        if(!cart.cart){
+        if(!cart.cart || !cart.cart?.cartArticles){
             return sum;
         }
-        for(const item of cart.cart?.cartArticles){
+
+        for(const item of cart.cart.cartArticles){
             sum += item.article.articlePrices[item.article.articlePrices.length-1].price * item.quantity;
         }
 
@@ -189,7 +191,7 @@ export const Cart = () =>{
                 <Table hover size="sm">
                     <thead>
                         <tr>
-                            <th>Kategorija</th>
+                            <th>Slika artikla</th>
                             <th>Artikal</th>
                             <th className="text-right">Količina</th>
                             <th className="text-right">Cijena</th>
@@ -197,13 +199,16 @@ export const Cart = () =>{
                         </tr>
                     </thead>
                     <tbody>
-                        {cart.cart?.cartArticles.map(item=>{
+                        {cart.cart?.cartArticles && cart.cart?.cartArticles.map(item=>{
+                            const image = item.article.photos[item.article.photos.length-1].imagePath;
+
                             const price = Number(item.article.articlePrices[item.article.articlePrices.length-1].price).toFixed(2)
                             const total = Number(item.article.articlePrices[item.article.articlePrices.length-1].price * item.quantity).toFixed(2);
 
                             return(
                                 <tr>
-                                    <td>{item.article.category.name}</td>
+                                    <td><img src={ApiConfig.PHOTO_PATH + 'thumb/' + image} alt="" /></td>
+                                    {/* <td>{item.article.category.name}</td> */}
                                     <td>{item.article.name}</td>
                                     <td className="text-right">
                                         <FormControl type="number" step='1' min='1'
@@ -237,9 +242,9 @@ export const Cart = () =>{
                 </Table>
                 <Alert variant="success" className={cart.message ? '' : 'd-none'}>{cart.message}</Alert>
             </ModalBody>
-            <ModalFooter>
-                <Button variant="primary" onClick={() => makeOrder()}
-                        disabled={cart.cart?.cartArticles.length === 0 }>Kupi</Button>
+            <ModalFooter >
+                <button className="kupi" onClick={() => makeOrder()}
+                        disabled={cart.cart?.cartArticles && cart.cart?.cartArticles.length === 0 }>Kupi</button>
             </ModalFooter>
         </Modal>
         </>

@@ -222,7 +222,7 @@ export const HomePage = () =>{
     
     return(
         <div className="HomePage">
-            <div className='baneri '>
+            <div className='baneri mt-2'>
                 <Carousel >
                     <Carousel.Item>
                         <img src={banerPopust} alt="" className='banerImg'/>
