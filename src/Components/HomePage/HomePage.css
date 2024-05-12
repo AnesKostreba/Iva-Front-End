@@ -43,7 +43,7 @@
     width: 100%;
 }
 .carousel-inner{
-    border-radius: 0 0 30px 30px;
+    border-radius: 30px;
 }
 .izdvajamo{
     width: 90%;

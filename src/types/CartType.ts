@@ -13,7 +13,10 @@ export default interface CartType {
             category: {
                 categoryId: number;
                 name: string;
-            }
+            },
+            photos:{
+                imagePath: string;
+            }[],
         articlePrices:{
             articlePriceId: number;
             price: number;

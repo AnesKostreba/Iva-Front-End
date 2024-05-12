@@ -67,7 +67,8 @@ form .text_field{
 }
 
 .text_field label{
-    color: #adadad;
+    color: #000000;
+    font-weight: 600;
 }
 .pass{
     margin: 5px 0 20px 5px;
@@ -102,6 +103,11 @@ form .text_field{
     justify-content: center !important;
     display: flex;
     align-items: center;
+}
+.labell{
+    font-size: small;
+    font-style: italic;
+    color: #919191 !important;
 }
 @media(max-width: 750px){
     .first{

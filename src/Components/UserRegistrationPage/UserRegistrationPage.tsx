@@ -114,38 +114,40 @@ export const UserRegistrationPage = () =>{
                         <h1>Registruj se</h1>
                         <div className="text_field">
                             <label htmlFor="email">Email</label><br />
-                            <input type="email" id="email" required
+                            <input placeholder='unesite email...' type="email" id="email" required
                                                                 value={userState.formData?.email}
                                                                 onChange={event => formInputChanged(event as any)} />
                         </div>
                         
                         <div className="text_field">
                             <label htmlFor="forname">Ime</label><br />
-                            <input type="text" id="forname" required
+                            <input placeholder='unesite ime...' type="text" id="forname" required
                                                                 value={userState.formData?.forname}
                                                                 onChange={event => formInputChanged(event as any)} />
                         </div>
                         <div className="text_field">
                             <label htmlFor="surname">Prezime</label><br />
-                            <input type="text" id="surname" required
+                            <input placeholder='unesite prezime...' type="text" id="surname" required
                                                                 value={userState.formData?.surname}
                                                                 onChange={event => formInputChanged(event as any)} />
                         </div>
                         <div className="text_field">
                             <label htmlFor="phone">Broj telefona</label><br />
-                            <input type="phone" id="phone" required
+                            <input placeholder='unesite broj telefona...' type="phone" id="phone" required
                                                                 value={userState.formData?.phone}
-                                                                onChange={event => formInputChanged(event as any)} />
+                                                                onChange={event => formInputChanged(event as any)} /><br/>
+                            <label className='labell' htmlFor="phone">(Unesite broj telefona u sledećem formatu: +38XXXXXXXX)</label><br />
                         </div>
                         <div className="text_field">
                             <label htmlFor="password">Lozinka</label><br />
-                            <input type="password" id="password" required
+                            <input placeholder='unesite lozinku...' type="password" id="password" required
                                                                 value={userState.formData?.password}
-                                                                onChange={event => formInputChanged(event as any)}  />
+                                                                onChange={event => formInputChanged(event as any)}  /><br/>
+                            <label className='labell' htmlFor="password">(Lozinka mora sadrzati veliko slovo, malo slovo, broj i znak, i ukupno 6 karaktera...)</label>
                         </div>
                         <div className="text_field">
                             <label htmlFor="address">Adresa</label><br />
-                            <textarea id="address" rows={3}
+                            <textarea placeholder='unesite adresu...' id="address" rows={3}
                                                                 value={userState.formData?.address}
                                                                 onChange={event => formInputChanged(event as any)} />
                         </div>

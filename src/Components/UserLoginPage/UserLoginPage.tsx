@@ -108,13 +108,13 @@ export const UserLoginPage = () =>{
                         <h1>Prijavi se</h1>
                         <div className="text_field">
                             <label htmlFor="email">Email</label><br />
-                            <input type="email" id="email" required
+                            <input placeholder='unesite email...' type="email" id="email" required
                                                                 value={userState.email}
                                                                 onChange={event => formInputChanged(event as any)} />
                         </div>
                         <div className="text_field">
                             <label htmlFor="password">Lozinka</label><br />
-                            <input type="password" id="password" required
+                            <input placeholder='unesite lozinku...' type="password" id="password" required
                                                                 value={userState?.password}
                                                                 onChange={event => formInputChanged(event as any)}  />
                         </div>
