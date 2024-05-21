@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArticleType } from '../../types/ArticleType';
-import { Container, Row, Col, CardTitle, CardBody, Card} from 'react-bootstrap';
+import { Container, Row, Col, CardTitle, CardBody} from 'react-bootstrap';
 import { ApiConfig } from '../../config/api.config';
 import api, { ApiResponse } from '../../api/api';
 import './ArticlePage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { CategoryType } from '../../types/CategoryType';
 import { ProductCard } from '../ProductCard/ProductCard';
+import Carousell from "react-multi-carousel";
 
 interface ArticleDto{
     articleId: number,
     name: string,
     excerpt: string,
     description: string,
+    status: string,
     photos:{
         imagePath: string;
     }[],
@@ -30,8 +32,8 @@ export const ArticlePage = ()=>{
     const [article, setArticle] = useState<ArticleType>();
     const [category, setCategory] = useState<CategoryType>();
     const [articles, setArticles] = useState<ArticleType[] >();
+    const [quantity, setQuantity] = useState<number>(1)
     const navigate = useNavigate()
-    console.log(articles)
 
     const setMessage = (message: string)=>{
         setArticle(prevState =>({
@@ -73,17 +75,45 @@ export const ArticlePage = ()=>{
             navigate(`/article/${articleId}`)
             window.scroll({top: 0, behavior: 'smooth'})
         }
+
+        // articles.map((article)=>{
+        //     if(article.articleId === id){
+        //         return;
+        //     }
+        // })
+
+        const responsiv = {
+            desktop: {
+                breakpoint: { max: 3000, min: 1432 },
+                items: 4,
+                },
+            tablet: {
+                breakpoint: { max: 1432, min: 664 },
+                items: 4,
+                },
+            mobile: {
+                breakpoint: { max: 664, min: 0 },
+                items: 2,
+                },
+        }
     
         return (
             <Container >
                 <h3 id='slicniProizvodi' className='text-center mt-3 slicniProizvodi'>Slicni proizvodi</h3>
-                <Row>
-                    {articles.map((article, index) => (
-                        <Col key={index} xs={6} md={3} lg={3} onClick={()=>handleClick(article?.articleId)}>
+                
+                    <Carousell
+                        responsive={responsiv}
+                        autoPlay={true}
+                        autoPlaySpeed={5000}
+                        infinite={true}
+                        pauseOnHover={true}
+                    >
+                        {articles.map((article, index) => (
+                        <Col className='mb-3 d-flex justify-content-center' key={index} >
                             <ProductCard article={article}/>
                         </Col>
                     ))}
-                </Row>
+                    </Carousell>
             </Container>
         );
     };
@@ -114,6 +144,7 @@ export const ArticlePage = ()=>{
                     return setMessage('Request error. Please try to refresh page')
                 }
                 const data = res?.data
+                
                 if(data){
                     const fetchArticle:ArticleType = {
                         articleId: data.articleId,
@@ -121,6 +152,7 @@ export const ArticlePage = ()=>{
                         excerpt: data.excerpt,
                         imageUrl: '',
                         name: data.name,
+                        status: data.status,
                         price: 0
                     }
 
@@ -165,10 +197,8 @@ export const ArticlePage = ()=>{
                                 if(res?.status === 'error'){
                                     return setMessage('Try to refresh page!')
                                 }
-                                console.log(res?.data)
                                 const fetchArticles: ArticleType[] =
                                     res?.data.map((article: ArticleDto)=>{
-                                        
                                         const object:ArticleType = {
                                             articleId: article.articleId,
                                             name: article.name,
@@ -187,8 +217,7 @@ export const ArticlePage = ()=>{
                                                 article.articlePrices.length-1].price
                                         }
                                         return object;
-                                    }).slice(0,4)
-
+                                    }).slice(0,7)
                                 setArticles(fetchArticles)
                             })
                 }
@@ -204,6 +233,45 @@ export const ArticlePage = ()=>{
     },[category?.categoryId])
     
 
+    const decrementQuantity = () =>{
+        if(quantity > 1){
+            setQuantity(prevQuantity => prevQuantity -1 )
+        }
+    }
+
+    const incrementQuantity = () =>{
+        setQuantity(prevQuantity => prevQuantity + 1 )
+    }
+
+    const addToCart = () =>{
+        const data = {
+            articleId: article?.articleId,
+            quantity: quantity
+        }
+
+        api('/api/user/cart/addToCart/','post',data)
+            .then((res: ApiResponse | undefined)=>{
+                if(res?.status === 'error'){
+                    return;
+                }
+
+                window.dispatchEvent(new CustomEvent('cart.update'))
+            })
+        
+    }
+
+    const showStatus = () =>{
+        if(article?.status === 'available'){
+            return(
+                <div><FontAwesomeIcon icon={faCheck}/> Na stanju</div>
+            )
+        }else if(article?.status === 'visible'){
+            return(
+                <div> <FontAwesomeIcon icon={faXmark}/> Proizvod nije na stanju</div>
+            )
+        }
+    }
+
     return (
         <Container className='mt-3'>
             <Row className=''>
@@ -214,10 +282,12 @@ export const ArticlePage = ()=>{
                     <img src={ApiConfig.PHOTO_PATH + 'medium/' + article?.imageUrl} alt={article?.name}/>
                 </Col>
                 <Col md='6' lg='6' className='border border-1 p-0 kolona'>
-                    <CardTitle className='text-center p-3 mb-5 articleNameMobile'>
+                    <CardTitle className='text-center p-3 mb-3 articleNameMobile'>
                         <h2>{article?.name}</h2>
                     </CardTitle>
-                    
+                    <div className='status p-3'>
+                        {showStatus()}
+                    </div>
                     <div className='w-100 d-flex wrapper'>
                         <div className='w-100 text-center cenaDiv align-items-center d-flex justify-content-center'>
                             {article?.price} EUR
@@ -226,17 +296,17 @@ export const ArticlePage = ()=>{
                         <div className='w-100 p-3 d-flex flex-column justify-content-center align-items-center'>
                             <div className='d-flex kolicina border justify-content-center align-items-center mb-1'>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <button className='w-100 border'>-</button>
+                                    <button onClick={decrementQuantity} className='w-100 border'>-</button>
                                 </div>
                                 <div className='w-100 d-flex justify-content-center text-center align-items-center'>
-                                    <p className='p-0 m-0'>1</p>
+                                    <p className='p-0 m-0'>{quantity}</p>
                                 </div>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <button className='w-100 border'>+</button>
+                                    <button onClick={incrementQuantity} className='w-100 border'>+</button>
                                 </div>
                             </div>
                             <div className='kupiBtn justify-content-center d-flex'>
-                                <button className='btn btn-success buttonKupi'>
+                                <button onClick={addToCart} className='btn btn-success buttonKupi'>
                                     <FontAwesomeIcon icon={faCartShopping}/> Kupi
                                 </button>
                             </div>

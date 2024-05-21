@@ -54,6 +54,10 @@ h2{
 .slicniProizvodi{
     color: #040272;
 }
+.status{
+    font-size: larger;
+    color: rgb(0, 166, 0);
+}
 @media (max-width:567px) {
     .wrapper{
         flex-direction: row;
