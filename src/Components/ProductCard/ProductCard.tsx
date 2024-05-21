@@ -1,8 +1,8 @@
-import { Card, CardBody, CardText, CardTitle, Col, Container, Row } from "react-bootstrap";
+import { Card, CardBody, CardText, CardTitle} from "react-bootstrap";
 import { ApiConfig } from "../../config/api.config";
 import './ProductCard.css';
 import { ArticleType } from "../../types/ArticleType";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { useState } from "react";
 import api, {ApiResponse} from '../../api/api';
 

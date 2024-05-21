@@ -173,7 +173,7 @@ export const HomePage = () =>{
                     infinite= {true}
                     arrows={true}>
                     {article.map((article, index) => (
-                        <Col key={index} className=' '>
+                        <Col key={index} className='mb-3 d-flex justify-content-center'>
                             <ProductCard article={article}/>
                         </Col>
                     ))}

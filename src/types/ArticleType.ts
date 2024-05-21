@@ -5,4 +5,5 @@ export interface ArticleType{
     description?: string;
     imageUrl?: string;
     price?: number;
+    status?: string;
 }
