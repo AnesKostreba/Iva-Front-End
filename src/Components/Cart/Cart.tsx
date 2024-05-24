@@ -38,18 +38,19 @@ export const Cart = () =>{
                     return
                 }
 
-                const cartArticlesLength = res?.data.cartArticles?.length ?? 0;
+                const cartArticlesLength = res?.data?.cartArticles?.length ?? 0;
                 setStateCart(res?.data);
                 setStateCount(cartArticlesLength);
                 
-                setStateMenuColor('#ff0000')
-                setTimeout(()=> setStateMenuColor('#000000'),1000)
+                
             })
         }
         updateCart();
 
         const cartUpdateHandler = () =>{
             updateCart()
+            setStateMenuColor('#ff0000')
+            setTimeout(()=> setStateMenuColor('#000000'),1000)
         }
 
         window.addEventListener("cart.update", cartUpdateHandler);
@@ -206,7 +207,7 @@ export const Cart = () =>{
                             const total = Number(item.article.articlePrices[item.article.articlePrices.length-1].price * item.quantity).toFixed(2);
 
                             return(
-                                <tr>
+                                <tr key={item.articleId}>
                                     <td><img src={ApiConfig.PHOTO_PATH + 'thumb/' + image} alt="" /></td>
                                     {/* <td>{item.article.category.name}</td> */}
                                     <td>{item.article.name}</td>
@@ -220,7 +221,7 @@ export const Cart = () =>{
                                     <td className="text-right">{price} EUR</td>
                                     <td className="text-right">{total} EUR</td>
                                     <td className="faSquareXmark">
-                                        <FontAwesomeIcon className=""
+                                        <FontAwesomeIcon  className=""
                                                 icon={faSquareXmark}             
                                                 onClick={() => removeFromCart(
                                                 item.article.articleId)}/>

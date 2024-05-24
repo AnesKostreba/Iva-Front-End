@@ -296,17 +296,19 @@ export const ArticlePage = ()=>{
                         <div className='w-100 p-3 d-flex flex-column justify-content-center align-items-center'>
                             <div className='d-flex kolicina border justify-content-center align-items-center mb-1'>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <button onClick={decrementQuantity} className='w-100 border'>-</button>
+                                    <button disabled={article?.status === 'visible'} onClick={decrementQuantity} className='w-100 border'>-</button>
                                 </div>
                                 <div className='w-100 d-flex justify-content-center text-center align-items-center'>
                                     <p className='p-0 m-0'>{quantity}</p>
                                 </div>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <button onClick={incrementQuantity} className='w-100 border'>+</button>
+                                    <button disabled={article?.status === 'visible'} onClick={incrementQuantity} className='w-100 border'>+</button>
                                 </div>
                             </div>
                             <div className='kupiBtn justify-content-center d-flex'>
-                                <button onClick={addToCart} className='btn btn-success buttonKupi'>
+                                <button onClick={addToCart}
+                                        disabled={article?.status === 'visible'}
+                                        className='btn btn-success buttonKupi'>
                                     <FontAwesomeIcon icon={faCartShopping}/> Kupi
                                 </button>
                             </div>

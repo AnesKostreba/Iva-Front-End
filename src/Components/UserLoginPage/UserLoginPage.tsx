@@ -60,15 +60,14 @@ export const UserLoginPage = () =>{
             }
 
             if(res.status === 'error'){
-                //setErrorMessage('System error... Try again!')
-                console.log(res.data);
+                setErrorMessage('System error... Try again!')
                 return;
             }
 
             if(res.status === 'ok'){
                 if(res.data.statusCode !== undefined){
                     let message = '';
-                    console.log(res.data.statusCode);
+                    
                     switch(res.data.statusCode){
                         case -3001: message = 'Unknown email!';
                         break;
@@ -77,7 +76,7 @@ export const UserLoginPage = () =>{
                     }
 
                     setErrorMessage(message);
-                    console.log(res.data.statusCode);
+                    
                     return;
                 }
 
@@ -134,42 +133,5 @@ export const UserLoginPage = () =>{
             </div>
 
         </div>
-
-
-        // <Container>
-        //     <Col md={{ span: 6, offset: 3 }}>
-        //     <Card >
-        //         <CardTitle>
-        //             User Login Page
-        //         </CardTitle>
-        //         <CardText>
-        //             <FormGroup>
-        //                 <FormLabel htmlFor="email">E-mail:</FormLabel>
-        //                 <FormControl type="email" 
-        //                              id="email" 
-        //                              value={userState.email}
-        //                              onChange={event => formInputChanged(event as any)} />
-        //             </FormGroup>
-        //             <FormGroup>
-        //                 <FormLabel htmlFor="password">Password:</FormLabel>
-        //                 <FormControl type="password" 
-        //                              id="password" 
-        //                              value={userState?.password}
-        //                              onChange={event => formInputChanged(event as any)} />
-        //             </FormGroup>
-        //             <FormGroup>
-        //                 <Button variant="primary"
-        //                         onClick={ ()=> doLogin() }>
-        //                     Log in
-        //                 </Button>
-        //             </FormGroup>
-        //         </CardText>
-        //         <Alert variant="danger"
-        //                className={userState.errorMessage ? '' : 'd-none'}>
-        //                { userState.errorMessage }
-        //         </Alert>
-        //     </Card>
-        //     </Col>
-        // </Container>
     )
 }
