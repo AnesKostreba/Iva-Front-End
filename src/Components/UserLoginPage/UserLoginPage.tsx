@@ -8,7 +8,7 @@ interface UserLoginPageState{
     email: string;
     password: string;
     errorMessage: string;
-    isLoggedIn: boolean;
+    // isLoggedIn: boolean;
 }
 
 export const UserLoginPage = () =>{
@@ -18,9 +18,10 @@ export const UserLoginPage = () =>{
             email: '',
             password: '',
             errorMessage: '',
-            isLoggedIn: false,
+            // isLoggedIn: false,
         }
     )
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const navigate = useNavigate();
     const formInputChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
@@ -40,12 +41,12 @@ export const UserLoginPage = () =>{
         }))
     }
 
-    const setLogginState = (isLoggedIn: boolean) =>{
-        setStateUser(prevState =>({
-            ...prevState,
-            isLoggedIn: isLoggedIn
-        }))
-    }
+    // const setLogginState = (isLoggedIn: boolean) =>{
+    //     setIsLoggedIn(prevState =>({
+    //         ...prevState,
+    //         isLoggedIn: isLoggedIn
+    //     }))
+    // }
 
     const doLogin = () =>{
         api('auth/user/login', 'post', {
@@ -53,7 +54,6 @@ export const UserLoginPage = () =>{
             password: userState.password,
         })
         .then((res?: ApiResponse) =>{
-            console.log(res);
             if(!res){
                 console.log('No response receive!')
                 return;
@@ -82,11 +82,18 @@ export const UserLoginPage = () =>{
 
                 saveToken(res.data.token);
                 saveRefreshToken(res.data.refreshToken)
-
-                setLogginState(true);
-                navigate('/')
+                localStorage.setItem('user_id',res.data.id)
+                setIsLoggedIn(true);
+                navigate('/user/profile')
             }
         })
+    }
+
+    const handleLogout = () =>{
+        saveToken('');
+        saveRefreshToken('');
+        setIsLoggedIn(false);
+        navigate('/user/login')
     }
 
 
@@ -98,12 +105,14 @@ export const UserLoginPage = () =>{
                 <div className="content ">
                     <h3 className="contentText">Dobro došli!</h3>
                     <h5 className="">Uloguj se i kupujte lakše!</h5>
+
                 </div>
             </div>
             
             <div className="secound">
                 <div className="center">
                     <form method="post" action="">
+
                         <h1>Prijavi se</h1>
                         <div className="text_field">
                             <label htmlFor="email">Email</label><br />

@@ -17,6 +17,7 @@ import { UserRegistrationPage } from './Components/UserRegistrationPage/UserRegi
 import { CategoryPage } from './Components/CategoryPage/CategoryPage';
 import { ArticlePage } from './Components/ArticlePage/ArticlePage';
 import { Footer } from './Components/Footer/Footer';
+import { UserProfil } from './Components/UserProfile/UserProfile';
 
 const generateMenuItems = ():MainMenuItem[] =>{
   return[
@@ -39,6 +40,7 @@ root.render(
         <Route path='/user/register' element={<UserRegistrationPage/>}/>
         <Route path='/category/:id' element={<CategoryPage/>}/>
         <Route path='/article/:id' element={<ArticlePage/>}/>
+        <Route path='/user/profile' element={<UserProfil/>}/>
       </Routes>
     </BrowserRouter>
       <Footer/>
