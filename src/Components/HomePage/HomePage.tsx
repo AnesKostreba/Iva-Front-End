@@ -191,8 +191,6 @@ export const HomePage = () =>{
         api('api/article','get',{})
             .then((res: ApiResponse | undefined)=>{
 
-                console.log('Api response', res)
-
                 if(res && Array.isArray(res.data)){
                     const articles:ArticleTypee[] =
                         res.data.map((article:ArticleDto)=>{
