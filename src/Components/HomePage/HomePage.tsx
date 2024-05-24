@@ -63,21 +63,22 @@ export const HomePage = () =>{
     // }
 
     useEffect(()=>{
-        if(homePageState.isUserLoggedIn === false){
-            navigate('/user/login');
-        }else if(homePageState.categories.length === 0){ // Provera da li su kategorije vec ucitane
+        // if(homePageState.isUserLoggedIn === false){
+        //     navigate('/user/login');
+        if(homePageState.categories.length === 0){ // Provera da li su kategorije vec ucitane
             getCategories();
         }
-    },[homePageState.isUserLoggedIn, homePageState.categories.length])
+    })
 
     const getCategories = () =>{
         api('api/category/?filter=parentCategoryId||$isnull','get',{})
             .then((res: ApiResponse | undefined) =>{
-                if(res?.status === 'error' || res?.status === 'login' || !Array.isArray(res?.data)){
+                if(res?.status === 'error' || !Array.isArray(res?.data)){
                     setLogginState(false);
                     return;
                 }
                 putCategoriesInState(res?.data as ApiCategoryDto[])
+                console.log('Kategorije',res?.data)
             })
     }
 
@@ -189,6 +190,9 @@ export const HomePage = () =>{
     const showArticles = () =>{
         api('api/article','get',{})
             .then((res: ApiResponse | undefined)=>{
+
+                console.log('Api response', res)
+
                 if(res && Array.isArray(res.data)){
                     const articles:ArticleTypee[] =
                         res.data.map((article:ArticleDto)=>{
@@ -213,9 +217,14 @@ export const HomePage = () =>{
                         })
                         .filter(article => article.isPromoted === 1)
                         .slice(0,10)
+
+                        console.log('Processed articles', articles)
                     
                     setArticles(articles)
                 }
+            })
+            .catch(err =>{
+                console.log('Error fetching articles: ',err)
             })
     }
     
@@ -248,7 +257,12 @@ export const HomePage = () =>{
                     infinite= {true}
                     arrows={true}
                 >
-                    {homePageState.categories.map(category => singleCategory(category))}
+
+                    {homePageState.categories.map(category => (
+                        <div key={category.categoryId}>
+                            {singleCategory(category)}
+                        </div>
+                    ))}
                 </Carousell>
             </div>
 

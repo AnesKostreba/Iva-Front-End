@@ -147,12 +147,12 @@ export const CategoryPage = () =>{
         }
 
         return(
-            <Col lg='3' md='4' sm='6' xs='12' className="">
+            <Col key={category.categoryId} lg='3' md='4' sm='6' xs='12' className="">
                 <div className="border d-flex">
-                    <Link to={`/category/${category.categoryId}`} onClick={scroll} className="d-flex justify-content-center ">
+                    <Link to={`/category/${category.categoryId}`}  onClick={scroll} className="d-flex justify-content-center ">
                         <img className="linkSubcategory" src={ApiConfig.PHOTO_PATH+'category/'+'apoteka-iva-pharm-i-bar.jpg'} alt="" />
                     </Link>
-                    <CardTitle as='p' className="text-center titleSubcategory align-items-center d-flex">
+                    <CardTitle  as='p' className="text-center titleSubcategory align-items-center d-flex">
                         {category.name}
                     </CardTitle>
                 </div>
@@ -254,12 +254,6 @@ export const CategoryPage = () =>{
                 selectedFeatures: newSelectedFeatures
             })
         }))
-        // setNewFilter({
-        //     ...categoryState.filters,
-        //     selectedFeatures :newSelectedFeatures
-        // })
-
-        console.log(categoryState)
     }
 
     const applyFilters = () =>{
@@ -282,28 +276,6 @@ export const CategoryPage = () =>{
                     </FormControl>
                 </FormGroup>  
                 <FormGroup>
-                    {/* <Row>
-                        <Col sm='12' xs='12'>
-                        <FormLabel htmlFor="priceMin">Minimalna cena:</FormLabel>
-                            <FormControl type="number" id="priceMin"
-                                         step='0.01' min='0.01' max='9999.99'
-                                         value={categoryState.filters.priceMinimum}
-                                         onChange={(e)=> filterPriceMinChanged(e as any)}>
-
-                            </FormControl>
-                        </Col>
-                        <Col sm='12' xs='12'>
-                            <FormLabel htmlFor="priceMax">Maksimalna cena:</FormLabel>
-                            <FormControl type="number" id="priceMax"
-                                         step='0.01' min='0.02' max='10000'
-                                         value={categoryState.filters.priceMaximum}
-                                         onChange={(e)=> filterPriceMaxChanged(e as any)}>
-
-                            </FormControl>
-                        </Col>
-                    </Row> */}
-                </FormGroup>
-                <FormGroup>
                     <FormLabel className="mt-2">Sortiraj po nazivu:</FormLabel>
                     <FormSelect as='select' id='sortOrder' className=" formSelectSort"
                                  value={categoryState.filters.order}
@@ -324,17 +296,18 @@ export const CategoryPage = () =>{
                     </FormSelect>
                 </FormGroup>
 
-                { categoryState.features && categoryState.features.map(printFeatureFilterComponent, this) }
+                    {categoryState.features && categoryState.features.map(feature =>(
+                        <div key={feature.featureId}>
+                            {printFeatureFilterComponent(feature)}
+                        </div>
+                    ))}
+                    {/* { categoryState.features && categoryState.features.map(printFeatureFilterComponent, this) } */}
 
                 <FormGroup>
-                    {/* <Button variant="primary" className="w-100" onClick={() => applyFilters()}>
-                        <FontAwesomeIcon icon={faSearch}/> Search
-                    </Button> */}
                     <div className="divSearchFeatures d-flex w-100">
                         <button onClick={() => applyFilters()} className="btnSearchFeatures p-1 w-100 d-flex align-items-center justify-content-center ">
                             <FontAwesomeIcon className="icon" icon={faSearch}/>Pretrazi</button>
                     </div>
-                    
                 </FormGroup>
             </div>
         );
@@ -347,14 +320,18 @@ export const CategoryPage = () =>{
 
             return(
                 <>
-                <FormLabel className="mt-2">
+                <FormLabel  className="mt-2">
                         <strong>{feature.name}</strong>
                 </FormLabel>
                 <div className="checkbox">
-                <FormGroup className="">
-                    
-                    { feature.values.map(value => printFeatureFilterCheckBox(feature, value), this) }
-                </FormGroup>
+                    <FormGroup  className="">   
+                        {feature.values.map((value, index) => (
+                            <div key={`${feature.featureId}-${value}-${index}`}>
+                                {printFeatureFilterCheckBox(feature, value)}
+                            </div>
+                        ))}
+                        {/* { feature.values.map(value => printFeatureFilterCheckBox(feature, value), this) } */}
+                    </FormGroup>
                 </div>
                 </>
             );
@@ -363,10 +340,12 @@ export const CategoryPage = () =>{
     const printFeatureFilterCheckBox = (feature: any, value: string) =>{
         return (
             
-            <FormCheck type="checkbox" label={value}
-                                       value={value}
-                                       data-feature-id = {feature.featureId}
-                                       onChange={(event: any)=> featureFilterChanged(event as any)}/>
+            <FormCheck 
+                    key={`${feature.featureId}-${value}`}
+                    type="checkbox" label={value}
+                    value={value}
+                    data-feature-id = {feature.featureId}
+                    onChange={(event: any)=> featureFilterChanged(event as any)}/>
             
         )
         
@@ -383,54 +362,9 @@ export const CategoryPage = () =>{
         // }
 
         return(
-                <Col className="p-0 omotac" lg='3' md='4' xl='3' xs='6'>
+                <Col key={article.articleId} className="p-0 omotac" lg='3' md='4' xl='3' xs='6'>
                         <ProductCard article={article}/>
                 </Col>
-
-            // <Col lg='3' md='4' xl='3' xxl='3' sm='6' xs='6' className="cards p-1">
-            //     <Card className="mb-3 containerArticle text-center" onClick={()=>handleArticleClick(article.articleId)}>
-            //     {/* <Link to={`article/${article.articleId}`}
-            //           className="btn btn-block btn-sm linkArticle"> */}
-
-            //             <img src={ApiConfig.PHOTO_PATH + 'small/' + article.imageUrl} 
-            //                  alt={article.name}
-            //                  className="w-100" />
-                    
-            //         <CardTitle as='p' className="mt-4 nameArticle">
-            //                 <strong>{article.name}</strong>
-            //         </CardTitle>
-            //     {/* </Link> */}
-            //         <CardBody className="cardBody">
-                        
-            //             {/* <CardText>
-            //                 {article.excerpt}
-            //             </CardText> */}
-            //             <CardText className="text-center cardPrice">
-            //                 Cijena: { Number(article.price)?.toFixed(2)} EUR
-            //             </CardText>
-            //             <div className="container wrapper">
-            //                 <div className="prviDiv d-flex align-items-center">
-            //                     <div className="minusDiv w-100 align-items-center justify-content-center text-center">
-            //                         <button className="povecajSmanji minus p-0 w-100 d-flex justify-content-center">-</button>
-            //                         {/* <div className="btn povecajSmanji minus p-0 w-100 d-flex justify-content-center">-</div> */}
-            //                     </div>
-            //                     <div className="w-100 text-center">
-            //                         <p className="p-0  m-0 text-center">1</p>
-            //                     </div>
-            //                     <div className="w-100 minusDiv">
-            //                         <button className="povecajSmanji plus p-0 w-100 d-flex justify-content-center">+</button>
-            //                         {/* <div className="btn povecajSmanji plus p-0 w-100 d-flex justify-content-center">+</div> */}
-            //                     </div>
-            //                 </div>
-            //                 <div className="drugiDiv d-flex">
-            //                     <button className="btnKupi p-0 w-100 d-flex align-items-center justify-content-center ">Kupi</button>
-            //                     {/* <div className="btn p-0 kupi w-100 d-flex justify-content-center">Kupi</div> */}
-            //                 </div>
-            //             </div>
-            //         </CardBody>
-                    
-            //     </Card>
-            // </Col>
         )
     }
 

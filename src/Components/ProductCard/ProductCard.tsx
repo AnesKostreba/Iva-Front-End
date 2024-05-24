@@ -72,7 +72,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
                             </div>
                     </div> 
                     <div className="w-100 bg-dark d-flex kupi">
-                        <button onClick={addToCart} className="w-100">Kupi</button>
+                        <button onClick={addToCart}
+                         className="w-100">Kupi</button>
                     </div>
                 </div>
             </CardBody>
