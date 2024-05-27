@@ -4,10 +4,19 @@ import location from '../../Images/pin.png';
 import user from '../../Images/user.png';
 import cart from '../../Images/shopping-cart.png';
 import { Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Cart } from '../Cart/Cart';
+import { useEffect, useState } from 'react';
 
 const Header = () =>{
+
+    const[isLoggedIn, setLogin] = useState<boolean>(false);
+
+    useEffect(()=>{
+        const token = localStorage.getItem('api_token');
+        setLogin(!!token);
+    })
+
     return(
         <div className='container-fluid mb-2'>
             <div className="container-fluid header">
@@ -36,12 +45,23 @@ const Header = () =>{
                         </div>
                     </div>
 
-                    <Link to={"/user/login"} className='user'>
-                        <img src={user} alt="User" className='imgUser'/>
-                        <div className="userP">
-                            <p>Prijava</p>
-                        </div>
-                    </Link>
+                    {isLoggedIn ? (
+                        <Link to={"/user/profile"} className='user'>
+                            <img src={user} alt="User" className='imgUser'/>
+                            <div className="userP">
+                                <p>Moj profil</p>
+                            </div>
+                        </Link>
+                    ) : (
+                        <Link to={"/user/login"} className='user'>
+                            <img src={user} alt="User" className='imgUser'/>
+                            <div className="userP">
+                                <p>Prijava</p>
+                            </div>
+                        </Link>
+                    )}
+
+                    
 
                     <div className="cart">
                         <Cart/>

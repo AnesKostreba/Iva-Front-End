@@ -30,7 +30,6 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
     <BrowserRouter>
       <Header/>
       <Menu items={generateMenuItems()}/>
@@ -42,8 +41,8 @@ root.render(
         <Route path='/article/:id' element={<ArticlePage/>}/>
         <Route path='/user/profile' element={<UserProfil/>}/>
       </Routes>
-    </BrowserRouter>
       <Footer/>
-  </React.StrictMode>
+    </BrowserRouter>
+      
 );
 reportWebVitals();
