@@ -84,18 +84,10 @@ export const UserLoginPage = () =>{
                 saveRefreshToken(res.data.refreshToken)
                 localStorage.setItem('user_id',res.data.id)
                 setIsLoggedIn(true);
-                navigate('/user/profile')
+                navigate('/')
             }
         })
     }
-
-    const handleLogout = () =>{
-        saveToken('');
-        saveRefreshToken('');
-        setIsLoggedIn(false);
-        navigate('/user/login')
-    }
-
 
     return(
 

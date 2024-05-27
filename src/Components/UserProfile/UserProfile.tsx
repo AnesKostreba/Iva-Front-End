@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api, { ApiResponse, saveRefreshToken, saveToken } from "../../api/api";
 import { Spinner } from "react-bootstrap";
 import './UserProfile.css';
-import { useNavigate } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,59 +25,50 @@ export const UserProfil = () =>{
     useEffect(()=>{
         const userId = localStorage.getItem('user_id');
 
-        if(userId){
-            api(`api/user/profile/${userId}`, 'get', {})
-                .then((res:ApiResponse)=>{
+        api('api/user/profile/'+userId, 'get', {})
+            .then((res:ApiResponse)=>{
+                try{
 
                     if(res.status === 'ok'){
                         setUser(res.data)
-                        
                     }else{
-                        setError('Failed to load user data')
+                        setError('Failed to load user data!')
                     }
-                    setLoading(false);
-                })
-                .catch(()=>{
-                    setError('Failed to load user data');
-                    setLoading(false);
-                });
-                console.log(user)
-        }else{
-            setError('User not logged in');
-            setLoading(false);
-        }
-        
+                    setLoading(false)
+                }catch{
+                    setError('Failed to load user data!')
+                    setLoading(false)
+                }
+            })
     },[])
 
-
-    if(loading){
-        return <Spinner className="spiner" animation='border'/>;
-    }
-
-    const navigateToProfile = () =>{
-        navigate('/user/profile');
-    }
-
-    const logout = () =>{
-        saveToken('')
+    const logOut = () =>{
+        saveToken('');
         saveRefreshToken('')
         navigate('/user/login')
     }
 
+
+    if(loading){
+        return <Spinner animation="border" variant="success" className="spiner"/>
+    }
+    
     return(
         <div className="userProfile">
             {user ? (
                 <div>
-                    <button onClick={navigateToProfile} className="buttonProfil">Profil</button>
-                    <p>Email: {user.email}</p>
-                    <p>Ime: {user.forname}</p>
-                    <p>Prezime: {user.surname}</p>
-                    <p>Vaša adresa: {user.postalAddress}</p>
-                    <p>Broj telefona: {user.phoneNumber}</p>
-                    <button onClick={logout} className="odjaviMe"><FontAwesomeIcon className="icon" icon={faRightFromBracket}/>Odjavi me</button>
+                    <div className="profileMenu">
+                        <p>Email: {user.email}</p>
+                        <p>Ime: {user.forname}</p>
+                        <p>Prezime: {user.surname}</p>
+                        <p>Adresa: {user.postalAddress}</p>
+                        <p>Broj telefona: {user.phoneNumber}</p>
+                    </div>
+                    <button className="odjaviMe" onClick={logOut}>
+                        <FontAwesomeIcon icon={faRightFromBracket}/>Odjavi me</button>
                 </div>
-            ) : (
-                <p>No user data available</p>
+            ):(
+                <p>No user data available!</p>
             )}
         </div>
     )
