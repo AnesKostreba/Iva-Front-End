@@ -18,11 +18,13 @@ import { CategoryPage } from './Components/CategoryPage/CategoryPage';
 import { ArticlePage } from './Components/ArticlePage/ArticlePage';
 import { Footer } from './Components/Footer/Footer';
 import { UserProfil } from './Components/UserProfile/UserProfile';
+import { OrdersPage } from './Components/OrdersPage/OrdersPage';
 
 const generateMenuItems = ():MainMenuItem[] =>{
   return[
     {text: 'Home', link: '/'},
     {text: 'Kontakt', link: '/contact'},
+    {text: 'My Orders', link: '/user/orders/'}
   ]
 }
 
@@ -40,6 +42,7 @@ root.render(
         <Route path='/category/:id' element={<CategoryPage/>}/>
         <Route path='/article/:id' element={<ArticlePage/>}/>
         <Route path='/user/profile' element={<UserProfil/>}/>
+        <Route path='/user/orders' element={<OrdersPage/>}/>
       </Routes>
       <Footer/>
     </BrowserRouter>

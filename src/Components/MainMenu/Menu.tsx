@@ -29,9 +29,7 @@ export const Menu: React.FC<MainMenuProperties> = ({items}) =>{
                         </Nav.Link>
                         
                     ))}
-                    
                 </Nav>
-                
             </Container>
         </Navbar>
     )
