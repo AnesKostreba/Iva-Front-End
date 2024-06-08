@@ -11,6 +11,8 @@ import Carousell from "react-multi-carousel";
 import { ApiConfig } from '../../config/api.config';
 import { ArticleType } from '../../types/ArticleType';
 import { ProductCard } from '../ProductCard/ProductCard';
+import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
+import ApiCategoryDto from '../../dtos/ApiCategoryDto';
 
 
 interface ArticleTypee{
@@ -42,11 +44,7 @@ interface HomePageState{
     categories: CategoryType[];
 }
 
-interface ApiCategoryDto{
-    categoryId: number;
-    name: string;
-    imagePath: string;
-}
+
 
 export const HomePage = () =>{
     const navigate = useNavigate();
@@ -228,6 +226,8 @@ export const HomePage = () =>{
     
     
     return(
+        <>
+        <RoledMainMenu role='user'/>
         <div className="HomePage">
             <div className='baneri mt-2'>
                 <Carousel >
@@ -274,5 +274,6 @@ export const HomePage = () =>{
                 </Row>
             </Card.Title>
         </div>
+        </>
     )
 }

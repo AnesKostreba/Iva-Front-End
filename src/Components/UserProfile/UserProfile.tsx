@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import api, { ApiResponse, saveRefreshToken, saveToken } from "../../api/api";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import './UserProfile.css';
 import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faBoxArchive, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { OrdersPage } from "../OrdersPage/OrdersPage";
+import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 
 interface UserProfile{
     userId: number;
@@ -43,8 +45,8 @@ export const UserProfil = () =>{
     },[])
 
     const logOut = () =>{
-        saveToken('');
-        saveRefreshToken('')
+        saveToken('user','');
+        saveRefreshToken('user','')
         navigate('/user/login')
     }
 
@@ -52,11 +54,24 @@ export const UserProfil = () =>{
     if(loading){
         return <Spinner animation="border" variant="success" className="spiner"/>
     }
+
+    const ProfileDetails = ({ user }: { user: UserProfile }) => (
+        <div className="profileMenu">
+            <p>Email: {user.email}</p>
+            <p>Ime: {user.forname}</p>
+            <p>Prezime: {user.surname}</p>
+            <p>Adresa: {user.postalAddress}</p>
+            <p>Broj telefona: {user.phoneNumber}</p>
+        </div>
+    );
     
     return(
+        <>
+        <RoledMainMenu role="user"/>
         <div className="userProfile">
+            
             {user ? (
-                <div>
+                <div className="w-50">
                     <div className="profileMenu">
                         <p>Email: {user.email}</p>
                         <p>Ime: {user.forname}</p>
@@ -65,12 +80,23 @@ export const UserProfil = () =>{
                         <p>Broj telefona: {user.phoneNumber}</p>
                     </div>
                     <button className="odjaviMe" onClick={logOut}>
-                        <FontAwesomeIcon icon={faRightFromBracket}/>Odjavi me</button>
+                        <FontAwesomeIcon icon={faRightFromBracket} /> Odjavi me
+                    </button>
                 </div>
-            ):(
+            ) : (
                 <p>No user data available!</p>
             )}
+            <div className="mojePorudzbine w-50 d-flex justify-content-center">
+                <nav className="profileNav">
+                    <Button  variant="outline-success">
+                        <Link to="/user/orders">
+                            <FontAwesomeIcon className="btnMojePorudzbine" icon={faBoxArchive}/>Moje porudžbine
+                        </Link>
+                    </Button>
+                </nav>
+            </div>
         </div>
+        </>
     )
 
 }

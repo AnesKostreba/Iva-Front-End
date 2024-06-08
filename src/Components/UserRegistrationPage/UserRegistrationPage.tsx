@@ -3,6 +3,7 @@ import './UserRegistrationPage.css';
 import api, { ApiResponse } from '../../api/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button } from 'react-bootstrap';
+import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 
 interface UserRegistrationPage{
     formData?:{
@@ -108,7 +109,7 @@ export const UserRegistrationPage = () =>{
                 </div>
             </div>
             
-            <div className="secound">
+            <div>
                 <div className="center">
                     <form method="post" action="">
                         <h1>Registruj se</h1>
@@ -185,6 +186,7 @@ export const UserRegistrationPage = () =>{
     return(
         
           <div>
+            <RoledMainMenu role='user'/>
                 {userState.isRegistrationComplete === false ? renderForm() : renderRegistrationCompleteMessage()}
           </div>
     )

@@ -10,6 +10,7 @@ import { faCartShopping, faCheck, faXmark } from '@fortawesome/free-solid-svg-ic
 import { CategoryType } from '../../types/CategoryType';
 import { ProductCard } from '../ProductCard/ProductCard';
 import Carousell from "react-multi-carousel";
+import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 
 interface ArticleDto{
     articleId: number,
@@ -273,6 +274,8 @@ export const ArticlePage = ()=>{
     }
 
     return (
+        <>
+        <RoledMainMenu role='user'/>
         <Container className='mt-3'>
             <Row className=''>
                 <CardTitle className=' articleName'>
@@ -327,6 +330,7 @@ export const ArticlePage = ()=>{
                 {showArticles()}
             </Row>
         </Container>
+        </>
     )
 
 }
