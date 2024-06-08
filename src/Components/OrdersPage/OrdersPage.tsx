@@ -7,6 +7,7 @@ import { faBox, faBoxArchive, faBoxOpen } from "@fortawesome/free-solid-svg-icon
 import { ApiConfig } from "../../config/api.config";
 import CartType from "../../types/CartType";
 import { ArticleType } from "../../types/ArticleType";
+import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 
 interface OrdersPageState{
     isUserLoggedIn: boolean;
@@ -200,7 +201,10 @@ export const OrdersPage = () =>{
     const sum = calculateSum();
 
     return (
+        <>
+        <RoledMainMenu role="user"/>
         <Container className="mt-3">
+            
             <Card>
                 <CardBody>
                     <CardTitle className="text-center mojePorudzbine">
@@ -271,5 +275,6 @@ export const OrdersPage = () =>{
             </ModalBody>
         </Modal>
         </Container>
+        </>
     )
 }

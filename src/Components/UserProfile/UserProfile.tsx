@@ -6,6 +6,7 @@ import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router-do
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxArchive, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { OrdersPage } from "../OrdersPage/OrdersPage";
+import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 
 interface UserProfile{
     userId: number;
@@ -44,8 +45,8 @@ export const UserProfil = () =>{
     },[])
 
     const logOut = () =>{
-        saveToken('');
-        saveRefreshToken('')
+        saveToken('user','');
+        saveRefreshToken('user','')
         navigate('/user/login')
     }
 
@@ -65,7 +66,10 @@ export const UserProfil = () =>{
     );
     
     return(
+        <>
+        <RoledMainMenu role="user"/>
         <div className="userProfile">
+            
             {user ? (
                 <div className="w-50">
                     <div className="profileMenu">
@@ -92,6 +96,7 @@ export const UserProfil = () =>{
                 </nav>
             </div>
         </div>
+        </>
     )
 
 }

@@ -13,7 +13,7 @@ const Header = () =>{
     const[isLoggedIn, setLogin] = useState<boolean>(false);
 
     useEffect(()=>{
-        const token = localStorage.getItem('api_token');
+        const token = localStorage.getItem('api_token_user');
         setLogin(!!token);
     })
 

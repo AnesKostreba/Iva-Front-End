@@ -19,14 +19,19 @@ import { ArticlePage } from './Components/ArticlePage/ArticlePage';
 import { Footer } from './Components/Footer/Footer';
 import { UserProfil } from './Components/UserProfile/UserProfile';
 import { OrdersPage } from './Components/OrdersPage/OrdersPage';
+import { AdministratorLoginPage } from './Components/AdministratorLoginPage/AdministratorLoginPage';
+import AdministratorDashboard from './Components/AdministratorDashboard/AdministratorDashboard';
+import AdministratorDashboardCategory from './Components/AdministratorDashboardCategory/AdministratorDashboardCategory';
+import AdministratorDashboardFeature from './Components/AdministratorDashboardFeature/AdministratorDashboardFeature';
 
-const generateMenuItems = ():MainMenuItem[] =>{
-  return[
-    {text: 'Home', link: '/'},
-    {text: 'Kontakt', link: '/contact'},
-    {text: 'My Orders', link: '/user/orders/'}
-  ]
-}
+// const generateMenuItems = ():MainMenuItem[] =>{
+//   return[
+//     {text: 'Home', link: '/'},
+//     {text: 'Kontakt', link: '/contact'},
+//     {text: 'My Orders', link: '/user/orders/'},
+//     {text: 'Administrator Login', link: '/administrator/login/'}
+//   ]
+// }
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -34,10 +39,14 @@ const root = ReactDOM.createRoot(
 root.render(
     <BrowserRouter>
       <Header/>
-      <Menu items={generateMenuItems()}/>
+      {/* <Menu items={generateMenuItems()}/> */}
       <Routes>
         <Route path='/' element={<HomePage/>}/>
         <Route path='/user/login' element={<UserLoginPage/>}/>
+        <Route path='/administrator/login' element={<AdministratorLoginPage/>}/>
+        <Route path='/administrator/dashboard/' element={<AdministratorDashboard/>}/>
+        <Route path='/administrator/dashboard/feature/:id' element={<AdministratorDashboardFeature/>}/>
+        <Route path='/administrator/dashboard/category' element={<AdministratorDashboardCategory/>}/>
         <Route path='/user/register' element={<UserRegistrationPage/>}/>
         <Route path='/category/:id' element={<CategoryPage/>}/>
         <Route path='/article/:id' element={<ArticlePage/>}/>

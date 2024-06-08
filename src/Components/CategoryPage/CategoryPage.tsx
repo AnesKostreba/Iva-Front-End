@@ -1,18 +1,16 @@
-import { Form, Link, unstable_HistoryRouter, useNavigate, useParams } from "react-router-dom";
+import { Link,  useParams } from "react-router-dom";
 import { CategoryType } from "../../types/CategoryType";
 import { useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup, Row } from "react-bootstrap";
+import { CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup, Row } from "react-bootstrap";
 import { ArticleType } from "../../types/ArticleType";
 import api, { ApiResponse } from '../../api/api';
 import { ApiConfig } from "../../config/api.config";
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-import { faCartShopping, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import './CategoryPage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MultiRangeSlider from "multi-range-slider-react";
-import InputGroupText from "react-bootstrap/esm/InputGroupText";
-import { ArticlePage } from "../ArticlePage/ArticlePage";
 import { ProductCard } from "../ProductCard/ProductCard";
+import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 
 interface CategoryPageState{
     isUserLoggedIn: boolean;
@@ -500,9 +498,11 @@ export const CategoryPage = () =>{
 
 
     return(
-        
+        <>
+        <RoledMainMenu role="user"/>
         <div className="container-fluid d-flex mt-3 p-0">
             <Container>
+                
                 <div className="row">
                     <CardTitle className="mb-3 subcategoryName">
                         {categoryState.category?.name}
@@ -520,5 +520,6 @@ export const CategoryPage = () =>{
                 </div>
             </Container>
         </div>
+        </>
     )
 }
