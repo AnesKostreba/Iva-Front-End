@@ -64,7 +64,7 @@ const AdministratorDashboard = () =>{
                             <Link to='/administrator/dashboard/category/'>Osobine</Link>
                         </li>
                         <li>
-                            <Link to='/administrator/dashboard/category/'>Artikli</Link>
+                            <Link to='/administrator/dashboard/article/'>Artikli</Link>
                         </li>
                     </ul>
                 </CardBody>

@@ -23,6 +23,7 @@ import { AdministratorLoginPage } from './Components/AdministratorLoginPage/Admi
 import AdministratorDashboard from './Components/AdministratorDashboard/AdministratorDashboard';
 import AdministratorDashboardCategory from './Components/AdministratorDashboardCategory/AdministratorDashboardCategory';
 import AdministratorDashboardFeature from './Components/AdministratorDashboardFeature/AdministratorDashboardFeature';
+import AdministratorDashboardArticle from './Components/AdministratorDashboardArticle/AdministratorDashboardArticle';
 
 // const generateMenuItems = ():MainMenuItem[] =>{
 //   return[
@@ -46,7 +47,8 @@ root.render(
         <Route path='/administrator/login' element={<AdministratorLoginPage/>}/>
         <Route path='/administrator/dashboard/' element={<AdministratorDashboard/>}/>
         <Route path='/administrator/dashboard/feature/:id' element={<AdministratorDashboardFeature/>}/>
-        <Route path='/administrator/dashboard/category' element={<AdministratorDashboardCategory/>}/>
+        <Route path='/administrator/dashboard/category/' element={<AdministratorDashboardCategory/>}/>
+        <Route path='/administrator/dashboard/article/' element={<AdministratorDashboardArticle/>}/>
         <Route path='/user/register' element={<UserRegistrationPage/>}/>
         <Route path='/category/:id' element={<CategoryPage/>}/>
         <Route path='/article/:id' element={<ArticlePage/>}/>

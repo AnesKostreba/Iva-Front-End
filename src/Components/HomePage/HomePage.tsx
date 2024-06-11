@@ -19,6 +19,7 @@ interface ArticleTypee{
     articleId?: number;
     name?: string;
     excerpt?: string;
+    status?: "available" | "visible" | "hidden";
     description?: string;
     imageUrl?: string;
     price?: number;
@@ -28,6 +29,7 @@ interface ArticleDto{
     articleId?: number;
     name?: string;
     isPromoted: number;
+    status?: "available" | "visible" | "hidden";
     excerpt?: string;
     description?: string;
     articlePrices?:{
@@ -76,7 +78,7 @@ export const HomePage = () =>{
                     return;
                 }
                 putCategoriesInState(res?.data as ApiCategoryDto[])
-                console.log('Kategorije',res?.data)
+                
             })
     }
 
@@ -185,18 +187,23 @@ export const HomePage = () =>{
         showArticles()
     },[])
 
+    const validStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden']
+
     const showArticles = () =>{
         api('api/article','get',{})
             .then((res: ApiResponse | undefined)=>{
-
+                
                 if(res && Array.isArray(res.data)){
+
                     const articles:ArticleTypee[] =
                         res.data.map((article:ArticleDto)=>{
+                            const status = validStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
                             const object:ArticleTypee = {
                                 articleId: article.articleId,
                                 description: article.description,
                                 excerpt: article.excerpt,
                                 imageUrl: '',
+                                status: status,
                                 name: article.name,
                                 price: 0,
                                 isPromoted: article.isPromoted
@@ -214,7 +221,7 @@ export const HomePage = () =>{
                         .filter(article => article.isPromoted === 1)
                         .slice(0,10)
 
-                        console.log('Processed articles', articles)
+                        // console.log('Processed articles', articles)
                     
                     setArticles(articles)
                 }
