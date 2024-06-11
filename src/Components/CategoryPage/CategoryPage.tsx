@@ -45,6 +45,7 @@ interface ArticleDto{
     name: string;
     isPromoted: number;
     excerpt: string;
+    status: string;
     description: string;
     articlePrices?: {
         price: number;
@@ -445,6 +446,8 @@ export const CategoryPage = () =>{
             // if(res?.status === 'login'){
             //     return setLogginState(false)
             // }
+            const validStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
+
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
             }
@@ -452,11 +455,14 @@ export const CategoryPage = () =>{
             if(res && Array.isArray(res.data)){
             const articles: ArticleType[] =
             res?.data.map((article: ArticleDto)=>{
+                const status = validStatus.includes(article.status as any) ? article.status as 
+                'available' | 'visible' | 'hidden' : undefined;
                 
                 const object: ArticleType = {
                     articleId: article.articleId,
                     name:  article.name,
                     excerpt:  article.excerpt,
+                    status: status,
                     description:  article.description,
                     imageUrl:  '',
                     price:  0,

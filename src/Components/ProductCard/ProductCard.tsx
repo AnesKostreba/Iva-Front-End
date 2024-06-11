@@ -16,7 +16,6 @@ interface SingleARticlePreviewState{
 
 export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
     const [quantity, setQuantity] = useState<number>(1)
-
     const decrementQuantity = () =>{
         if(quantity > 1){
             setQuantity(prevQuantity => prevQuantity -1)
@@ -53,6 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
                 <img className="w-100 mt-2 p-3" src={ApiConfig.PHOTO_PATH+"small/"+article.imageUrl} alt={article.name}></img>
                 <CardTitle as='p' className="mt-4 text-center nazivArtikla p-1">
                     <strong>{article.name}</strong>
+                    <p className="articleDisabled">{article.status === 'visible' ? 'Proizvod nije na stanju' : ''}</p>
                 </CardTitle>
             </Link>
             <CardBody className="bodyCard p-3 mt-4">
@@ -62,17 +62,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
                 <div className="omotac d-flex">
                     <div className="w-100 d-flex omotacPovecanje border">
                             <div className="d-flex w-100 ">
-                                <button onClick={decrementQuantity} className="w-100 minus">-</button>
+                                <button disabled={article?.status === 'visible'}
+                                         onClick={decrementQuantity} className="w-100 minus">-</button>
                             </div>
                             <div className="w-100 text-center  justify-content-center align-items-center d-flex">
                                 <p className="m-0">{quantity}</p>
                             </div>
                             <div className="d-flex w-100 ">
-                                <button onClick={incrementQuantity} className="w-100 plus">+</button>
+                                <button disabled={article?.status === 'visible'} 
+                                        onClick={incrementQuantity} className="w-100 plus">+</button>
                             </div>
                     </div> 
                     <div className="w-100 bg-dark d-flex kupi">
                         <button onClick={addToCart}
+                         disabled ={article?.status === 'visible'}
                          className="w-100">Kupi</button>
                     </div>
                 </div>
