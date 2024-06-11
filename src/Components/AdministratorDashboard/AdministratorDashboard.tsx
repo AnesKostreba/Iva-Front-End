@@ -1,7 +1,7 @@
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { Card, CardBody, CardTitle, Container } from "react-bootstrap";
+import { Card, CardBody, CardTitle, Container, Nav, NavItem } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import api, { ApiResponse, getIdentity } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
@@ -48,7 +48,7 @@ const AdministratorDashboard = () =>{
     return (
         <>
         <RoledMainMenu role="administrator"/>
-        <Container>
+        <Container className="mt-3">
             
             <Card>
                 <CardBody>
@@ -56,7 +56,18 @@ const AdministratorDashboard = () =>{
                         <FontAwesomeIcon icon={faHome}/>Administrator Dashboard
                     </CardTitle>
 
-                    <ul>
+                    <Nav>
+                        <NavItem>
+                            <Link to='/administrator/dashboard/category/' className='btn btn-success m-3'>
+                                <FontAwesomeIcon icon={faLink}/> Kategorije
+                            </Link>
+                            <Link to='/administrator/dashboard/article/' className='btn btn-success m-3'>
+                                <FontAwesomeIcon icon={faLink}/> Artikli
+                            </Link>
+                        </NavItem>
+                    </Nav>
+
+                    {/* <ul>
                         <li>
                             <Link to='/administrator/dashboard/category/'>Kategorije</Link>
                         </li>
@@ -66,7 +77,7 @@ const AdministratorDashboard = () =>{
                         <li>
                             <Link to='/administrator/dashboard/article/'>Artikli</Link>
                         </li>
-                    </ul>
+                    </ul> */}
                 </CardBody>
             </Card>
         </Container>
