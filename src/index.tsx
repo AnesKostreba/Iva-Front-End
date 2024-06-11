@@ -24,6 +24,8 @@ import AdministratorDashboard from './Components/AdministratorDashboard/Administ
 import AdministratorDashboardCategory from './Components/AdministratorDashboardCategory/AdministratorDashboardCategory';
 import AdministratorDashboardFeature from './Components/AdministratorDashboardFeature/AdministratorDashboardFeature';
 import AdministratorDashboardArticle from './Components/AdministratorDashboardArticle/AdministratorDashboardArticle';
+import AdministratorDashboardPhoto from './Components/AdministratorDashboardPhoto/AdministratorDashboardPhoto';
+
 
 // const generateMenuItems = ():MainMenuItem[] =>{
 //   return[
@@ -49,6 +51,7 @@ root.render(
         <Route path='/administrator/dashboard/feature/:id' element={<AdministratorDashboardFeature/>}/>
         <Route path='/administrator/dashboard/category/' element={<AdministratorDashboardCategory/>}/>
         <Route path='/administrator/dashboard/article/' element={<AdministratorDashboardArticle/>}/>
+        <Route path='/administrator/dashboard/photo/:id' element={<AdministratorDashboardPhoto/>}/>
         <Route path='/user/register' element={<UserRegistrationPage/>}/>
         <Route path='/category/:id' element={<CategoryPage/>}/>
         <Route path='/article/:id' element={<ArticlePage/>}/>

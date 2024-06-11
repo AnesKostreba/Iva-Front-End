@@ -1,8 +1,8 @@
-import { faEdit, faListAlt, faPlus, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faImage, faListAlt, faPlus, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, CardBody, CardTitle, Col, Container, FormControl, FormGroup, FormLabel, Modal, ModalBody, ModalHeader, ModalTitle, Row, Table } from "react-bootstrap";
-import { Form, useNavigate } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import api, { ApiResponse } from "../../api/api";
 import { apiFile } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
@@ -672,6 +672,10 @@ const AdministratorDashboardArticle = () =>{
                                     <td>{article.isPromoted ? 'Da' : 'Ne'}</td>
                                     <td className="text-right">{article.price}</td>
                                     <td className="text-center">
+                                        <Link to={'/administrator/dashboard/photo/'+article.articleId}
+                                            className="btn btn-sm btn-info linkToPhoto">
+                                                <FontAwesomeIcon icon={faImage}/> Fotografije
+                                        </Link>
                                         <Button 
                                             onClick={() => showEditModal(article)}
                                             variant="success" size="sm">

@@ -16,8 +16,8 @@ interface ArticleDto{
     articleId: number,
     name: string,
     excerpt: string,
+    status?: "available" | "visible" | "hidden",
     description: string,
-    status: string,
     photos:{
         imagePath: string;
     }[],
@@ -180,7 +180,7 @@ export const ArticlePage = ()=>{
     }
 
 
-
+    const selectStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
     useEffect(()=>{
         const fetchArticles = async () =>{
             try{
@@ -200,9 +200,11 @@ export const ArticlePage = ()=>{
                                 }
                                 const fetchArticles: ArticleType[] =
                                     res?.data.map((article: ArticleDto)=>{
+                                        const status = selectStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
                                         const object:ArticleType = {
                                             articleId: article.articleId,
                                             name: article.name,
+                                            status: status,
                                             excerpt: article.excerpt,
                                             description: article.description,
                                             imageUrl: '',
