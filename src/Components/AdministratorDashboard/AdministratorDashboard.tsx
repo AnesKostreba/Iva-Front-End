@@ -64,6 +64,9 @@ const AdministratorDashboard = () =>{
                             <Link to='/administrator/dashboard/article/' className='btn btn-success m-3'>
                                 <FontAwesomeIcon icon={faLink}/> Artikli
                             </Link>
+                            <Link to='/administrator/dashboard/order/' className='btn btn-success m-3'>
+                                <FontAwesomeIcon icon={faLink}/> Porudžbine
+                            </Link>
                         </NavItem>
                     </Nav>
 
