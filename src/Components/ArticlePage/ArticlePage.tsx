@@ -357,11 +357,18 @@ export const ArticlePage = () =>{
                 <Button className="btnLeftRight" onClick={handlePrevPhoto}>
                     <FontAwesomeIcon className="icn" icon={faLeftLong} />
                 </Button>
-                <img
-                    alt={'Image-' + articleState.article?.photos[currentPhotoIndex].photoId}
-                    src={ApiConfig.PHOTO_PATH + 'small/' + articleState.article?.photos[currentPhotoIndex].imagePath}
-                    style={{ width: '50%', maxWidth: '', margin: '' }}
-                />
+                {/* proveriti article */}
+                {
+                    articleState.article &&
+                    articleState.article.photos &&
+                    articleState.article.photos[currentPhotoIndex] && (
+                    <img
+                        alt={'Image-' + articleState.article?.photos[currentPhotoIndex].photoId}
+                        src={ApiConfig.PHOTO_PATH + 'small/' + articleState.article?.photos[currentPhotoIndex].imagePath}
+                        style={{ width: '50%', maxWidth: '', margin: '' }}
+                    />
+                    )
+                }
                 <Button className="btnLeftRight" onClick={handleNextPhoto}>
                     <FontAwesomeIcon className="icn" icon={faRightLong} />
                 </Button>
