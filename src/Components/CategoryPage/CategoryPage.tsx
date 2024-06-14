@@ -367,9 +367,7 @@ export const CategoryPage = () =>{
         )
     }
 
-    useEffect(()=>{
-        getCategoryData()
-    },[id])
+    
 
 
     const getCategoryData = () =>{
@@ -501,7 +499,9 @@ export const CategoryPage = () =>{
         })
     }
 
-
+    useEffect(()=>{
+        getCategoryData()
+    },[id])
 
     return(
         <>
