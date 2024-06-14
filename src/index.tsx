@@ -50,6 +50,11 @@ root.render(
         <Route path='/' element={<HomePage/>}/>
         <Route path='/user/login' element={<UserLoginPage/>}/>
         <Route path='/user/logout' element={<UserLogoutPage/>}/>
+        <Route path='/user/register' element={<UserRegistrationPage/>}/>
+        <Route path='/category/:id' element={<CategoryPage/>}/>
+        <Route path='/article/:id' element={<ArticlePage/>}/>
+        <Route path='/user/profile' element={<UserProfil/>}/>
+        <Route path='/user/orders' element={<OrdersPage/>}/>
         <Route path='/administrator/login' element={<AdministratorLoginPage/>}/>
         <Route path='/administrator/logout' element={<AdministratorLogoutPage/>}/>
         <Route path='/administrator/dashboard/' element={<AdministratorDashboard/>}/>
@@ -58,11 +63,7 @@ root.render(
         <Route path='/administrator/dashboard/article/' element={<AdministratorDashboardArticle/>}/>
         <Route path='/administrator/dashboard/photo/:id' element={<AdministratorDashboardPhoto/>}/>
         <Route path='/administrator/dashboard/order' element={<AdministratorDashboardOrder/>}/>
-        <Route path='/user/register' element={<UserRegistrationPage/>}/>
-        <Route path='/category/:id' element={<CategoryPage/>}/>
-        <Route path='/article/:id' element={<ArticlePage/>}/>
-        <Route path='/user/profile' element={<UserProfil/>}/>
-        <Route path='/user/orders' element={<OrdersPage/>}/>
+        
       </Routes>
       <Footer/>
     </BrowserRouter>
