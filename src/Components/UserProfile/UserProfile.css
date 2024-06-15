@@ -33,7 +33,7 @@
 .spiner{
     display: flex;
     justify-content: center;
-    margin: 0 auto;
+    align-items: center;
 }
 .btnMojePorudzbine{
     margin-right: 5px;

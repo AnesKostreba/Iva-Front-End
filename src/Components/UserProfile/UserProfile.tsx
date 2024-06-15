@@ -9,6 +9,7 @@ import { OrdersPage } from "../OrdersPage/OrdersPage";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 
 interface UserProfile{
+    isAdministratorLoggedIn: boolean;
     userId: number;
     email: string;
     surname: string;
@@ -18,24 +19,42 @@ interface UserProfile{
 }
 
 export const UserProfil = () =>{
-
-    const[user, setUser] = useState<UserProfile | null >(null);
+    
+    const[user, setUser] = useState<UserProfile>({
+        isAdministratorLoggedIn: true,
+        userId: 0,
+        email: '',
+        surname: '',
+        forname: '',
+        phoneNumber: '',
+        postalAddress: '',
+    });
     const[loading, setLoading] = useState<boolean>(true);
     const[error, setError] = useState<string>('');
     const navigate = useNavigate();
 
+
+    const setLogginState = (isUserLoggedIn: boolean) =>{
+        setUser(prevState =>({
+            ...prevState,
+            isUserLoggedIn: isUserLoggedIn
+        }))
+    }
+
     useEffect(()=>{
         const userId = localStorage.getItem('user_id');
-
         api('api/user/profile/'+userId, 'get', {})
             .then((res:ApiResponse)=>{
                 try{
-
-                    if(res.status === 'ok'){
-                        setUser(res.data)
-                    }else{
-                        setError('Failed to load user data!')
+                    if(res?.status === 'login'){
+                        setLogginState(false);
+                        return;
                     }
+                    if(res.status === 'error'){
+                        console.log('Error')
+                        return;
+                    }
+                    setUser(res.data)
                     setLoading(false)
                 }catch{
                     setError('Failed to load user data!')
@@ -51,25 +70,25 @@ export const UserProfil = () =>{
     }
 
 
-    if(loading){
-        return <Spinner animation="border" variant="success" className="spiner"/>
-    }
+    // if(loading){
+    //     return <Spinner animation="border" variant="success" className="spiner"/>
+    // }
 
-    const ProfileDetails = ({ user }: { user: UserProfile }) => (
-        <div className="profileMenu">
-            <p>Email: {user.email}</p>
-            <p>Ime: {user.forname}</p>
-            <p>Prezime: {user.surname}</p>
-            <p>Adresa: {user.postalAddress}</p>
-            <p>Broj telefona: {user.phoneNumber}</p>
-        </div>
-    );
+    // const ProfileDetails = ({ user }: { user: UserProfile }) => (
+    //     <div className="profileMenu">
+    //         <p>Email: {user.email}</p>
+    //         <p>Ime: {user.forname}</p>
+    //         <p>Prezime: {user.surname}</p>
+    //         <p>Adresa: {user.postalAddress}</p>
+    //         <p>Broj telefona: {user.phoneNumber}</p>
+    //     </div>
+    // );
     
     return(
         <>
         <RoledMainMenu role="user"/>
         <div className="userProfile">
-            
+            {loading ? <Spinner animation="border" variant="success" className="spiner"/> : ''}
             {user ? (
                 <div className="w-50">
                     <div className="profileMenu">
