@@ -441,14 +441,14 @@ export const CategoryPage = () =>{
             orderDirection: orderDirection
         })
         .then((res:ApiResponse | undefined) =>{
-            // if(res?.status === 'login'){
-            //     return setLogginState(false)
-            // }
-            const validStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
-
+            if(res?.status === 'login'){
+                return setLogginState(false)
+            }
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
             }
+            
+            const validStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
 
             if(res && Array.isArray(res.data)){
             const articles: ArticleType[] =
@@ -488,9 +488,9 @@ export const CategoryPage = () =>{
     const getFeatures = () =>{
         api('api/feature/values/' + id, 'get', {})
         .then((res:ApiResponse | undefined) =>{
-            // if(res?.status === 'login'){
-            //     return setLogginState(false)
-            // }
+            if(res?.status === 'login'){
+                return setLogginState(false)
+            }
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
             }
