@@ -17,7 +17,9 @@ interface AdministratorDashboardArticle {
     articles: ArticleType[];
     categories: CategoryType[];
     status: string[];
-
+    filters: {
+        keywords: string;
+    };
     addModal: {
         visible: boolean;
         name: string;
@@ -71,6 +73,9 @@ const AdministratorDashboardArticle = () =>{
         isAdministratorLoggedIn: true,
         articles: [],
         categories: [],
+        filters: {
+            keywords: ''
+        },
         status: [
             "available",
             "visible",
@@ -105,6 +110,38 @@ const AdministratorDashboardArticle = () =>{
             features: [],
         }
     })
+
+    const filterKeywordsChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+        setAdminState({
+            ...adminPage,
+            filters:{
+                ...adminPage.filters,
+                keywords: event.target.value
+            }
+        })
+    }
+
+    useEffect(()=>{
+        getArticlesWithFilter()
+    },[])
+
+    const getArticlesWithFilter = () =>{
+        if(!adminPage.filters.keywords){
+            return getArticles();
+        }
+        api('/api/article/search-by-name/','post',{
+            keywords: adminPage.filters.keywords
+        },'administrator')
+            .then((res: ApiResponse)=>{
+                if(res?.status === 'login'){
+                    return setLogginState(false)
+                }
+                if(res?.status === 'error'){
+                    return 'Request error.';
+                }
+                setAdminState({...adminPage, articles: res.data})
+            })
+    }
 
     const setAddModalVisibleState = (newState: boolean) =>{
         setAdminState(prevState => ({
@@ -261,20 +298,22 @@ const AdministratorDashboardArticle = () =>{
     };
 
     const putCategoriesInState = (data: ApiCategoryDto[]) =>{
-        const categories: CategoryType[] = data?.map(category =>{
-            return{
-                categoryId: category.categoryId,
-                name:       category.name,
-                parentCategoryId: category.parentCategoryId,
-                imagePath: category.imagePath,
-                // items:      [] // artikli
-            };
-        });
-
-        setAdminState(prevState => ({
-            ...prevState,
-            categories: categories
-        }))
+        if(data && data.length > 0){
+            const categories: CategoryType[] = data?.map(category =>{
+                return{
+                    categoryId: category.categoryId,
+                    name:       category.name,
+                    parentCategoryId: category.parentCategoryId,
+                    imagePath: category.imagePath,
+                    // items:      [] // artikli
+                };
+            });
+    
+            setAdminState(prevState => ({
+                ...prevState,
+                categories: categories
+            }))
+        }
     }
 
     const getCategories = () =>{
@@ -311,8 +350,8 @@ const AdministratorDashboardArticle = () =>{
                 if(!Array.isArray(responseData)){
                     return resolve([]);
                 }
-
-                const features: FeatureBaseType[] = responseData.map((item: any) =>({
+                
+                const features: FeatureBaseType[] = responseData?.map((item: any) =>({
                     featureId: item.featureId,
                     name: item.name,
                 }))
@@ -359,29 +398,30 @@ const AdministratorDashboardArticle = () =>{
 
     const putArticlesInState = (data: ApiArticleDto[]) =>{
         
-        const articles: ArticleType[] = data?.map(article =>{
-            return{
-                articleId: article.articleId,
-                name: article.name,
-                excerpt: article.excerpt,
-                description: article.description,
-                imageUrl: article.photos && article.photos.length > 0 ? article.photos[0].imagePath : '',
-                price: article.articlePrices[article.articlePrices.length-1].price,
-                status: article.status,
-                isPromoted: article.isPromoted,
-                articleFeatures: article.articleFeatures,
-                features: article.features,
-                articlePrices: article.articlePrices,
-                photos: article.photos,
-                category: article.category,
-                categoryId: article.categoryId
-            };
-        });
-
-        setAdminState(prevState => ({
-            ...prevState,
-            articles: articles
-        }))
+        if(data && data.length > 0){
+            const articles: ArticleType[] = data?.map(article =>{
+                return{
+                    articleId: article.articleId,
+                    name: article.name,
+                    excerpt: article.excerpt,
+                    description: article.description,
+                    imageUrl: article.photos && article.photos.length > 0 ? article.photos[0].imagePath : '',
+                    price: article.articlePrices[article.articlePrices.length-1].price,
+                    status: article.status,
+                    isPromoted: article.isPromoted,
+                    articleFeatures: article.articleFeatures,
+                    features: article.features,
+                    articlePrices: article.articlePrices,
+                    photos: article.photos,
+                    category: article.category,
+                    categoryId: article.categoryId
+                };
+            });
+            setAdminState(prevState => ({
+                ...prevState,
+                articles: articles
+            }))
+        }
     }
 
     const getArticles = () =>{
@@ -636,6 +676,19 @@ const AdministratorDashboardArticle = () =>{
                         <FontAwesomeIcon className="kategorijeIcon" icon={faListAlt}/>Artikli
                     </CardTitle>
 
+                    <FormGroup className="d-flex formGroupFilter">
+                        <FormLabel className="d-flex align-items-center m-0 "  htmlFor="keywords"><strong>Pretraži artikal:</strong></FormLabel>
+                        <FormControl 
+                            className="w-50 labelFilter"
+                            id="keywords"
+                            type="text"
+                            placeholder="pretraži po nazivu..."
+                            value={adminPage.filters.keywords}
+                            onChange={filterKeywordsChanged}
+                        />
+                        <Button className="btn btnFilter" size="sm" onClick={getArticlesWithFilter}>Pretraži</Button>
+                    </FormGroup>
+
                     <Table hover size="sm" bordered>
                         <thead>
                             <tr>
@@ -659,7 +712,7 @@ const AdministratorDashboardArticle = () =>{
                             </tr>
                         </thead>
                         <tbody>
-                            {adminPage.articles.map(article =>(
+                            {adminPage.articles && adminPage.articles.length > 0 ?( adminPage.articles.map  (article =>(
                                 <tr>
                                     <td className="text-right">{article.articleId}</td>
                                     <td>{article.name}</td>
@@ -683,7 +736,11 @@ const AdministratorDashboardArticle = () =>{
                                         </Button>
                                     </td>
                                 </tr>
-                            ),this)}
+                            ),this) ) : (
+                                <tr>
+                                    <td>Nema artikla sa ovim nazivom</td>
+                                </tr>
+                            )}
                         </tbody>
                     </Table>
                 </CardBody>
