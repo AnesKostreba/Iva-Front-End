@@ -124,18 +124,44 @@
     border-radius: 20px;
     margin-top: 20px;
 }
+.filterBtn{
+    display: none;
+    font-size: 16px;
+    background-color: #469919;
+    color: #fff;
+    border-radius: 10px;
+}
+.iconFilteri{
+    margin-right: 5px;
+}
+.filter-content{
+    display: block;
+    overflow: hidden;
+}
+
 /* .omotac :hover{
     -webkit-box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
 -moz-box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
 box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
 } */
-@media screen and (max-width:756px){
+@media screen and (max-width:767px){
     /* .articlesCol{
         width: 100%;
     } */
     /* .filter{
         display: none;
     } */
+    .filterBtn{
+        display: block;
+        
+    }
+    .featuresSearch{
+        background-color: #fff;
+        padding: 0%;
+    }
+    .filter-content{
+        max-height: 0;
+    }
     .wrapper{
         flex-direction: column;
     }

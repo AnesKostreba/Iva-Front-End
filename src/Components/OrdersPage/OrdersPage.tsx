@@ -14,6 +14,7 @@ interface OrdersPageState{
     orders: OrderType[];
     cartVisible: boolean;
     cart?: CartType;
+    message: string;
 }
 
 interface OrderDto {
@@ -53,8 +54,16 @@ export const OrdersPage = () =>{
     const [orders, setOrders] = useState<OrdersPageState>({
         isUserLoggedIn: true,
         orders: [],
-        cartVisible: false
+        cartVisible: false,
+        message: '',
     })
+
+    const setMessage = (message: string) =>{
+        setOrders(prevState =>({
+            ...prevState,
+            message: message
+        }))
+    }
 
     const setLogginState = (isLoggedIn: boolean) =>{
         setOrders(prevState =>({
@@ -92,12 +101,21 @@ export const OrdersPage = () =>{
     }
 
     const getOrders = () =>{
+        // console.log('Fetching orders...')
         api('/api/user/cart/orders', 'get', {})
             .then((res: ApiResponse) =>{
+                if(res?.status === 'login'){
+                    console.log('User not logged in')
+                    return setLogginState(false)
+                }
+                if(res?.status === 'error'){
+                    console.log('Error fetching orders'+res)
+                    return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
+                }
                 const data: OrderDto[] = res.data;
 
                 if(data){
-                const orders: OrderType[] = data.map(order =>({
+                const orders: OrderType[] = data?.map(order =>({
                     orderId: order.orderId,
                     status: order.status,
                     createdAt: order.createdAt,
@@ -129,13 +147,17 @@ export const OrdersPage = () =>{
                         }))
                     }
                 }))
-                setOrdersState(orders)
+                // console.log('Orders fetched:',orders)
+                if(orders){
+                    setOrdersState(orders)
+                }
                 }
                 
             })
     }
 
     useEffect(()=>{
+        // console.log('UseEffect colled.')
         getOrders()
     },[])
 
@@ -145,11 +167,20 @@ export const OrdersPage = () =>{
         showCart()
     }
 
+    const statusTranslations:any= {
+        pending: 'Na čekanju',
+        accepted: 'Prihvaćeno',
+        shipped: 'Poslato',
+        rejected: 'Odbijeno',
+    };
+
     const printOrderRow = (order: OrderType) =>{
+        const formattedDateTime = formatDateTime(order.createdAt);
+        // console.log('Rendering orders row for',order)
         return(
-            <tr>
-                <td>{order.createdAt}</td>
-                <td>{order.status}</td>
+            <tr key={order.orderId}>
+                <td>{formattedDateTime}</td>
+                <td>{statusTranslations[order.status]}</td>
                 <td className="text-right">
                     <Button className="p-2" size="sm" variant="outline-success" 
                             onClick={ () => setAndShowCart(order.cart)}>
@@ -177,6 +208,26 @@ export const OrdersPage = () =>{
         return price;
         
     }
+
+    
+
+    const formatDateTime = (date: any) => {
+    const formattedDate = new Date(date);
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+
+    const datePart = formattedDate.toLocaleDateString(undefined, options);
+
+    return `${datePart}`;
+};
+
+
 
     const calculateSum = () =>{
         let sum: number= 0;
@@ -221,7 +272,7 @@ export const OrdersPage = () =>{
                     </thead>
                     <tbody>
                         {
-                            orders.orders.map(printOrderRow, this)
+                            orders.orders.map(printOrderRow)
                         }
                     </tbody>
                     </Table>

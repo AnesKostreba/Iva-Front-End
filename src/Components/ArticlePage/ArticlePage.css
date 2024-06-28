@@ -71,6 +71,28 @@ h2{
 .smallImg{
     cursor: pointer;
 }
+.subPhoto {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.subPhoto .col {
+    flex: 1 1 100px; /* Osigurava da kockice budu najmanje 100px, ali mogu se širiti */
+    max-width: 150px; /* Ograničava maksimalnu širinu kockica */
+}
+.subPhoto .col img:hover{
+    cursor: pointer;
+}
+.visible{
+    color: red;
+}
+.subPhoto img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Osigurava da slika popuni kockicu bez zadržavanja proporcija */
+    border-radius: 5px; /* Doda malo zaobljenja uglova */
+    border: 1px solid #ddd; /* Tanki border oko slika */
+}
 .btnLeftRight:focus {
     color: #fff !important;
     background-color: #fff !important;
@@ -92,6 +114,11 @@ h2{
 } */
 .icn{
     color: black;
+}
+.spiner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 @media (max-width:567px) {
     .wrapper{

@@ -13,6 +13,8 @@ import { ArticleType } from '../../types/ArticleType';
 import { ProductCard } from '../ProductCard/ProductCard';
 import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 import ApiCategoryDto from '../../dtos/ApiCategoryDto';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClipboardList, faSheetPlastic } from '@fortawesome/free-solid-svg-icons';
 
 
 interface ArticleTypee{
@@ -251,7 +253,7 @@ export const HomePage = () =>{
             </div>
 
             <Card.Title className='text-center kategorijeP'>
-                <p>KATEGORIJE</p>
+                <p><FontAwesomeIcon className='listIcon' icon={faClipboardList}/>KATEGORIJE</p>
             </Card.Title>
 
             <div className="kategorije mb-4">
@@ -271,9 +273,9 @@ export const HomePage = () =>{
                 </Carousell>
             </div>
 
-            <Card.Title className='text-center mt-5'>
+            <Card.Title className='text-center mt-2'>
                 <div className='izdvajamoP'>
-                    <p>IZDVAJAMO IZ PONUDE</p>
+                    <p><FontAwesomeIcon className='listIcon' icon={faSheetPlastic}/>IZDVAJAMO IZ PONUDE</p>
                 </div>
                 
                 <Row className=''>

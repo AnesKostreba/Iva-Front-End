@@ -6,7 +6,7 @@ import { ArticleType } from "../../types/ArticleType";
 import api, { ApiResponse } from '../../api/api';
 import { ApiConfig } from "../../config/api.config";
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faList, faSearch } from "@fortawesome/free-solid-svg-icons";
 import './CategoryPage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProductCard } from "../ProductCard/ProductCard";
@@ -259,55 +259,68 @@ export const CategoryPage = () =>{
         getCategoryData()
     }
     
-
-    
+    const[isFilterVisible, setIsFilterVisible] = useState(false);
 
     const printFilters = ()=>{
+        const toggleFilter = () =>{
+            setIsFilterVisible(!isFilterVisible);
+        }
+        const handleSearch = () =>{
+            applyFilters()
+            setIsFilterVisible(false);
+            window.scrollTo({top: 0, behavior: 'smooth'})
+        }
+        
 
         return(
             <div className="featuresSearch">
-                <FormGroup className="mt-2">
-                    
-                    <FormLabel htmlFor="keywords">Pretrazi po nazivu:</FormLabel>
-                    <FormControl type="text" id="keywords" 
-                                 value={ categoryState.filters.keywords }
-                                 onChange={(e)=> filterKeywordsChanged(e as any)}>
-                    </FormControl>
-                </FormGroup>  
-                <FormGroup>
-                    <FormLabel className="mt-2">Sortiraj po nazivu:</FormLabel>
-                    <FormSelect as='select' id='sortOrder' className=" formSelectSort"
-                                 value={categoryState.filters.order}
-                                 onChange={(e)=> filterOrderChanged(e as any)}>
-
-                        <option value="name asc" >Sortiraj po nazivu  (A - Z)</option>
-                        <option value="name desc">Sortiraj po nazivu  (Z - A)</option>
+                    <button onClick={toggleFilter} className="btn filterBtn">
+                        <FontAwesomeIcon className="iconFilteri" icon={faList}/>Filteri
+                    </button>
+                    <div className={`filter-content${isFilterVisible ? 'visible' : ''}`}>
+                    <FormGroup className="mt-2">
                         
-                    </FormSelect>
-                </FormGroup>
-                <FormGroup>
-                    <FormLabel className="mt-2">Sortiraj po ceni:</FormLabel>
-                    <FormSelect as='select' id='sortOrder' className="formSelectSort mb-2"
-                                value={categoryState.filters.order}
-                                onChange={(e)=> filterOrderChanged(e as any)}>
-                            <option value="price asc">Sortiraj po ceni - rastuce</option>
-                            <option value="price desc">Sortiraj po ceni - opadajuce</option>
-                    </FormSelect>
-                </FormGroup>
+                        <FormLabel htmlFor="keywords">Pretrazi po nazivu:</FormLabel>
+                        <FormControl type="text" id="keywords" 
+                                    value={ categoryState.filters.keywords }
+                                    onChange={(e)=> filterKeywordsChanged(e as any)}>
+                        </FormControl>
+                    </FormGroup>  
+                    <FormGroup>
+                        <FormLabel className="mt-2">Sortiraj po nazivu:</FormLabel>
+                        <FormSelect as='select' id='sortOrder' className=" formSelectSort"
+                                    value={categoryState.filters.order}
+                                    onChange={(e)=> filterOrderChanged(e as any)}>
 
-                    {categoryState.features && categoryState.features.map(feature =>(
-                        <div key={feature.featureId}>
-                            {printFeatureFilterComponent(feature)}
+                            <option value="name asc" >Sortiraj po nazivu  (A - Z)</option>
+                            <option value="name desc">Sortiraj po nazivu  (Z - A)</option>
+                            
+                        </FormSelect>
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel className="mt-2">Sortiraj po ceni:</FormLabel>
+                        <FormSelect as='select' id='sortOrder' className="formSelectSort mb-2"
+                                    value={categoryState.filters.order}
+                                    onChange={(e)=> filterOrderChanged(e as any)}>
+                                <option value="price asc">Sortiraj po ceni - rastuce</option>
+                                <option value="price desc">Sortiraj po ceni - opadajuce</option>
+                        </FormSelect>
+                    </FormGroup>
+
+                        {categoryState.features && categoryState.features.map(feature =>(
+                            <div key={feature.featureId}>
+                                {printFeatureFilterComponent(feature)}
+                            </div>
+                        ))}
+                        {/* { categoryState.features && categoryState.features.map(printFeatureFilterComponent, this) } */}
+
+                    <FormGroup>
+                        <div className="divSearchFeatures d-flex w-100">
+                            <button onClick={handleSearch} className="btnSearchFeatures p-1 w-100 d-flex align-items-center justify-content-center ">
+                                <FontAwesomeIcon className="icon" icon={faSearch}/>Pretrazi</button>
                         </div>
-                    ))}
-                    {/* { categoryState.features && categoryState.features.map(printFeatureFilterComponent, this) } */}
-
-                <FormGroup>
-                    <div className="divSearchFeatures d-flex w-100">
-                        <button onClick={() => applyFilters()} className="btnSearchFeatures p-1 w-100 d-flex align-items-center justify-content-center ">
-                            <FontAwesomeIcon className="icon" icon={faSearch}/>Pretrazi</button>
-                    </div>
-                </FormGroup>
+                    </FormGroup>
+                </div>
             </div>
         );
     }
@@ -372,11 +385,11 @@ export const CategoryPage = () =>{
 
     const getCategoryData = () =>{
         
-        api('api/category/'+ id, 'get',{})
+        api('api/category/'+ id, 'get',{},'user')
         .then((res:ApiResponse | undefined) =>{
-            // if(res?.status === 'login'){
-            //     return setLogginState(false)
-            // }
+            if(res?.status === 'login'){
+                return setLogginState(false)
+            }
             if(res?.status === 'error'){
                 return setMessage('Request error. Please try to refresh page.')
             }
@@ -396,6 +409,7 @@ export const CategoryPage = () =>{
                                 }
                             });
             setSubcategories(subcategories)
+
             }else{
                 JSON.stringify('No categories found in response data.')
             }

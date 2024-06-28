@@ -28,12 +28,24 @@
     margin: 0 auto;
 }
 .kategorijeP{
-    margin-top: 3rem;
-    margin-bottom: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.kategorijeP p{
+    font-weight: 600;
+    color: rgb(0, 0, 70);
 }
 .izdvajamoP{
-    margin-top: 3rem;
-    margin-bottom: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.listIcon{
+    margin-right: 8px;
+}
+.izdvajamoP p{
+    font-weight: 600;
+    color: rgb(0, 0, 70);
 }
 .baneri{
     width: 90%;

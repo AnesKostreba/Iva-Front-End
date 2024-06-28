@@ -88,7 +88,6 @@ export const UserProfil = () =>{
         <>
         <RoledMainMenu role="user"/>
         <div className="userProfile">
-            {loading ? <Spinner animation="border" variant="success" className="spiner"/> : ''}
             {user ? (
                 <div className="w-50">
                     <div className="profileMenu">
@@ -107,11 +106,11 @@ export const UserProfil = () =>{
             )}
             <div className="mojePorudzbine w-50 d-flex justify-content-center">
                 <nav className="profileNav">
-                    <Button  variant="outline-success">
-                        <Link to="/user/orders">
+                    
+                        <Link className="linkMojePorudzbine" to="/user/orders">
                             <FontAwesomeIcon className="btnMojePorudzbine" icon={faBoxArchive}/>Moje porudžbine
                         </Link>
-                    </Button>
+                    
                 </nav>
             </div>
         </div>

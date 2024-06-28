@@ -11,6 +11,7 @@ import ApiArticleDto from "../../dtos/ApiArticleDto";
 import './AdministratorDashboardArticle.css';
 import { CategoryType } from "../../types/CategoryType";
 import ApiCategoryDto from "../../dtos/ApiCategoryDto";
+import { parse } from "path";
 
 interface AdministratorDashboardArticle {
     isAdministratorLoggedIn: boolean;
@@ -464,10 +465,17 @@ const AdministratorDashboardArticle = () =>{
         setEditModalStringFieldState('description', String(article.description));
         setEditModalStringFieldState('status', String(article.status));
         setEditModalNumberFieldState('articleId', article.articleId);
-        setEditModalNumberFieldState('price', article.price);
-        setEditModalNumberFieldState('isPromoted', article.isPromoted);
 
-       
+        let price = 0;
+
+        if(article.articlePrices && article.articlePrices.length > 0){
+            price = article.articlePrices[article.articlePrices.length-1].price
+        }
+
+
+        setEditModalNumberFieldState('price', price);
+        setEditModalNumberFieldState('isPromoted', article.isPromoted);
+        console.log(article)
         if(!article.categoryId){
             return;
         }

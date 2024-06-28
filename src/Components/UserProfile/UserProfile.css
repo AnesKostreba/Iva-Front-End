@@ -30,11 +30,15 @@
 .icon{
     padding-right: 8px;
 }
-.spiner{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 .btnMojePorudzbine{
     margin-right: 5px;
+}
+.linkMojePorudzbine{
+    border: 1px solid #a0a0a0;
+    padding: 5px;
+}
+.linkMojePorudzbine:hover{
+    background-color: rgb(0, 167, 0);
+    color: #fff;
 }

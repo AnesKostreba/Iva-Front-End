@@ -1,3 +1,79 @@
 .navbar{
-    background-color: #469919;
+    background-color: #7ea027;
+    padding: 0;
+    margin: 0;
+}
+.allCategories{
+    position: relative;
+    font-size: 19px;
+}
+.iconDown{
+    margin-left: 5px;
+    font-size: 16px;
+}
+.allCategories:hover{
+    background-color: #ecffb8;
+    cursor: pointer;
+    color: #000;
+}
+
+.downSubcat{
+    margin-left: 10px;
+    font-size: 16px;
+}
+.dropdown li:hover .downSubcat{
+    transform: rotate(-90deg);
+}
+.nav{
+    width: 73%;
+    margin: 0 auto;
+}
+.nav ul li{
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    color: #fff;
+}
+.nav ul{
+    margin: 0;
+    padding: 0;
+}
+.dropdown{
+    position: absolute;
+    top: 100%;
+    width: 200px;
+    z-index: 1000;
+    background-color: #ecffb8;
+}
+.drop-item:hover{
+    background-color: #7ea027;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.drop-item{
+    position: relative;
+    color: #000 !important;
+}
+.drop-item:hover{
+    color: #fff !important;
+}
+.subMenu{
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #ecffb8;
+    width: 200px;
+}
+.subMenu li:hover{
+    background-color: #7ea027;
+    cursor: pointer;
+    font-weight: 500;
+    color: #fff !important;
+}
+.sub-item{
+    color: #000 !important;
+}
+.sub-item:hover{
+
 }

@@ -50,9 +50,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
         <Card className="mt-3 kartica">
             <Link to={`/article/${article.articleId}`} onClick={scroll}>
                 <img className="w-100 mt-2 p-3" src={ApiConfig.PHOTO_PATH+"small/"+article.imageUrl} alt={article.name}></img>
-                <CardTitle as='p' className="mt-4 text-center nazivArtikla p-1">
+                <CardTitle as='p' className="mt-4 text-center nazivArtikla p-1 d-flex flex-column">
                     <strong>{article.name}</strong>
-                    <p className="articleDisabled">{article.status === 'visible' ? 'Proizvod nije na stanju' : ''}</p>
+                    <span className="articleDisabled">{article.status === 'visible' ? 'Proizvod nije na stanju' : ''}</span>
                 </CardTitle>
             </Link>
             <CardBody className="bodyCard p-3 mt-4">
