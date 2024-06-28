@@ -79,7 +79,7 @@ const Header = () =>{
     const getArticlesWithFilter = () =>{
         api('/api/article/search-by-name/','post',{
             keywords: header.filters.keywords
-        },'administrator')
+        },'user')
             .then((res: ApiResponse)=>{
                 if(res.status === 'login'){
                     return setLogginState(false)
