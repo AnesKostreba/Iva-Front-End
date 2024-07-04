@@ -1,5 +1,30 @@
 .footer{
-    height: 400px;
-    background-color: #5c9d5c;
-    margin-top: 4rem;
+    margin-top: 2em;
+    border-top: 2px solid rgb(146, 146, 146);
+    justify-content: space-around;
+}
+.faSocial{
+    margin-right: 5px;
+}
+.firstFooter{
+    color: #040272;
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    /* background-color: green; */
+}
+.secoundFooter{
+    color: #040272;
+    padding: 2%;
+}
+.thirdFooter{
+    color: #040272;
+    padding: 2%;
+}
+.logoFooter{
+    width: 15%;
+}
+.created{
+    border-top: 2px solid rgb(146, 146, 146);
+    color: #040272
 }

@@ -28,6 +28,8 @@ import AdministratorDashboardPhoto from './Components/AdministratorDashboardPhot
 import { AdministratorDashboardOrder } from './Components/AdministratorDashboardOrder/AdministratorDashboardOrder';
 import { AdministratorLogoutPage } from './Components/AdministratorLogoutPage/AdministratorLogoutPage';
 import { UserLogoutPage } from './Components/UserLogoutPage/UserLogoutPage';
+import { ContactPage } from './Components/ContactPage/ContactPage';
+import { ArticleType } from './types/ArticleType';
 
 
 // const generateMenuItems = ():MainMenuItem[] =>{
@@ -55,6 +57,7 @@ root.render(
         <Route path='/article/:id' element={<ArticlePage/>}/>
         <Route path='/user/profile' element={<UserProfil/>}/>
         <Route path='/user/orders' element={<OrdersPage/>}/>
+        <Route path='/contact' element={<ContactPage/>}/>
         <Route path='/administrator/login' element={<AdministratorLoginPage/>}/>
         <Route path='/administrator/logout' element={<AdministratorLogoutPage/>}/>
         <Route path='/administrator/dashboard/' element={<AdministratorDashboard/>}/>

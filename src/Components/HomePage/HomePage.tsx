@@ -117,7 +117,7 @@ export const HomePage = () =>{
     const singleCategory = (category: CategoryType) =>{
         return(
             <div className='divBody'>
-                <CardTitle className='mb-2'>
+                <CardTitle className='mb-2 titleCategory'>
                         {category.name}
                 </CardTitle>
                 <Link to={`/category/${category.categoryId}`} onClick={scrollToTop} className=''>
@@ -130,30 +130,30 @@ export const HomePage = () =>{
     }
     const responsive = {
         desktop: {
-            breakpoint: { max: 3000, min: 1432 },
+            breakpoint: { max: 3000, min: 1232 },
             items: 5,
             },
         tablet: {
-            breakpoint: { max: 1432, min: 664 },
-            items: 5,
+            breakpoint: { max: 1232, min: 750 },
+            items: 4,
             },
         mobile: {
-            breakpoint: { max: 664, min: 0 },
+            breakpoint: { max: 750, min: 0 },
             items: 2,
             },
     }
 
     const responsiveIzdvajamo = {
         desktop: {
-            breakpoint: { max: 3000, min: 1432 },
+            breakpoint: { max: 3000, min: 1232 },
             items: 5,
             },
         tablet: {
-            breakpoint: { max: 1432, min: 664 },
+            breakpoint: { max: 1232, min: 750 },
             items: 4,
             },
         mobile: {
-            breakpoint: { max: 664, min: 0 },
+            breakpoint: { max: 750, min: 0 },
             items: 2,
             },
     }
@@ -278,7 +278,7 @@ export const HomePage = () =>{
                     <p><FontAwesomeIcon className='listIcon' icon={faSheetPlastic}/>IZDVAJAMO IZ PONUDE</p>
                 </div>
                 
-                <Row className=''>
+                <Row className='m-0'>
                     {setArticle()}
                 </Row>
             </Card.Title>

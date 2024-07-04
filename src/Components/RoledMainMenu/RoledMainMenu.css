@@ -1,0 +1,85 @@
+.navbar{
+    background-color: #7ea027;
+    padding: 0;
+    margin: 0;
+}
+.allCategories{
+    /* position: relative; */
+    font-size: 1em;
+}
+.class-comon{
+    color: #fff;
+}
+.class-comon:hover{
+    background-color: #ecffb8;
+    cursor: pointer;
+    color: #000;
+}
+.iconDown{
+    margin-left: 5px;
+    font-size: 16px;
+}
+.dropdown li {
+    list-style: none;
+    padding: 10px;
+}
+.subMenu{
+    padding-left: 0;
+}
+.downSubcat{
+    margin-left: 10px;
+    font-size: 16px;
+}
+.dropdown li:hover .downSubcat{
+    transform: rotate(-90deg);
+}
+.navbarWrapper{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.dropdown {
+    position: absolute;
+    width: 200px;
+    top: 100%;
+    z-index: 1000;
+    background-color: #ecffb8;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.drop-item:hover{
+    background-color: #7ea027;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.drop-item{
+    position: relative;
+    color: #000 !important;
+}
+.drop-item:hover{
+    color: #fff !important;
+}
+.subMenu{
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #ecffb8;
+    width: 200px;
+}
+.subMenu li:hover{
+    background-color: #7ea027;
+    cursor: pointer;
+    font-weight: 500;
+    color: #fff !important;
+}
+.sub-item{
+    color: #000 !important;
+}
+
+@media (min-width:300px) and (max-width: 1300px) {
+    .nav{
+        width: 90%;
+    }
+}

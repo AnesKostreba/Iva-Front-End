@@ -6,6 +6,10 @@
 .btnPretrazi{
     border-radius: 10px;
 }
+.formSearch{
+    position: relative;
+    
+}
 .logo{
     width: 33.3%;
     display: flex;
@@ -25,25 +29,60 @@
 }
 .searchArticle{
     position: absolute;
-    z-index: 9999;
-    top: 90px;
+    border: 1px solid #ced4da;
+    border-top: 0;
+    z-index: 10;
+    top: 100%;
+    left: 0;
     background-color: #fff;
-    width: 40%;
+    width: 100%;
+}
+.priceAndNameArticle{
+    color: #040272;
+    font-weight: 500;
 }
 .buttonLi{
    color: #fff;
 }
+.searchArticle ul:hover{
+    background-color: rgb(241, 241, 241);
+    color: #fff;
+}
+.searchArticle{
+    background-color: #ffffff;
+}
 .searchArticle ul{
+    display: flex;
     list-style: none;
+    align-items: center;
+    border-bottom: 1px solid #ced4da;
     padding: 5px;
     margin: 10px;
+}
+.imgSearch{
+    cursor: pointer;
+}
+.kupiSearch{
+    width: 100px;
+    margin-left: 1em;
+}
+.kupiSearch button{
+    border: none;
+    background-color: green;
+    color: #fff;
+}
+.kupiSearch button:hover{
+    background-color: rgb(0, 170, 0);
+}
+.articleNameCursor{
+    cursor: pointer;
 }
 .listaArtikala{
     border-bottom: 1px solid #ddd;
 }
 .listaArtikala:hover{
     background-color: #d4d4d4;
-    cursor: pointer;
+    
 }
 .login{
     display: flex;
@@ -81,10 +120,45 @@ a{
     flex-direction: column;
     align-items: center;
 }
-.searchArticle{
+.searchControl::placeholder{
+    font-style: italic;
+}
+.searchControl{
+    margin-right: 0% !important;
+    border-top: 0;
+    border-radius: 0%;
+}
+.searchControl:focus{
+    outline: none;
+    box-shadow: none;
+    /* border-color: rgb(155, 155, 155); */
+    border-color: #ced4da;
+}
+.faSearch{
+    background-color: #fff;
+}
+.btnSearch{
+    background-color: #fff;
+    border: 1px solid #ced4da;
+}
+.btnSearch:active{
+    background-color: #798e3d;
+}
+.btnSearch:active .faSearch{
+    background-color: #798e3d;
+    color: #fff;
+}
+
+@media (min-width: 300px) and (max-width: 1300px) {
+    .header{
+        width: 90%;
+    }
+}
+@media(min-width: 600px){
     
 }
-@media (max-width: 567px){
+
+@media (max-width: 820px){
     .logoImg{
         max-width: 130px;
         height: auto;
@@ -94,7 +168,7 @@ a{
     }
     .logo,
     .login{
-        width: 50%;
+        width: 70%;
     }
     .locationP,
     .userP,
@@ -110,7 +184,7 @@ a{
         align-items: center;
     }
     .search-mobile form{
-        width: 88%;
+        width: 90%;
     }
     .user{
         margin-left: 10px;

@@ -2,7 +2,6 @@ import './Header.css';
 import logo from '../../Images/logo/IvaPharmLogo.jpg';
 import location from '../../Images/pin.png';
 import user from '../../Images/user.png';
-import cart from '../../Images/shopping-cart.png';
 import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { Cart } from '../Cart/Cart';
@@ -10,6 +9,8 @@ import { useEffect, useState } from 'react';
 import api, { ApiResponse } from '../../api/api';
 import { ArticleType } from '../../types/ArticleType';
 import { ApiConfig } from '../../config/api.config';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface HeaderSearch {
     isUserLoggedIn: boolean;
@@ -19,9 +20,8 @@ interface HeaderSearch {
     }
 }
 
-
-const Header = () =>{
-
+const Header= () =>{
+    const [quantity, setQuantity] = useState(1);
     const [header, setHeaderState] = useState<HeaderSearch>({
         articles: [],
         isUserLoggedIn: true,
@@ -89,12 +89,29 @@ const Header = () =>{
                 }
 
                 setHeaderState({...header, articles: res.data })
+                
             })
     }
 
+    // const addToCart = (articleId:ArticleType) =>{
+    //     const data = {
+    //         article: articleId,
+    //         quantity: quantity
+    //     }
+
+    //     api('/api/user/cart/addToCart/','post',data)
+    //         .then((res: ApiResponse | undefined)=>{
+    //             if(res?.status === 'error'){
+    //                 return;
+    //             }
+
+    //             window.dispatchEvent(new CustomEvent('cart.update'))
+    //         })
+    // }
+
     const navigate = useNavigate();
 
-    const hendleClick = (articleId: number | undefined) =>{
+    const handleClick = (articleId: number | undefined) =>{
         navigate('/article/'+articleId)
 
         setHeaderState(prevState =>({
@@ -107,49 +124,60 @@ const Header = () =>{
     const goToHome = () =>{
         navigate('/')
     }
-    
-
 
     return(
+        <>
         <div className='container-fluid mb-2'>
             <div className="container-fluid header">
                 <div onClick={goToHome} className="logo">
                     <img src={logo} alt="" className='logoImg'/>
                 </div>
                 <div className="search">
-                    <Form className='d-flex w-100'>
+                    <Form className='d-flex w-100 formSearch'>
                         <Form.Control 
                             type='search'
-                            placeholder='Pretraga...'
+                            placeholder='Pretraži po nazivu...'
                             className='me-2 searchControl'
                             aria-label='Search' 
-                            value= {header.filters.keywords}  
+                            value={header.filters.keywords}  
                             onChange={filterSearchChange} 
                         />
-                        <Button variant='outline-success ' onClick={getArticlesWithFilter}>
+                        {/* <button className='btnSearch' onClick={getArticlesWithFilter} type='button'> 
+                            <FontAwesomeIcon className='faSearch' icon={faSearch}/>
+                        </button> */}
+                        {/* <Button variant='outline-success' onClick={getArticlesWithFilter}>
                             Pretraži
-                        </Button>
+                        </Button> */}
+                            {header.articles && header.articles.length > 0 && (
+                                <div className="searchArticle">
+                                    {header.articles.slice(0,8).map(article=>(
+                                        <ul  
+                                            key={article.articleId}>
+                                                {article.photos && article.photos.length > 0 && (
+                                                    <img onClick={()=> handleClick(article.articleId)} className='imgSearch p-0' src={ApiConfig.PHOTO_PATH + '/thumb/' + article.photos[0].imagePath} alt={article.name}
+                                                    style={{width:'50px', height:'50px', margin:'5px'}} />
+                                                )}
+                                                <div className='d-flex flex-column'>
+                                                    <div>
+                                                        <li onClick={()=> handleClick(article.articleId)} className='p-2 articleNameCursor priceAndNameArticle'>{article.name}</li>
+                                                    </div>
+                                                    <div className='d-flex'>
+                                                        {article.articlePrices && article.articlePrices.length > 0 && (
+                                                            <li className='d-flex p-1 priceAndNameArticle'>{article.articlePrices[article.articlePrices.length-1].price} €</li>
+                                                        )}
+                                                        {/* <div className="bg-dark d-flex kupiSearch">
+                                                            <button type='button' className="w-100">
+                                                                Kupi
+                                                            </button>
+                                                        </div> */}
+                                                    </div>
+                                                </div>
+                                        </ul>
+                                    ))}
+                                </div>
+                            )}
                     </Form>
-
-                    <div className='searchArticle'>
-                        {header.articles && header.articles.length > 0 ? (
-                            header.articles.map(article => (
-                                <ul onClick={() => hendleClick(article.articleId)} key={article.articleId} className='listaArtikala d-flex align-items-center'>
-                                    {
-                                        article.photos && article.photos.length > 0 && (
-                                            <img src={ApiConfig.PHOTO_PATH+"thumb/"+article.photos[0].imagePath} 
-                                            alt={article.name} 
-                                            style={{width: '50px', height: '50px'}}/>
-                                        )
-                                    }
-                                    <li  
-                                    className=' p-1'>
-                                        
-                                        {article.name}</li>
-                                </ul>
-                            ))
-                        ).slice(0,8) : ''}
-                    </div>
+                    
                 </div>
                 
 
@@ -189,7 +217,7 @@ const Header = () =>{
             </div>
 
             <div className="search-mobile">
-                <Form className='d-flex mt-3'>
+                <Form className='d-flex mt-1'>
                     <Form.Control 
                         type='search'
                         placeholder='Pretraga...'
@@ -200,6 +228,7 @@ const Header = () =>{
                 </Form>
             </div>
         </div>
+        </>
     )
 }
 

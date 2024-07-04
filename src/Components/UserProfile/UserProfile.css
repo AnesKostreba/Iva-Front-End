@@ -42,3 +42,8 @@
     background-color: rgb(0, 167, 0);
     color: #fff;
 }
+@media (min-width: 300px) and (max-width:1200px){
+    .userProfile{
+        width: 90%;
+    }
+}

@@ -4,7 +4,7 @@ import api, {ApiResponse} from '../../api/api';
 import { Alert, Button, FormControl, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, NavItem, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown, faCartShopping, faMinusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import './Cart.css'
 import { ApiConfig } from "../../config/api.config";
 
@@ -178,6 +178,7 @@ export const Cart = () =>{
 
     return(
         <>
+        
         <NavItem>
             <NavLink className='iconCart d-flex' to={''} onClick={(e)=> {e.preventDefault(); showCart()}}
                 style={{color: cart.cartMenuColor}}>
@@ -189,6 +190,7 @@ export const Cart = () =>{
                 <ModalTitle className="">Vaša korpa</ModalTitle>
             </ModalHeader>
             <ModalBody>
+                {cart.cart?.cartArticles && cart.cart.cartArticles.length > 0  ? (
                 <Table hover size="sm">
                     <thead>
                         <tr>
@@ -241,12 +243,23 @@ export const Cart = () =>{
                         </tr>
                     </tfoot>
                 </Table>
+                ):(
+                    <div className="d-flex flex-column text-center cartEmpty">
+                        Vaša korpa je prazna
+                        <Link 
+                            style={{color:'blue'}} 
+                            onClick={()=>setHideCart()} className="m-2" 
+                            to={'/'}>Dodajte u korpu neke naše proizvode</Link>
+                    </div>
+                )}
                 <Alert variant="success" className={cart.message ? '' : 'd-none'}>{cart.message}</Alert>
             </ModalBody>
+            {cart.cart?.cartArticles && cart.cart.cartArticles.length > 0 && (
             <ModalFooter >
                 <button className="kupi" onClick={() => makeOrder()}
                         disabled={cart.cart?.cartArticles && cart.cart?.cartArticles.length === 0 }>Kupi</button>
             </ModalFooter>
+            )}
         </Modal>
         </>
     )

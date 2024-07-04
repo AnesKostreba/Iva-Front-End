@@ -33,6 +33,7 @@
 }
 .kategorijeP p{
     font-weight: 600;
+    font-size: 1em;
     color: rgb(0, 0, 70);
 }
 .izdvajamoP{
@@ -45,6 +46,7 @@
 }
 .izdvajamoP p{
     font-weight: 600;
+    font-size: 1em;
     color: rgb(0, 0, 70);
 }
 .baneri{
@@ -63,6 +65,12 @@
 }
 .carousel{
     border-radius: 30px;
+}
+.titleCategory{
+    font-size: 1em;
+}
+.react-multiple-carousel__arrow{
+    width: 10px;
 }
 @media(min-width: 664px){
     .imageCategory{

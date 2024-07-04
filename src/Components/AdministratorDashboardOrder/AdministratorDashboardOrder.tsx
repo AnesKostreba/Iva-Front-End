@@ -248,10 +248,10 @@ export const AdministratorDashboardOrder = () =>{
                 </thead>
                 <tbody>
                     {formatDateTimeOrder.map(order =>(
-                        <tr>
-                        <td className="text-end">{order.orderId}</td>
-                        <td>{order.formatDate}{order.formatTime}</td>
-                        <td>{statusTranslations[order.status]}</td>
+                        <tr key={order.orderId}>
+                            <td className="text-end">{order.orderId}</td>
+                            <td>{order.formatDate}{order.formatTime}</td>
+                            <td>{statusTranslations[order.status]}</td>
                         <td>
                         <Button className="p-2" size="sm" variant="outline-success" 
                             onClick={ () => setAndShowCart(order.cart)}>

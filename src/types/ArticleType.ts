@@ -5,7 +5,6 @@ export interface ArticleType{
     description?: string;
     imageUrl?: string;
     price?: number;
-
     status?: "available" | "visible" | "hidden";
     isPromoted?: number;
     articleFeatures?:{

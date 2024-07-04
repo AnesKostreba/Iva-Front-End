@@ -11,6 +11,9 @@
 .faSquareXmark :hover{
     cursor: pointer;
 }
+.faCart{
+    width: 100%;
+}
 .vasaKorpa{
     background-color: rgb(0, 179, 0);
     color: #fff;

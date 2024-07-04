@@ -1,4 +1,4 @@
-import { Link,  useParams } from "react-router-dom";
+import { Link,  useParams, useSearchParams } from "react-router-dom";
 import { CategoryType } from "../../types/CategoryType";
 import { useEffect, useState } from "react";
 import { CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup, Row } from "react-bootstrap";
@@ -6,7 +6,7 @@ import { ArticleType } from "../../types/ArticleType";
 import api, { ApiResponse } from '../../api/api';
 import { ApiConfig } from "../../config/api.config";
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-import { faList, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDoubleLeft, faAngleDoubleRight, faList, faSearch } from "@fortawesome/free-solid-svg-icons";
 import './CategoryPage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProductCard } from "../ProductCard/ProductCard";
@@ -58,7 +58,10 @@ interface ArticleDto{
 
 export const CategoryPage = () =>{
     const {id} = useParams<{id: string}>();
-
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 0);
+    const [itemsPerPage, setItemsPerPage] = useState(Number(searchParams.get('limit')) || 12);
+    const [totalPages, setTotalPages] = useState(0);
     const [categoryState, setCategoryState] = useState<CategoryPageState>({
         isUserLoggedIn: true,
         message: '',
@@ -161,22 +164,21 @@ export const CategoryPage = () =>{
 
     
 
-    const showArticles = () =>{
-        if(categoryState.articles?.length === 0){
-            return(
+    const showArticles = () => {
+        if (categoryState.articles?.length === 0) {
+            return (
                 <div>There are no articles in this category.</div>
             );
         }
-
-        return(
-            <div className="container ">
+    
+        return (
+            <div className="container">
                 <Row>
-                    { categoryState.articles?.map(singleArticle) }
+                    {categoryState.articles?.map(singleArticle)}
                 </Row>
-                
             </div>
-        )
-    }
+        );
+    };
     const setNewFilter =(newFilter: any) =>{
         setCategoryState(prevState =>({
             ...prevState,
@@ -281,7 +283,8 @@ export const CategoryPage = () =>{
                     <FormGroup className="mt-2">
                         
                         <FormLabel htmlFor="keywords">Pretrazi po nazivu:</FormLabel>
-                        <FormControl type="text" id="keywords" 
+                        <FormControl 
+                                    type="text" id="keywords" 
                                     value={ categoryState.filters.keywords }
                                     onChange={(e)=> filterKeywordsChanged(e as any)}>
                         </FormControl>
@@ -299,7 +302,7 @@ export const CategoryPage = () =>{
                     </FormGroup>
                     <FormGroup>
                         <FormLabel className="mt-2">Sortiraj po ceni:</FormLabel>
-                        <FormSelect as='select' id='sortOrder' className="formSelectSort mb-2"
+                        <FormSelect as='select' id='sortOrderPrice' className="formSelectSort mb-2"
                                     value={categoryState.filters.order}
                                     onChange={(e)=> filterOrderChanged(e as any)}>
                                 <option value="price asc">Sortiraj po ceni - rastuce</option>
@@ -378,74 +381,68 @@ export const CategoryPage = () =>{
                         <ProductCard article={article}/>
                 </Col>
         )
-    }
-
+    } 
     
 
 
-    const getCategoryData = () =>{
-        
+    const getCategoryData = (page = currentPage, limit = itemsPerPage) => {
         api('api/category/'+ id, 'get',{},'user')
         .then((res:ApiResponse | undefined) =>{
             if(res?.status === 'login'){
-                return setLogginState(false)
+                return setLogginState(false);
             }
             if(res?.status === 'error'){
-                return setMessage('Request error. Please try to refresh page.')
+                return setMessage('Request error. Please try to refresh page.');
             }
-
+    
             const categoryData: CategoryType ={
                 categoryId: res?.data.categoryId,
                 name: res?.data.name
-            }
+            };
             setCategoryData(categoryData);
-
+    
             if(res?.data && res.data.categories){
-            const subcategories: CategoryType[] = 
-                            res?.data.categories.map((category: CategoryDto)=>{
-                                return{
-                                    categoryId: category.categoryId,
-                                    name: category.name
-                                }
-                            });
-            setSubcategories(subcategories)
-
-            }else{
-                JSON.stringify('No categories found in response data.')
+                const subcategories: CategoryType[] = 
+                    res?.data.categories.map((category: CategoryDto)=>{
+                        return {
+                            categoryId: category.categoryId,
+                            name: category.name
+                        };
+                    });
+                setSubcategories(subcategories);
+            } else {
+                JSON.stringify('No categories found in response data.');
             }
-        })
-
+        });
+    
         const orderParts = categoryState.filters.order ? categoryState.filters.order.split(' ') : [];
         const orderBy = orderParts.length > 0 ? orderParts[0] : '';
         const orderDirection = orderParts.length > 1 ? orderParts[1].toLocaleUpperCase() : '';
-        // const orderParts = categoryState.filters.order.split(' ');
-        // const orderBy = orderParts[0];
-        // const orderDirection = orderParts[1].toLocaleUpperCase();
-
+    
         const featureFilters: any[] = [ ];
         for(const item of categoryState.filters.selectedFeatures){
             let found = false;
             let foundReference = null;
-
-            for( const featureFilter of featureFilters){
+    
+            for(const featureFilter of featureFilters){
                 if(featureFilter.featureId === item.featureId){
                     found = true;
                     foundReference = featureFilter;
                     break;
                 }
             }
-
+    
             if(!found){
                 featureFilters.push({
                     featureId: item.featureId,
                     values: [item.value]
-                })
-            }else{
-                foundReference.values.push(item.value)
+                });
+            } else {
+                foundReference.values.push(item.value);
             }
         }
-
-        api('api/article/search/', 'post', {
+    
+        api(`api/article/search?page=${page}&limit=${limit}`, 'post', {
             categoryId: Number(id),
             keywords: categoryState.filters.keywords,
             priceMin: categoryState.filters.priceMinimum,
@@ -454,49 +451,88 @@ export const CategoryPage = () =>{
             orderBy: orderBy,
             orderDirection: orderDirection
         })
-        .then((res:ApiResponse | undefined) =>{
-            if(res?.status === 'login'){
-                return setLogginState(false)
+        .then((res: ApiResponse | undefined) => {
+            if (res?.status === 'login') {
+                return setLogginState(false);
             }
-            if(res?.status === 'error'){
-                return setMessage('Request error. Please try to refresh page. Error: '+ JSON.stringify(res) )
+            if (res?.status === 'error') {
+                return setMessage('Request error. Please try to refresh page. Error: ' + JSON.stringify(res));
             }
-            
-            const validStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
-
-            if(res && Array.isArray(res.data)){
-            const articles: ArticleType[] =
-            res?.data.map((article: ArticleDto)=>{
-                const status = validStatus.includes(article.status as any) ? article.status as 
-                'available' | 'visible' | 'hidden' : undefined;
-                
-                const object: ArticleType = {
-                    articleId: article.articleId,
-                    name:  article.name,
-                    excerpt:  article.excerpt,
-                    status: status,
-                    description:  article.description,
-                    imageUrl:  '',
-                    price:  0,
-                }
-                if(article.photos !== undefined && article.photos?.length > 0){
-                    object.imageUrl = article.photos[article.photos?.length-1].imagePath;
-                }
-                if(article.articlePrices !== undefined && article.articlePrices?.length > 0){
-                    object.price = article.articlePrices[article.articlePrices?.length-1].price;
-                }
-
-                return object;
-            });
-
-            setArticles(articles)
-        }else{
-            // console.error('res.data nije niz ili nije definisan')
-        }
-        })
-
+    
+            const validStatus: ('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
+    
+            if (res?.data && res.data.articles) {
+                const articles: ArticleType[] = res.data.articles.map((article: ArticleDto) => {
+                    const status = validStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
+    
+                    const object: ArticleType = {
+                        articleId: article.articleId,
+                        name: article.name,
+                        excerpt: article.excerpt,
+                        status: status,
+                        description: article.description,
+                        imageUrl: '',
+                        price: 0,
+                    };
+                    if (article.photos !== undefined && article.photos?.length > 0) {
+                        object.imageUrl = article.photos[article.photos?.length - 1].imagePath;
+                    }
+                    if (article.articlePrices !== undefined && article.articlePrices?.length > 0) {
+                        object.price = article.articlePrices[article.articlePrices?.length - 1].price;
+                    }
+    
+                    return object;
+                });
+    
+                setArticles(articles);
+                setTotalPages(Math.ceil(res.data.totalCount / itemsPerPage));
+            } else {
+                setMessage('No articles found.');
+            }
+        });
+    
         getFeatures();
-    }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            handlePageClick(currentPage);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages - 1) {
+            handlePageClick(currentPage + 2);
+        }
+    };
+
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    className={`btnPages ${i === currentPage + 1 ? 'active' : ''}`}
+                    onClick={() => handlePageClick(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+        return pageNumbers;
+    };
+
+    const handlePageClick = (pageNumber: number) => {
+        const actualPageIndex = pageNumber - 1;
+        setCurrentPage(actualPageIndex);
+        setSearchParams({ page: actualPageIndex.toString(), limit: itemsPerPage.toString() });
+        getCategoryData(actualPageIndex, itemsPerPage);
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    };
+    
 
 
     const getFeatures = () =>{
@@ -513,15 +549,70 @@ export const CategoryPage = () =>{
         })
     }
 
-    useEffect(()=>{
-        getCategoryData()
-    },[id])
+    // const handlePageChange = (pageNumber: number) => {
+    //     setCurrentPage(pageNumber); // Ažurirajte trenutnu stranicu
+    //     // getCategoryData(); // Ponovno dohvatite podatke sa novom stranicom
+    //     window.scrollTo({
+    //         top: 0,
+    //         behavior: "smooth"
+    //     })
+    // }
+
+    // const showPagination = () => {
+    //     if(!categoryState.articles){
+    //         return null;
+    //     }
+    //     const totalPages = Math.ceil(categoryState.articles.length / articlesPerPage);
+    
+    //     // if (totalPages <= 1) return null;
+    
+    //     const pages = [];
+    //     for (let i = 1; i <= totalPages; i++) {
+    //         pages.push(
+    //             <button
+    //                 key={i}
+    //                 onClick={() => handlePageChange(i)}
+    //                 disabled={currentPage === i}
+    //             >
+    //                 {i}
+    //             </button>
+    //         );
+    //     }
+    //     return (
+    //         <div>
+    //             <button
+    //                 onClick={() => handlePageChange(currentPage - 1)}
+    //                 // disabled={currentPage === 1}
+    //             >
+    //                 Prethodna
+    //             </button>
+    //             {pages}
+    //             <button
+    //                 onClick={() => handlePageChange(currentPage + 1)}
+    //                 // disabled={currentPage === totalPages}
+    //             >
+    //                 Sledeća
+    //             </button>
+    //         </div>
+    //     );
+    // };
+
+    useEffect(() => {
+        getCategoryData(currentPage, itemsPerPage);
+    }, [id, currentPage, itemsPerPage]);
+    
+    useEffect(() => {
+        const page = Number(searchParams.get('page')) || 0;
+        const limit = Number(searchParams.get('limit')) || 12;
+        setCurrentPage(page);
+        setItemsPerPage(limit);
+    }, [searchParams, currentPage, itemsPerPage]);
 
     return(
         <>
         <RoledMainMenu role="user"/>
         <div className="container-fluid d-flex mt-3 p-0">
-            <Container>
+            <div className="container-fluid">
                 
                 <div className="row">
                     <CardTitle className="mb-3 subcategoryName">
@@ -536,9 +627,16 @@ export const CategoryPage = () =>{
                     </div>
                     <div className=" col-xs-12 col-md-9 col-lg-9 articlesCol">    
                         {showArticles()}
+                        <div className="d-flex justify-content-center mt-3">
+                            <button className="btnPages" onClick={handlePreviousPage}>
+                                <FontAwesomeIcon className="faDuble" icon={faAngleDoubleLeft}/></button>
+                            {renderPageNumbers()}
+                            <button className="btnPages" onClick={handleNextPage}>
+                                <FontAwesomeIcon className="faDuble" icon={faAngleDoubleRight}/></button>
+                        </div>
                     </div>
                 </div>
-            </Container>
+                </div>
         </div>
         </>
     )

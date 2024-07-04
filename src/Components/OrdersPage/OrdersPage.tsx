@@ -174,22 +174,22 @@ export const OrdersPage = () =>{
         rejected: 'Odbijeno',
     };
 
-    const printOrderRow = (order: OrderType) =>{
+    const printOrderRow = (order: OrderType) => {
         const formattedDateTime = formatDateTime(order.createdAt);
-        // console.log('Rendering orders row for',order)
-        return(
+        // console.log('Rendering orders row for', order);
+        return (
             <tr key={order.orderId}>
                 <td>{formattedDateTime}</td>
                 <td>{statusTranslations[order.status]}</td>
                 <td className="text-right">
                     <Button className="p-2" size="sm" variant="outline-success" 
-                            onClick={ () => setAndShowCart(order.cart)}>
-                            <FontAwesomeIcon icon={faBoxOpen}/> Pregredaj korpu
+                            onClick={() => setAndShowCart(order.cart)}>
+                            <FontAwesomeIcon icon={faBoxOpen}/> Pregledaj korpu
                     </Button>
                 </td>
             </tr>
-        )
-    }
+        );
+    };
 
     const getLatestPriceBeforeDate = (article: any, latestDate: any) =>{
         const cartTimeStamp = new Date(latestDate).getTime();
@@ -212,20 +212,27 @@ export const OrdersPage = () =>{
     
 
     const formatDateTime = (date: any) => {
-    const formattedDate = new Date(date);
-    const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
+        const formatedDate = new Date(date);
+
+        const dateOption: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+        };
+
+        const formatDatePart = formatedDate.toLocaleDateString(undefined, dateOption)
+
+        const timeOption:Intl.DateTimeFormatOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }
+
+        const formatTimePart = formatedDate.toLocaleTimeString(undefined, timeOption)
+
+        const formatedDateTime = `${formatDatePart} ${formatTimePart}`
+        return formatedDateTime;
     };
-
-    const datePart = formattedDate.toLocaleDateString(undefined, options);
-
-    return `${datePart}`;
-};
 
 
 

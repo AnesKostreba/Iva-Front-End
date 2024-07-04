@@ -670,61 +670,68 @@ export const ArticlePage = ()=>{
     }
 
     const selectStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden'];
-    useEffect(()=>{
-        const fetchArticles = async () =>{
-            try{
-            if(category && category.categoryId){
-                const categoryId = category.categoryId;
-                    if(typeof categoryId === 'number' && categoryId > 0){
-                       await api('api/article/search', 'post',{
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                if (category && category.categoryId) {
+                    const categoryId = category.categoryId;
+                    if (typeof categoryId === 'number' && categoryId > 0) {
+                        const res = await api('api/article/search', 'post', {
                             categoryId: category?.categoryId,
                             keywords: '',
                             priceMin: 0.1,
                             priceMax: Number.MAX_SAFE_INTEGER,
                             features: []
-                        })
-                            .then((res: ApiResponse | undefined)=>{
-                                if(res?.status === 'error'){
-                                    return setMessage('Try to refresh page!')
+                        });
+    
+                        if (res?.status === 'error') {
+                            return setMessage('Try to refresh page!');
+                        }
+    
+                        // Log the response to see its structure
+                        console.log('API Response:', res);
+    
+                        if (Array.isArray(res?.data.articles)) {
+                            const fetchArticles: ArticleType[] = res.data.articles.map((article: ArticlePageState) => {
+                                const status = selectStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
+                                const object: ArticleType = {
+                                    articleId: article.articleId,
+                                    name: article.name,
+                                    status: status,
+                                    excerpt: article.excerpt,
+                                    description: article.description,
+                                    imageUrl: '',
+                                    price: 0,
+                                };
+    
+                                if (article.photos !== undefined && article.photos.length > 0) {
+                                    object.imageUrl = article.photos[article.photos.length - 1].imagePath;
                                 }
-                                const fetchArticles: ArticleType[] =
-                                    res?.data.map((article: ArticlePageState)=>{
-                                        const status = selectStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
-                                        const object:ArticleType = {
-                                            articleId: article.articleId,
-                                            name: article.name,
-                                            status: status,
-                                            excerpt: article.excerpt,
-                                            description: article.description,
-                                            imageUrl: '',
-                                            price: 0,
-                                        }
-
-                                        if(article.photos !== undefined && article.photos.length > 0){
-                                            object.imageUrl = article.photos[article.photos.length-1].imagePath
-                                        }
-                                        if(article.articlePrices !== undefined && 
-                                                        article.articlePrices.length > 0){
-                                            object.price = article.articlePrices[
-                                                article.articlePrices.length-1].price
-                                        }
-                                        return object;
-                                    }).slice(0,7)
-
-                                const filterArticle = fetchArticles.filter(article => article.articleId !== Number(id))
-                                
-                                setArticles(filterArticle)
-                            })
+                                if (article.articlePrices !== undefined &&
+                                    article.articlePrices.length > 0) {
+                                    object.price = article.articlePrices[
+                                        article.articlePrices.length - 1].price;
+                                }
+                                return object;
+                            }).slice(0, 7);
+    
+                            const filterArticle = fetchArticles.filter(article => article.articleId !== Number(id));
+    
+                            setArticles(filterArticle);
+                        } else {
+                            // If res.data is not an array, log an error message
+                            console.error('Unexpected API response format:', res.data);
+                            setMessage('Unexpected response format. Please try again later.');
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+                setMessage('Error fetching data. Please try again later.');
             }
-        
-            }catch(error){
-                console.error('Error fetching data: ',error);
-                setMessage('Error fetching data. Please try again later.')
-            }
-        }
-        fetchArticles()
-    },[category?.categoryId])
+        };
+        fetchArticles();
+    }, [category?.categoryId]);
     
 
     const decrementQuantity = () =>{
