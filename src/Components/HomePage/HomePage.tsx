@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CategoryType } from '../../types/CategoryType';
 import './HomePage.css'
 import { useEffect, useState } from 'react';
-import api, { ApiResponse } from '../../api/api';
+import api from '../../api/api';
 import { Card, CardTitle, Col, Container, Row } from 'react-bootstrap';
 import 'react-multi-carousel/lib/styles.css';
 import banerPopust from './Image/BanerPopustPenzioneriDesktop.jpg'
@@ -15,33 +15,9 @@ import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 import ApiCategoryDto from '../../dtos/ApiCategoryDto';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboardList, faSheetPlastic } from '@fortawesome/free-solid-svg-icons';
+import ApiArticleDto from '../../dtos/ApiArticleDto';
 
 
-interface ArticleTypee{
-    articleId?: number;
-    name?: string;
-    excerpt?: string;
-    status?: "available" | "visible" | "hidden";
-    description?: string;
-    imageUrl?: string;
-    price?: number;
-    isPromoted: number;
-}
-interface ArticleDto{
-    articleId?: number;
-    name?: string;
-    isPromoted: number;
-    status?: "available" | "visible" | "hidden";
-    excerpt?: string;
-    description?: string;
-    articlePrices?:{
-        articleId?: number;
-        price?: number;
-    }[];
-    photos?:{
-        imagePath?: string;
-    }[]
-}
 
 interface HomePageState{
     isUserLoggedIn: boolean;
@@ -51,7 +27,6 @@ interface HomePageState{
 
 
 export const HomePage = () =>{
-    const navigate = useNavigate();
     const [article, setArticles] = useState<ArticleType[]>();
 
     const[homePageState, setHomePageState] = useState<HomePageState>({
@@ -59,30 +34,25 @@ export const HomePage = () =>{
         categories: [],
     })
 
-    // if(homePageState.isUserLoggedIn === false){
-    //     navigate('/user/login')
-    //     return null;
-    // }
-
     useEffect(()=>{
-        // if(homePageState.isUserLoggedIn === false){
-        //     navigate('/user/login');
         if(homePageState.categories.length === 0){ // Provera da li su kategorije vec ucitane
             getCategories();
         }
-    })
+    }, [homePageState.categories.length])
 
-    const getCategories = () =>{
-        api('api/category/?filter=parentCategoryId||$isnull','get',{})
-            .then((res: ApiResponse | undefined) =>{
-                if(res?.status === 'error' || !Array.isArray(res?.data)){
-                    setLogginState(false);
-                    return;
-                }
-                putCategoriesInState(res?.data as ApiCategoryDto[])
-                
-            })
-    }
+    const getCategories = async () => {
+        try {
+            const res = await api('api/category/?filter=parentCategoryId||$isnull', 'get', {});
+            if (res?.status === 'error' || !Array.isArray(res?.data)) {
+                setLogginState(false);
+                return;
+            }
+            putCategoriesInState(res.data as ApiCategoryDto[]);
+        } catch (err) {
+            console.error('Error fetching categories:', err);
+            setLogginState(false);
+        }
+    };
 
     const putCategoriesInState = (data: ApiCategoryDto[]) =>{
         const categories: CategoryType[] = data.map(category =>{
@@ -158,10 +128,6 @@ export const HomePage = () =>{
             },
     }
 
-    const baneri =[
-        {name: 'stavka 1', id: 1},
-    ];
-
     const setArticle = () =>{
         if(!article || article.length === 0 ){
             return <div>Nema artikala</div>
@@ -191,47 +157,39 @@ export const HomePage = () =>{
 
     const validStatus:('available' | 'visible' | 'hidden')[] = ['available', 'visible', 'hidden']
 
-    const showArticles = () =>{
-        api('api/article','get',{})
-            .then((res: ApiResponse | undefined)=>{
-                
-                if(res && Array.isArray(res.data)){
+    const showArticles = async () => {
+        try {
+            const res = await api('api/article', 'get', {});
+            if (res && Array.isArray(res.data)) {
+                const articles: ArticleType[] = res.data.map((article: ApiArticleDto) => {
+                    const status = validStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
+                    const object: ArticleType = {
+                        articleId: article.articleId,
+                        description: article.description,
+                        excerpt: article.excerpt,
+                        imageUrl: '',
+                        status: status,
+                        name: article.name,
+                        price: 0,
+                        isPromoted: article.isPromoted
+                    };
 
-                    const articles:ArticleTypee[] =
-                        res.data.map((article:ArticleDto)=>{
-                            const status = validStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;
-                            const object:ArticleTypee = {
-                                articleId: article.articleId,
-                                description: article.description,
-                                excerpt: article.excerpt,
-                                imageUrl: '',
-                                status: status,
-                                name: article.name,
-                                price: 0,
-                                isPromoted: article.isPromoted
-                            }
+                    if (article.photos && article.photos.length > 0) {
+                        object.imageUrl = article.photos[article.photos.length - 1].imagePath;
+                    }
+                    if (article.articlePrices && article.articlePrices.length > 0) {
+                        object.price = article.articlePrices[article.articlePrices.length - 1].price;
+                    }
 
-                            if(article.photos !== undefined && article.photos.length > 0){
-                                object.imageUrl = article.photos[article.photos.length-1].imagePath;
-                            }
-                            if(article.articlePrices !== undefined && article.articlePrices.length > 0){
-                                object.price = article.articlePrices[article.articlePrices.length-1].price;
-                            }
+                    return object;
+                }).filter(article => article.isPromoted === 1).slice(0, 10);
 
-                            return object;
-                        })
-                        .filter(article => article.isPromoted === 1)
-                        .slice(0,10)
-
-                        // console.log('Processed articles', articles)
-                    
-                    setArticles(articles)
-                }
-            })
-            .catch(err =>{
-                console.log('Error fetching articles: ',err)
-            })
-    }
+                setArticles(articles);
+            }
+        } catch (err) {
+            console.error('Error fetching articles:', err);
+        }
+    };
     
     
     return(
