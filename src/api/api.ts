@@ -6,47 +6,73 @@ export default async function api(
     method: 'get' | 'post' | 'patch' | 'delete',
     body: any | undefined,
     role: 'user' | 'administrator' = 'user',
-){
-    return new Promise<ApiResponse>((resolve)=>{
+): Promise<ApiResponse> {
+    return new Promise<ApiResponse>(async (resolve) => {
+        let token = getToken(role);
+
+        // Provera da li je token validan
+        if (!isTokenValid(token)) {
+            const newToken = await refreshToken(role);
+            if (!newToken) {
+                const response: ApiResponse = {
+                    status: 'login',
+                    data: null,
+                };
+                return resolve(response);
+            }
+            await saveToken(role, newToken);
+            token = `Bearer ${newToken}`;
+        }
+
         const requestData = {
             method: method,
             url: path,
             baseURL: ApiConfig.API_URL,
             data: JSON.stringify(body),
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization': getToken(role),
-            }
+                'Authorization': token,
+            },
         };
 
         axios(requestData)
-        .then(res => responseHandler(res, resolve))
-        .catch(async err => {
-            if(err.response?.status === 401){
-                const newToken = await refreshToken(role);
+            .then(res => responseHandler(res, resolve))
+            .catch(async err => {
+                if (err.response?.status === 401) {
+                    const newToken = await refreshToken(role);
 
-                if(!newToken){
-                    const response:ApiResponse ={
-                        status: 'login',
-                        data: null,
-                    };
-                    return resolve(response);
+                    if (!newToken) {
+                        const response: ApiResponse = {
+                            status: 'login',
+                            data: null,
+                        };
+                        return resolve(response);
+                    }
+                    await saveToken(role, newToken);
+
+                    requestData.headers['Authorization'] = `Bearer ${newToken}`;
+
+                    return await repeatRequest(requestData, resolve);
                 }
-                await saveToken(role, newToken);
-                
-                requestData.headers['Authorization'] = `Bearer ${newToken}`;
-                
-                return await repeatRequest(requestData, resolve);
-            }
 
-            const response: ApiResponse={
-                status: 'error',
-                data: err,
-            };
-            resolve(response);
-        })
-    })
-    
+                const response: ApiResponse = {
+                    status: 'error',
+                    data: err,
+                };
+                resolve(response);
+            });
+    });
+}
+
+function isTokenValid(token: string): boolean {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const exp = payload.exp;
+        const currentTime = Math.floor(Date.now() / 1000);
+        return exp > currentTime;
+    } catch (e) {
+        return false;
+    }
 }
 
 export async function apiFile(
