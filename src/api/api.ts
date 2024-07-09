@@ -9,8 +9,6 @@ export default async function api(
 ): Promise<ApiResponse> {
     return new Promise<ApiResponse>(async (resolve) => {
         let token = getToken(role);
-
-        // Provera da li je token validan
         if (!isTokenValid(token)) {
             const newToken = await refreshToken(role);
             if (!newToken) {
