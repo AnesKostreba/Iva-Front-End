@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import OrderType from "../../types/OrderType";
-import api, { ApiResponse } from "../../api/api";
+import api, { ApiResponse, getRole, Role } from "../../api/api";
 import { Button, Card, CardBody, CardTitle, Container, FormControl, Modal, ModalBody, ModalHeader, ModalTitle, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faBoxArchive, faBoxOpen } from "@fortawesome/free-solid-svg-icons";
@@ -51,6 +51,7 @@ interface OrderDto {
 }
 
 export const OrdersPage = () =>{
+    const role: Role = getRole();
     const [orders, setOrders] = useState<OrdersPageState>({
         isUserLoggedIn: true,
         orders: [],
@@ -102,7 +103,7 @@ export const OrdersPage = () =>{
 
     const getOrders = () =>{
         // console.log('Fetching orders...')
-        api('/api/user/cart/orders', 'get', {})
+        api('/api/user/cart/orders', 'get', {},undefined,role)
             .then((res: ApiResponse) =>{
                 if(res?.status === 'login'){
                     console.log('User not logged in')

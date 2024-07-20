@@ -492,7 +492,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArticleType } from '../../types/ArticleType';
 import { Container, Row, Col, CardTitle, CardBody, Button} from 'react-bootstrap';
 import { ApiConfig } from '../../config/api.config';
-import api, { ApiResponse } from '../../api/api';
+import api, { ApiResponse, getRole, Role } from '../../api/api';
 import './ArticlePage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faCheck, faLeftLong, faRightLong, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -518,7 +518,7 @@ interface ArticlePageState{
 }
 
 export const ArticlePage = ()=>{
-
+    const role: Role = getRole();
     const {id} = useParams()
     const [article, setArticle] = useState<ArticleType>();
     const [category, setCategory] = useState<CategoryType>();
@@ -627,7 +627,7 @@ export const ArticlePage = ()=>{
 
     const getArticle = async ()=>{
         try{
-        await api(`api/article/${id}`,'get',{})
+        await api(`api/article/${id}`,'get',{},undefined, role)
             .then((res:ApiResponse | undefined)=>{
                 if(res?.data === 'login'){
                     return setLogginState(false);
@@ -682,7 +682,7 @@ export const ArticlePage = ()=>{
                             priceMin: 0.1,
                             priceMax: Number.MAX_SAFE_INTEGER,
                             features: []
-                        });
+                        },undefined, role);
     
                         if (res?.status === 'error') {
                             return setMessage('Try to refresh page!');
@@ -750,7 +750,7 @@ export const ArticlePage = ()=>{
             quantity: quantity
         }
 
-        api('/api/user/cart/addToCart/','post',data)
+        api('/api/user/cart/addToCart/','post',data,undefined,role)
             .then((res: ApiResponse | undefined)=>{
                 if(res?.status === 'error'){
                     return;

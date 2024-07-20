@@ -2,8 +2,8 @@ import { faHome, faLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Card, CardBody, CardTitle, Container, Nav, NavItem } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import api, { ApiResponse, getIdentity } from "../../api/api";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import api, { ApiResponse, getIdentity, getRole, Role } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 
 interface AdministratorDashboard {
@@ -13,6 +13,8 @@ interface AdministratorDashboard {
 
 
 const AdministratorDashboard = () =>{
+    const location = useLocation();
+    const role: Role = getRole();
     const navigate = useNavigate();
     const[adminPage, setAdminState] = useState<AdministratorDashboard>({
         isAdministratorLoggedIn: true
@@ -25,19 +27,23 @@ const AdministratorDashboard = () =>{
         }))
     }
 
+   
     useEffect(()=>{
+        if(role !== 'administrator'){
+            setLogginState(false)
+            navigate('/administrator/login')
+        }else{
         getMyData()
-    })
+        }
+    },[role,navigate])
 
     const getMyData = () =>{
-        api('/api/administrator/', 'get', {}, 'administrator')
+        api('/api/administrator/', 'get', {}, undefined,role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
                     return;
                 }
-
-
             })
     }
 

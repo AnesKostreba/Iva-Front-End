@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { MainMenuItem, Menu } from "../MainMenu/Menu";
 import { CategoryType } from "../../types/CategoryType";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ApiCategoryDto from "../../dtos/ApiCategoryDto";
-import api, { ApiResponse } from "../../api/api";
+import api, { ApiResponse, getRole, Role } from "../../api/api";
 import { Nav, Navbar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
@@ -24,7 +24,8 @@ interface CategoryDto{
 }
 
 export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
-
+    const location = useLocation()
+    const roles: Role = getRole();
     const[category, setCategoryState] = useState<CategoryState>({
         isUserLoggedIn: true,
         category: []
@@ -99,7 +100,7 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
 
 
     const getCategories = () =>{
-        api('api/category/?filter=parentCategoryId||$isnull','get',{},'user')
+        api('api/category/?filter=parentCategoryId||$isnull','get',{},undefined,roles)
             .then((res: ApiResponse)=>{
             if(res?.status === 'login'){
             return setLogginState(false)
@@ -113,7 +114,7 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
     }
 
     const getSubcategories = (parentId: number) =>{
-        api(`api/category/${parentId}`,'get',{},'user')
+        api(`api/category/${parentId}`,'get',{},undefined,roles)
             .then((res: ApiResponse)=>{
                 if(res?.status === 'login'){
                     return setLogginState(false)
@@ -149,6 +150,9 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
     }
 
     useEffect(()=>{
+        if(location.pathname.startsWith('/administrator/')){
+            return;
+        }
         if(category.category.length === 0){
             getCategories()
         }
@@ -168,7 +172,6 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
 
     const getUserMenuItems = ():MainMenuItem[] =>{
         return [
-            // {text: 'Home', link: '/'},
             
             {text: 'O nama', link: '/about-us'},
             {text: 'Pitaj farmaceuta', link: '/question'},
@@ -176,8 +179,6 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
             {text: 'Poslovnice', link: '/branches'},
             {text: 'Zaposlenje', link: '/employment'},
             {text: 'Kontakt', link: '/contact'},
-            // {text: 'My Orders', link: '/user/orders/'},
-            // {text: 'Log out', link: '/user/logout/'},
         ];
     }
 
@@ -191,7 +192,7 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
 
     const getVisitorMenuItems = ():MainMenuItem[] =>{
         return [
-            {text: 'Administrator Login', link: '/administrator/login/'}
+
         ];
     }
 

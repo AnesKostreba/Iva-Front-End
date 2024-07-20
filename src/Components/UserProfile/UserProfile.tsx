@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api, { ApiResponse, saveRefreshToken, saveToken } from "../../api/api";
+import api, { ApiResponse, getRole, Role, saveRefreshToken, saveToken } from "../../api/api";
 import { Button, Spinner } from "react-bootstrap";
 import './UserProfile.css';
 import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router-dom";
@@ -19,6 +19,8 @@ interface UserProfile{
 }
 
 export const UserProfil = () =>{
+
+    const role: Role = getRole();
     
     const[user, setUser] = useState<UserProfile>({
         isAdministratorLoggedIn: true,
@@ -43,7 +45,8 @@ export const UserProfil = () =>{
 
     useEffect(()=>{
         const userId = localStorage.getItem('user_id');
-        api('api/user/profile/'+userId, 'get', {})
+        if(role === 'user'){
+        api('api/user/profile/'+userId, 'get', {} , undefined, role)
             .then((res:ApiResponse)=>{
                 try{
                     if(res?.status === 'login'){
@@ -61,6 +64,7 @@ export const UserProfil = () =>{
                     setLoading(false)
                 }
             })
+        }
     },[])
 
     const logOut = () =>{

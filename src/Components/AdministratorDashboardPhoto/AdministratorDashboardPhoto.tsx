@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardFooter, CardTitle, Col, Container, FormControl, FormGroup, FormLabel, Nav, NavItem, Row} from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import api, { ApiResponse, apiFile } from "../../api/api";
+import api, { ApiResponse, Role, apiFile, getRole } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 import './AdministratorDashboardPhoto.css'
 import PhotoType from "../../types/PhotoType";
@@ -17,6 +17,7 @@ interface AdministratorDashboardPhotoState {
 
 
 const AdministratorDashboardPhoto = () =>{
+    const role: Role = getRole();
     const {id} = useParams<{id: string}>();
     const navigate = useNavigate();
     const[photoState, setPhotoState] = useState<AdministratorDashboardPhotoState>({
@@ -31,7 +32,7 @@ const AdministratorDashboardPhoto = () =>{
     },[id])
 
     const getPhotos = () =>{
-        api('/api/article/'+ id +'/?join=photos', 'get', {}, 'administrator')
+        api('/api/article/'+ id +'/?join=photos', 'get', {}, undefined, role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -57,7 +58,7 @@ const AdministratorDashboardPhoto = () =>{
     }
 
     const uploadArticlePhoto = async (articleId:number, file: File) =>{
-        return await apiFile('/api/article/'+articleId+'/uploadPhoto', 'photo', file, 'administrator');
+        return await apiFile('/api/article/'+articleId+'/uploadPhoto', 'photo', file, ['administrator']);
     }
 
     const doUpload = async () =>{
@@ -76,7 +77,7 @@ const AdministratorDashboardPhoto = () =>{
         if(!window.confirm('Jeste li sigurni da želite obrisati fotografiju?')){
             return;
         }
-        api('/api/article/'+id+'/deletePhoto/'+photoId+'/', 'delete', {} , 'administrator')
+        api('/api/article/'+id+'/deletePhoto/'+photoId+'/', 'delete', {} , undefined, role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -87,12 +88,12 @@ const AdministratorDashboardPhoto = () =>{
             })
     }
 
-    const pringSinglePhoto = (photo: PhotoType) =>{
+    const printSinglePhoto = (photo: PhotoType) =>{
         return(
-            <Col xs='12' sm='6' md='4' lg='3'>
+            <Col key={photo.photoId} xs='12' sm='6' md='4' lg='3'>
                 <Card>
                     <CardBody>
-                        <img alt={"Photo "+photo.photoId} 
+                        <img alt={"Photo "+photo.photoId}
                              src={ApiConfig.PHOTO_PATH + 'medium/' + photo.imagePath} 
                              className="w-100"/>
                     </CardBody>
@@ -130,7 +131,7 @@ const AdministratorDashboardPhoto = () =>{
                         </NavItem>
                     </Nav>
                     <Row>
-                        {photoState.photos?.map(pringSinglePhoto, this)}
+                        {photoState.photos?.map(printSinglePhoto, this)}
                     </Row>
                     
                     <FormGroup className="mt-5">

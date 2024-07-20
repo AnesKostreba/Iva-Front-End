@@ -3,7 +3,7 @@ import { CategoryType } from "../../types/CategoryType";
 import { useEffect, useState } from "react";
 import { CardText, CardTitle, Col, Container, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, InputGroup, Row } from "react-bootstrap";
 import { ArticleType } from "../../types/ArticleType";
-import api, { ApiResponse } from '../../api/api';
+import api, { ApiResponse, getRole, Role } from '../../api/api';
 import { ApiConfig } from "../../config/api.config";
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 import { faAngleDoubleLeft, faAngleDoubleRight, faList, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -57,6 +57,7 @@ interface ArticleDto{
 }
 
 export const CategoryPage = () =>{
+    const role: Role = getRole();
     const {id} = useParams<{id: string}>();
     const [searchParams, setSearchParams] = useSearchParams();
     const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 0);
@@ -386,7 +387,7 @@ export const CategoryPage = () =>{
 
 
     const getCategoryData = (page = currentPage, limit = itemsPerPage) => {
-        api('api/category/'+ id, 'get',{},'user')
+        api('api/category/'+ id, 'get',{},undefined,role)
         .then((res:ApiResponse | undefined) =>{
             if(res?.status === 'login'){
                 return setLogginState(false);
@@ -450,7 +451,7 @@ export const CategoryPage = () =>{
             features: featureFilters,
             orderBy: orderBy,
             orderDirection: orderDirection
-        })
+        },undefined,role)
         .then((res: ApiResponse | undefined) => {
             if (res?.status === 'login') {
                 return setLogginState(false);
@@ -536,7 +537,7 @@ export const CategoryPage = () =>{
 
 
     const getFeatures = () =>{
-        api('api/feature/values/' + id, 'get', {})
+        api('api/feature/values/' + id, 'get', {},undefined,role)
         .then((res:ApiResponse | undefined) =>{
             if(res?.status === 'login'){
                 return setLogginState(false)

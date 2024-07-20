@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CategoryType } from '../../types/CategoryType';
 import './HomePage.css'
 import { useEffect, useState } from 'react';
-import api from '../../api/api';
+import api, { getRole, Role } from '../../api/api';
 import { Card, CardTitle, Col, Container, Row } from 'react-bootstrap';
 import 'react-multi-carousel/lib/styles.css';
 import banerPopust from './Image/BanerPopustPenzioneriDesktop.jpg'
@@ -28,7 +28,7 @@ interface HomePageState{
 
 export const HomePage = () =>{
     const [article, setArticles] = useState<ArticleType[]>();
-
+    const role: Role = getRole();
     const[homePageState, setHomePageState] = useState<HomePageState>({
         isUserLoggedIn: true,
         categories: [],
@@ -42,7 +42,7 @@ export const HomePage = () =>{
 
     const getCategories = async () => {
         try {
-            const res = await api('api/category/?filter=parentCategoryId||$isnull', 'get', {});
+            const res = await api('/api/category/?filter=parentCategoryId||$isnull', 'get', {}, undefined, role);
             if (res?.status === 'error' || !Array.isArray(res?.data)) {
                 setLogginState(false);
                 return;
@@ -159,7 +159,7 @@ export const HomePage = () =>{
 
     const showArticles = async () => {
         try {
-            const res = await api('api/article', 'get', {});
+            const res = await api('api/article', 'get', {},undefined,role);
             if (res && Array.isArray(res.data)) {
                 const articles: ArticleType[] = res.data.map((article: ApiArticleDto) => {
                     const status = validStatus.includes(article.status as any) ? article.status as 'available' | 'visible' | 'hidden' : undefined;

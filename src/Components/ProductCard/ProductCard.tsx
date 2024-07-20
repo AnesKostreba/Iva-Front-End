@@ -4,7 +4,7 @@ import './ProductCard.css';
 import { ArticleType } from "../../types/ArticleType";
 import { Link} from "react-router-dom";
 import { useState } from "react";
-import api, {ApiResponse} from '../../api/api';
+import api, {ApiResponse, getRole, Role} from '../../api/api';
 
 interface ProductCardProps {
     article : ArticleType
@@ -15,6 +15,7 @@ interface SingleARticlePreviewState{
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
+    const role: Role = getRole();
     const [quantity, setQuantity] = useState<number>(1)
     const decrementQuantity = () =>{
         if(quantity > 1){
@@ -30,7 +31,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
             quantity: quantity
         };
 
-        api('/api/user/cart/addToCart/',"post",data)
+        api('/api/user/cart/addToCart/',"post",data,undefined,role)
             .then((res: ApiResponse | undefined) =>{
                 if(res?.status === 'error'){
                     return;

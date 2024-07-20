@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { removeTokenData } from "../../api/api";
-
+import './AdministratorLogoutPage.css'
 interface AdministratorLogoutPageState{
     isCompleted: boolean
 }
@@ -29,12 +29,17 @@ export const AdministratorLogoutPage = () =>{
         doLogout()
     },[adminLog.isCompleted,navigate])
 
+    useEffect(() =>{
+        doLogout();
+    },[])
+
 
     // if(adminLog.isCompleted === true){
     //     navigate('/administrator/login/')
     // }
 
     return(
-        <p>Logging oput...</p>
+        <div className="logout">
+        </div>
     )
 }

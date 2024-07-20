@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './UserLoginPage.css'
 import { Link, useNavigate } from 'react-router-dom';
-import api, { ApiResponse, saveRefreshToken, saveToken } from '../../api/api';
+import api, { ApiResponse, getRole, Role, saveRefreshToken, saveToken } from '../../api/api';
 import { Alert, Button } from 'react-bootstrap';
 import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 
@@ -13,7 +13,7 @@ interface UserLoginPageState{
 }
 
 export const UserLoginPage = () =>{
-
+    const role: Role = getRole();
     const [userState, setStateUser] = useState<UserLoginPageState>(
         {
             email: '',
@@ -22,6 +22,7 @@ export const UserLoginPage = () =>{
             // isLoggedIn: false,
         }
     )
+    console.log('Current error message',userState.errorMessage)
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const navigate = useNavigate();
@@ -49,46 +50,78 @@ export const UserLoginPage = () =>{
     //     }))
     // }
 
-    const doLogin = () =>{
+    const doLogin = () => {
+        console.log('Starting login process');
         api('auth/user/login', 'post', {
             email: userState.email,
             password: userState.password,
-        })
-        .then((res?: ApiResponse) =>{
-            if(!res){
-                console.log('No response receive!')
+        }, true)
+        .then((res?: ApiResponse) => {
+            if (!res) {
+                console.log('No response received!');
+                setErrorMessage('No response from server!');
                 return;
             }
-
-            if(res.status === 'error'){
-                setErrorMessage('System error... Try again!')
-                return;
-            }
-
-            if(res.status === 'ok'){
-                if(res.data.statusCode !== undefined){
+    
+            console.log('Response received:', res);
+    
+            if (res.status === 'error') {
+                console.log('Error status received:', res);
+                if (res.data && res.data.statusCode !== undefined) {
                     let message = '';
-                    
-                    switch(res.data.statusCode){
-                        case -3001: message = 'Unknown email!';
-                        break;
-                        case -3002: message = 'Bad passwrod!';
-                        break;
+                    switch (res.data.statusCode) {
+                        case -3001: message = 'Uneli ste pogrešan email';
+                            break;
+                        case -3002: message = 'Uneli ste pogrešnu lozinku';
+                            break;
+                        default: message = 'Unexpected error occurred!';
                     }
-
+                    console.log('Error statusCode:', res.data.statusCode, 'Message:', message);
                     setErrorMessage(message);
-                    
+                } else {
+                    setErrorMessage('Unesite ispravno podatke i pokušajte ponovo!');
+                }
+                return;
+            }
+    
+            if (res.status === 'ok') {
+                console.log('Status OK, checking data!');
+                if (res.data.statusCode !== undefined) {
+                    console.log('Response data:', res.data);
+                    let message = '';
+                    switch (res.data.statusCode) {
+                        case -3001: message = 'Uneli ste pogrešan email';
+                            break;
+                        case -3002: message = 'Uneli ste pogrešnu lozinku';
+                            break;
+                        default: message = 'Unexpected error occurred!';
+                    }
+                    console.log('Error statusCode:', res.data.statusCode, 'Message:', message);
+                    setErrorMessage(message);
                     return;
                 }
-
-                saveToken('user',res.data.token);
-                saveRefreshToken('user',res.data.refreshToken)
-                localStorage.setItem('user_id',res.data.id)
+                saveToken('user', res.data.token);
+                saveRefreshToken('user', res.data.refreshToken);
+                localStorage.setItem('user_id', res.data.id);
                 setIsLoggedIn(true);
-                navigate('/')
+                navigate('/');
             }
         })
+        .catch(error => {
+            console.error('Login error:', error); // Log the error
+            if (error.response && error.response.data && error.response.data.message) {
+                // Check if message is an array and join messages
+                let message = Array.isArray(error.response.data.message) 
+                    ? error.response.data.message.join(' ') 
+                    : error.response.data.message;
+                console.log('Error response data message:', message); // Log the response data message
+                setErrorMessage(message);
+            } else {
+                setErrorMessage('Unesite ispravno podatke i pokušajte ponovo!');
+            }
+        });
     }
+    
 
     return(
         <>
@@ -104,38 +137,42 @@ export const UserLoginPage = () =>{
                 </div>
             </div>
             
-            <div className="secound">
+            <div className="secound d-flex flex-column" >
                 <div className="center">
                     <form method="post" action="">
 
                         <h1>Prijavi se</h1>
                         <div className="text_field">
                             <label htmlFor="email">Email</label><br />
-                            <input placeholder='unesite email...' type="email" id="email" required
+                            <input placeholder='unesite email...' type="email" id="email" 
+                                                                required
                                                                 value={userState.email}
-                                                                onChange={event => formInputChanged(event as any)} />
+                                                                onChange={event => formInputChanged(event as any)
+                                                                }
+                                                                />
                         </div>
                         <div className="text_field">
                             <label htmlFor="password">Lozinka</label><br />
-                            <input placeholder='unesite lozinku...' type="password" id="password" required
+                            <input placeholder='unesite lozinku...' type="password" id="password" 
+                                                                className='password-input'
                                                                 value={userState?.password}
+                                                                required
                                                                 onChange={event => formInputChanged(event as any)}  />
                         </div>
+                        <Alert variant="danger" className={`customAlert ${userState.errorMessage ? '' : 'd-none'}`}>
+                            {userState.errorMessage}
+                        </Alert>
                         <div className="pass">Zaboravili ste lozinku?</div>
                         
-                        <Button className="submit" variant="primary"
+                        <Button type='button' className="submit" variant="primary"
                                 onClick={ ()=> doLogin() }>
                             Prijavi se
                         </Button>
                         <div className="signup_link">Niste registrovani? <Link to={'/user/register'}>Registruj se</Link></div>
                     </form>
+                    
                 </div>
-                <Alert variant="danger"
-                       className={userState.errorMessage ? '' : 'd-none'}>
-                       { userState.errorMessage }
-                </Alert>
             </div>
-
         </div>
         </>
     )

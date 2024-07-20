@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import CartType from "../../types/CartType";
-import api, {ApiResponse} from '../../api/api';
+import api, {ApiResponse, getRole, Role} from '../../api/api';
 import { Alert, Button, FormControl, Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle, NavItem, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown, faCartShopping, faMinusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
@@ -19,6 +19,7 @@ interface CartState {
 
 
 export const Cart = () =>{
+    const role: Role = getRole();
     const[cart, setCart] = useState<CartState>({
         count: 0,
         cartVisible: false,
@@ -30,7 +31,8 @@ export const Cart = () =>{
     
     useEffect(()=>{
         const updateCart = () =>{
-            api("/api/user/cart/",'get',{})
+            console.log("updateCart function called");
+            api("/api/user/cart/",'get',{},undefined,role)
             .then((res:ApiResponse | undefined)=>{
                 if(res?.status === 'error'){
                     setStateCount(0);
@@ -119,7 +121,7 @@ export const Cart = () =>{
     const sum = calculateSum();
 
     const sendCartUpdate = (data:any) =>{
-        api('/api/user/cart/','patch', data)
+        api('/api/user/cart/','patch', data,undefined,role)
         .then((res: ApiResponse | undefined) =>{
             if(res?.status === 'error'){
                 setStateCount(0);
@@ -156,18 +158,21 @@ export const Cart = () =>{
 
 
     const makeOrder = () =>{
-        api('/api/user/cart/makeOrder/','post',{})
+        api('/api/user/cart/makeOrder/','post',{},undefined,role)
             .then((res:ApiResponse | undefined)=>{
                 if(res?.status === 'error'){
                     setStateCount(0);
                     setStateCart(undefined);
                     return
                 }
-
+                
                 setStateMessage('Vaša porudžbina je uspešno izvršena!');
 
                 setStateCart(undefined);
                 setStateCount(0);
+                setTimeout(()=>{
+                    setHideCart()
+                }, 3000)
             })
     }
 

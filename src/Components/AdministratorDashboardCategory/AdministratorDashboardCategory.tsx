@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, CardBody, CardTitle, Container, FormControl, FormGroup, FormLabel, Modal, ModalBody, ModalHeader, ModalTitle, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import api, { ApiResponse } from "../../api/api";
+import api, { ApiResponse, getRole, Role } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 import { CategoryType } from "../../types/CategoryType";
 import ApiCategoryDto from "../../dtos/ApiCategoryDto";
@@ -32,6 +32,7 @@ interface AdministratorDashboardCategory {
 
 
 const AdministratorDashboardCategory = () =>{
+    const role: Role = getRole();
     const navigate = useNavigate();
     const[adminPage, setAdminState] = useState<AdministratorDashboardCategory>({
         isAdministratorLoggedIn: true,
@@ -125,6 +126,11 @@ const AdministratorDashboardCategory = () =>{
     }
 
     useEffect(()=>{
+        if(role !== 'administrator'){
+            setLogginState(false);
+            navigate('/administrator/login')
+            return;
+        }
         getCategories()
     },[])
 
@@ -146,7 +152,8 @@ const AdministratorDashboardCategory = () =>{
     }
 
     const getCategories = () =>{
-        api('/api/category/', 'get', {}, 'administrator')
+        
+        api('/api/category/', 'get', {}, undefined, role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -179,7 +186,7 @@ const AdministratorDashboardCategory = () =>{
             name: adminPage.editModal.name,
             imagePath: adminPage.editModal.imagePath,
             parentCategoryId: adminPage.editModal.parentCategoryId
-        }, 'administrator')
+        }, undefined, role)
         .then((res: ApiResponse)=>{
             console.log('API response', res)
             if(res?.status === 'login'){
@@ -206,7 +213,7 @@ const AdministratorDashboardCategory = () =>{
             name: adminPage.addModal.name,
             imagePath: adminPage.addModal.imagePath,
             parentCategoryId: adminPage.addModal.parentCategoryId
-        }, 'administrator')
+        }, undefined, role)
         .then((res: ApiResponse)=>{
             console.log('API response', res)
             if(res?.status === 'login'){
@@ -264,7 +271,7 @@ const AdministratorDashboardCategory = () =>{
                         </thead>
                         <tbody>
                             {adminPage.categories.map(category =>(
-                                <tr>
+                                <tr key={category.categoryId}>
                                     <td className="text-right">{category.categoryId}</td>
                                     <td>{category.name}</td>
                                     <td className="text-right">{category.parentCategoryId}</td>
@@ -314,7 +321,7 @@ const AdministratorDashboardCategory = () =>{
                                      setAddModalNumberFieldState('parentCategoryId', e.target.value)}>
                                      <option value='null'>Ne pripada ni jednoj kategoriji</option>
                                      { adminPage.categories.map(category =>(
-                                        <option value={category.categoryId?.toString()}>
+                                        <option key={category.categoryId} value={category.categoryId?.toString()}>
                                             { category.name }
                                         </option>
                                      )) }
@@ -366,7 +373,7 @@ const AdministratorDashboardCategory = () =>{
                                      { adminPage.categories
                                      .filter(category => category.categoryId !== adminPage.editModal.categoryId)
                                      .map(category =>(
-                                        <option value={category.categoryId?.toString()}>
+                                        <option key={category.categoryId} value={category.categoryId?.toString()}>
                                             { category.name }
                                         </option>
                                      )) }

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, CardBody, CardTitle, Col, Container, FormControl, FormGroup, FormLabel, Modal, ModalBody, ModalHeader, ModalTitle, Row, Table } from "react-bootstrap";
 import { Form, Link, useNavigate } from "react-router-dom";
-import api, { ApiResponse } from "../../api/api";
+import api, { ApiResponse, getRole, Role } from "../../api/api";
 import { apiFile } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 import { ArticleType } from "../../types/ArticleType";
@@ -69,6 +69,7 @@ interface FeatureBaseType{
 
 
 const AdministratorDashboardArticle = () =>{
+    const role: Role = getRole();
     const navigate = useNavigate();
     const[adminPage, setAdminState] = useState<AdministratorDashboardArticle>({
         isAdministratorLoggedIn: true,
@@ -123,6 +124,10 @@ const AdministratorDashboardArticle = () =>{
     }
 
     useEffect(()=>{
+        if(role !== 'administrator'){
+            setLogginState(false)
+            navigate('administrator/login')
+        }
         getArticlesWithFilter()
     },[])
 
@@ -132,7 +137,7 @@ const AdministratorDashboardArticle = () =>{
         }
         api('/api/article/search-by-name/','post',{
             keywords: adminPage.filters.keywords
-        },'administrator')
+        },undefined, role)
             .then((res: ApiResponse)=>{
                 if(res?.status === 'login'){
                     return setLogginState(false)
@@ -318,7 +323,7 @@ const AdministratorDashboardArticle = () =>{
     }
 
     const getCategories = () =>{
-        api('/api/category/', 'get', {}, 'administrator')
+        api('/api/category/', 'get', {}, undefined, role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -340,7 +345,7 @@ const AdministratorDashboardArticle = () =>{
 
     const getFeaturesByCategoryId = async (categoryId: number):Promise<FeatureBaseType[]> =>{
         return new Promise(resolve =>{
-            api('/api/feature/?filter=categoryId||$eq||'+categoryId+'/', 'get', {}, 'administrator')
+            api('/api/feature/?filter=categoryId||$eq||'+categoryId+'/', 'get', {}, undefined, role)
             .then((res:ApiResponse) =>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -369,11 +374,20 @@ const AdministratorDashboardArticle = () =>{
     }
 
     useEffect(()=>{
+        if(role !== 'administrator'){
+            setLogginState(false);
+            navigate('/administrator/login')
+            return;
+        }
         getCategories();
         getArticles();
     },[])
 
-    useEffect(() => { // koji se pokrece svaki put kada se modal otvori
+    useEffect(() => {
+        if(role !== 'administrator'){
+            setLogginState(false)
+            navigate('/administrator/login')
+        } // koji se pokrece svaki put kada se modal otvori
         if (adminPage.addModal.visible) {
             const loadFeaturesForSelectedCategory = async () => {
                 const features = await getFeaturesByCategoryId(adminPage.addModal.categoryId);
@@ -426,7 +440,7 @@ const AdministratorDashboardArticle = () =>{
     }
 
     const getArticles = () =>{
-        api('/api/article/?join=articleFeatures&join=features&join=articlePrices&join=photos&join=category', 'get', {}, 'administrator')
+        api('/api/article/?join=articleFeatures&join=features&join=articlePrices&join=photos&join=category', 'get', {}, undefined, role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -530,7 +544,7 @@ const AdministratorDashboardArticle = () =>{
                 featureId: feature.featureId,
                 value: feature.value
             })),
-        }, 'administrator')
+        }, undefined, role)
         
         .then((res: ApiResponse)=>{
             if(res?.status === 'login'){
@@ -550,7 +564,7 @@ const AdministratorDashboardArticle = () =>{
     }
 
     const uploadArticlePhoto = async (articleId:number, file: File) =>{
-        return await apiFile('/api/article/'+articleId+'/uploadPhoto', 'photo', file, 'administrator');
+        return await apiFile('/api/article/'+articleId+'/uploadPhoto', 'photo', file, ['administrator']);
     }
 
     const doAddArticle = () =>{
@@ -573,7 +587,7 @@ const AdministratorDashboardArticle = () =>{
                 featureId: feature.featureId,
                 value: feature.value
             })),
-        }, 'administrator')
+        },undefined, role)
         .then( async (res: ApiResponse)=>{
             
             if(res?.status === 'login'){
@@ -630,7 +644,7 @@ const AdministratorDashboardArticle = () =>{
 
     const printAddModalFeatureInput = (feature: any) =>{
         return(
-            <FormGroup>
+            <FormGroup key={feature.featureId}>
                 <Row>
                     <Col xs='4' sm='1' className="text-center">
                         <input type="checkbox" value='1' checked={feature.use === 1}
@@ -650,7 +664,7 @@ const AdministratorDashboardArticle = () =>{
 
     const printEditModalFeatureInput = (feature: any) =>{
         return(
-            <FormGroup>
+            <FormGroup key={feature.featureId}>
                 <Row>
                     <Col xs='4' sm='1' className="text-center">
                         <input type="checkbox" value='1' checked={feature.use === 1}
@@ -721,7 +735,7 @@ const AdministratorDashboardArticle = () =>{
                         </thead>
                         <tbody>
                             {adminPage.articles && adminPage.articles.length > 0 ?( adminPage.articles.map  (article =>(
-                                <tr>
+                                <tr key={article.articleId}>
                                     <td className="text-right">{article.articleId}</td>
                                     <td>{article.name}</td>
                                     <td>{article.category?.name}</td>
@@ -772,7 +786,7 @@ const AdministratorDashboardArticle = () =>{
                         <FormControl id="add-categoryId" as='select' value={adminPage.addModal.categoryId.toString() || 'null'}
                                      onChange={(e) => addModalCategoryChanged(e as any)}>
                                      { adminPage.categories.map(category =>(
-                                        <option value={category.categoryId?.toString()}>
+                                        <option key={category.categoryId} value={category.categoryId?.toString()}>
                                             { category.name }
                                         </option>
                                      )) }

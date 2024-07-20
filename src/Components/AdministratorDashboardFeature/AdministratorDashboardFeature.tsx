@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, CardBody, CardTitle, Container, FormControl, FormGroup, FormLabel, Modal, ModalBody, ModalHeader, ModalTitle, Table } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import api, { ApiResponse } from "../../api/api";
+import api, { ApiResponse, getRole, Role } from "../../api/api";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 import FeatureType from "../../types/FeatureType";
 import ApiFeatureDto from "../../dtos/ApiFeatureDto";
@@ -28,6 +28,7 @@ interface AdministratorDashboardFeature {
 
 
 const AdministratorDashboardFeature = () =>{
+    const role: Role = getRole();
     const {id} = useParams<{id: string}>();
     const navigate = useNavigate();
     const[adminPage, setAdminState] = useState<AdministratorDashboardFeature>({
@@ -108,11 +109,16 @@ const AdministratorDashboardFeature = () =>{
     }
 
     useEffect(()=>{
+        if(role !== 'administrator'){
+            setLogginState(false)
+            navigate('/administrator/login')
+            return;
+        }
         getFeatures()
     },[id])
 
     const getFeatures = () =>{
-        api('/api/feature/?filter=categoryId||$eq||'+ id, 'get', {}, 'administrator')
+        api('/api/feature/?filter=categoryId||$eq||'+ id, 'get', {}, undefined, role)
             .then((res:ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -161,7 +167,7 @@ const AdministratorDashboardFeature = () =>{
         api('api/feature/'+ adminPage.editModal.featureId, 'patch', {
             name: adminPage.editModal.name,
             categoryId: id
-        }, 'administrator')
+        }, undefined,role)
         .then((res: ApiResponse)=>{
             console.log('API response', res)
             if(res?.status === 'login'){
@@ -187,7 +193,7 @@ const AdministratorDashboardFeature = () =>{
         api('api/feature/', 'post', {
             name: adminPage.addModal.name,
             categoryId: id
-        }, 'administrator')
+        },undefined, role)
         .then((res: ApiResponse)=>{
             console.log('API response', res)
             if(res?.status === 'login'){
@@ -249,7 +255,7 @@ const AdministratorDashboardFeature = () =>{
                         </thead>
                         <tbody>
                             {adminPage.features.map(feature =>(
-                                <tr>
+                                <tr key={feature.featureId}>
                                     <td className="text-right">{feature.featureId}</td>
                                     <td>{feature.name}</td>
                                     <td className="text-center">

@@ -37,7 +37,7 @@
     padding: 0;
     font-family: 'Montserrat', sans-serif;
     width: 40%;
-    height: 400px;
+    height: 500px !important; 
     overflow: hidden;
 }
 .center{
@@ -92,7 +92,11 @@ form .text_field{
     text-align: center;
     font-size: 16px;
 }
-
+.customAlert{
+    text-align: center;
+    background-color: #fff;
+    padding: 0;
+}
 .signup_link a{
     color: #a0d500;
     text-decoration: none;

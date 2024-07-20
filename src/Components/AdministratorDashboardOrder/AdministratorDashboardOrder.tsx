@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ApiOrderDto from "../../dtos/ApiOrderDto";
-import api, { ApiResponse } from "../../api/api";
+import api, { ApiResponse, getRole, Role } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { RoledMainMenu } from "../RoledMainMenu/RoledMainMenu";
 import { Button, Card, CardBody, CardTitle, Container, Modal, ModalBody, ModalHeader, ModalTitle, Tab, Table, Tabs } from "react-bootstrap";
@@ -18,6 +18,7 @@ interface AdministratorDashboardOrderState{
 }
 
 export const AdministratorDashboardOrder = () =>{
+    const role: Role = getRole();
     const navigate = useNavigate()
     const[adminOrder, setAdminOrder] = useState<AdministratorDashboardOrderState>({
         orders: [],
@@ -100,26 +101,28 @@ export const AdministratorDashboardOrder = () =>{
 
     const sum = calculateSum();
 
-    useEffect(()=>{
-        api('api/order/', 'get', {}, 'administrator')
-            .then((res: ApiResponse)=>{
-                if(res?.status === 'error' || res?.status === 'login'){
-                    setLogginState(false);
-                    return;
-                }
+    const getOrder = ( )=>{
+        api('api/order/', 'get', {}, undefined, role)
+        .then((res: ApiResponse)=>{
+            
+            if(res?.status === 'error' || res?.status === 'login'){
+                setLogginState(false);
+                return;
+            }
+            
 
-                const data:ApiOrderDto[] = res.data;
+            const data:ApiOrderDto[] = res.data;
 
-                if(adminOrder.isAdministratorLoggedIn === false){
-                    navigate('/administrator/login')
-                }
+            if(adminOrder.isAdministratorLoggedIn === false){
+                navigate('/administrator/login')
+            }
 
-                setOrders(data);
-            })
-    },[])
+            setOrders(data);
+        })
+    }
 
     const reloadOrders = () =>{
-        api('api/order/', 'get', {}, 'administrator')
+        api('api/order/', 'get', {}, undefined, role)
             .then((res: ApiResponse)=>{
                 if(res?.status === 'error' || res?.status === 'login'){
                     setLogginState(false);
@@ -135,12 +138,23 @@ export const AdministratorDashboardOrder = () =>{
             })
     }
     useEffect(()=>{
+        if(role !== 'administrator'){
+            setLogginState(false)
+            navigate('/administrator/login')
+            return;
+        }
+        getOrder()
         reloadOrders();
     },[])
 
     const changeStatus = (orderId: number, newStatus: "rejected" | "accepted" | "shipped" | "pending") =>{
-        api('api/order/'+orderId,'patch',{ newStatus}, 'administrator')
+        api('api/order/'+orderId,'patch',{ newStatus}, undefined, role)
         .then((res: ApiResponse)=>{
+            if(role !== 'administrator'){
+                setLogginState(false);
+                navigate('/administrator/login')
+                return;
+            }
             if(res?.status === 'error' || res?.status === 'login'){
                 setLogginState(false);
                 return;
@@ -265,26 +279,6 @@ export const AdministratorDashboardOrder = () =>{
                         </td>
                     </tr>
                     ))}
-                    {/* {orders
-                        .filter(order => order.status === withStatus)
-                        .map( order => (
-                        <tr>
-                            <td className="text-end">{order.orderId}</td>
-                            <td>{formatDateTimeOrder}</td>
-                            <td>{statusTranslations[order.status]}</td>
-                            <td>
-                            <Button className="p-2" size="sm" variant="outline-success" 
-                                onClick={ () => setAndShowCart(order.cart)}>
-                                <FontAwesomeIcon icon={faBoxOpen}/> Pregredaj korpu
-                            </Button>
-                            </td>
-                            <td>
-                                {
-                                    printStatusChangeButtons(order)
-                                }
-                            </td>
-                        </tr>
-                    ),this)}  */}
                 </tbody>
             </Table>
         )
@@ -363,17 +357,41 @@ export const AdministratorDashboardOrder = () =>{
                     </tfoot>
                 </Table>
                 <Table>
-                    <thead><strong>Podatci o korisniku:</strong></thead>
+                    <thead>
+                        <tr>
+                            <th><strong>Podatci o korisniku:</strong></th>
+                        </tr>
+                    </thead>
                     
                     <tbody>
                         {adminOrder.cart?.user && (
-                            <td className="p-2">
-                                <tr><strong className="strong">Email:</strong>{adminOrder.cart.user.email}</tr>
-                                <tr><strong className="strong">Ime:</strong>{adminOrder.cart.user.forname}</tr>
-                                <tr><strong className="strong">Prezime:</strong>{adminOrder.cart.user.surname}</tr>
-                                <tr><strong className="strong">Adresa:</strong>{adminOrder.cart.user.postalAddress}</tr>
-                                <tr><strong className="strong">Broj telefona:</strong>{adminOrder.cart.user.phoneNumber}</tr>
-                            </td>
+                            <tr className="d-flex flex-column">
+                                    
+                                <th>
+                                    <strong className="strong">Email:</strong>{adminOrder.cart.user.email}
+                                </th>
+                            
+                            
+                                <th>
+                                    <strong className="strong">Ime:</strong>{adminOrder.cart.user.forname}
+                                </th>
+                            
+                            
+                                <th>
+                                <strong className="strong">Prezime:</strong>{adminOrder.cart.user.surname}
+                                </th>
+                            
+                            
+                                <th>
+                                <strong className="strong">Adresa:</strong>{adminOrder.cart.user.postalAddress}
+                                </th>
+                            
+                            
+                                <th>
+                                <strong className="strong">Broj telefona:</strong>{adminOrder.cart.user.phoneNumber}
+                                </th>
+                                    
+                            </tr>
                         )}
                     </tbody>
                 </Table>

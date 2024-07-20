@@ -30,6 +30,7 @@ import { AdministratorLogoutPage } from './Components/AdministratorLogoutPage/Ad
 import { UserLogoutPage } from './Components/UserLogoutPage/UserLogoutPage';
 import { ContactPage } from './Components/ContactPage/ContactPage';
 import { ArticleType } from './types/ArticleType';
+import { NotFoundPage } from './Components/NotFoundPage/NotFoundPage';
 
 
 // const generateMenuItems = ():MainMenuItem[] =>{
@@ -66,7 +67,7 @@ root.render(
         <Route path='/administrator/dashboard/article/' element={<AdministratorDashboardArticle/>}/>
         <Route path='/administrator/dashboard/photo/:id' element={<AdministratorDashboardPhoto/>}/>
         <Route path='/administrator/dashboard/order' element={<AdministratorDashboardOrder/>}/>
-        
+        <Route path='*' element={<NotFoundPage/>}/>
       </Routes>
       <Footer/>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './UserRegistrationPage.css';
-import api, { ApiResponse } from '../../api/api';
+import api, { ApiResponse, getRole, Role } from '../../api/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button } from 'react-bootstrap';
 import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
@@ -54,19 +54,16 @@ export const UserRegistrationPage = () =>{
             phoneNumber: userState.formData?.phone,
             postalAddress: userState.formData?.address
         }
-        api('auth/user/register/','post',data)
+        api('auth/user/register/','post',data,true)
             .then((res? : ApiResponse)=>{
-                console.log(res)
                 if(res?.status === 'error'){
                     setErrorMessage('Unesite odgovarajuce podatke!');
                     return;
                 }
-
                 if(res?.data.statusCode !== undefined){
                     handleErrors(res.data);
                     return;
                 }
-
                 registrationComplete();
             })
     }
