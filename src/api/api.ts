@@ -211,7 +211,6 @@ async function responseHandler(
 
 
 
-
 export async function saveToken(role:Role,token: string) {
     console.log('Saving new token:', token);
     localStorage.setItem('api_token_'+role, token);

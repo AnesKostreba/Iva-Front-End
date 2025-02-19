@@ -1,8 +1,8 @@
-import { Card, CardBody, CardText, CardTitle} from "react-bootstrap";
+import { Button, Card, CardBody, CardText, CardTitle, Modal, ModalBody, ModalHeader} from "react-bootstrap";
 import { ApiConfig } from "../../config/api.config";
 import './ProductCard.css';
 import { ArticleType } from "../../types/ArticleType";
-import { Link} from "react-router-dom";
+import { Link, redirect, useNavigate} from "react-router-dom";
 import { useState } from "react";
 import api, {ApiResponse, getRole, Role} from '../../api/api';
 
@@ -25,7 +25,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
     const incrementQuantity = () =>{
         setQuantity(prevQuantity => prevQuantity + 1);
     }
+
+    const[showModal, setShowModal] = useState(false);
+
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
+
+    const navigate = useNavigate();
+
+    
     const addToCart = () =>{
+        if(role === 'visitor' || role === 'administrator'){
+            // alert('Niste ulogovani... Ulogujte se da biste dodali proizvode u korpu.')
+            handleShowModal();
+            return;
+        }
+
         const data = {
             articleId: article.articleId,
             quantity: quantity
@@ -46,6 +61,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
             behavior: "smooth"
         })
     }
+
+    const renderModal = () =>{
+        return(
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <ModalHeader><span className="text-danger">Obaveštenje</span>
+                    <Button className="btn-success"
+                        onClick={()=>{
+                            handleCloseModal();
+                        }}
+                    >Zatvori</Button>
+                </ModalHeader>
+                <ModalBody>Niste ulogovani. <span className="spanLogin" onClick={()=>{
+                    navigate('/user/login');
+                    scroll();
+                }}>Ulogujte se</span> da dodate artikle u korpu.</ModalBody>
+            </Modal>
+        )
+    } 
 
     return(
         <Card className="mt-3 kartica">
@@ -78,6 +111,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({article}) =>{
                         <button onClick={addToCart}
                          disabled ={article?.status === 'visible'}
                          className="w-100">Kupi</button>
+                         {renderModal()}
                     </div>
                 </div>
             </CardBody>

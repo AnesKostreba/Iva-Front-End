@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './Menu.css';
 import { Navbar, Nav } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown} from '@fortawesome/free-solid-svg-icons';
-import { CategoryType } from '../../types/CategoryType';
-import api, { ApiResponse } from '../../api/api';
-import ApiCategoryDto from '../../dtos/ApiCategoryDto';
+import { Link } from 'react-router-dom';
 
 
 export interface MainMenuItem{

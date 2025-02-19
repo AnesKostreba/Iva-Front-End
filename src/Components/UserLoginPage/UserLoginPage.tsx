@@ -74,7 +74,7 @@ export const UserLoginPage = () =>{
                             break;
                         case -3002: message = 'Uneli ste pogrešnu lozinku';
                             break;
-                        default: message = 'Unexpected error occurred!';
+                        default: message = 'Unesite podatke';
                     }
                     console.log('Error statusCode:', res.data.statusCode, 'Message:', message);
                     setErrorMessage(message);

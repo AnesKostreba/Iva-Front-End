@@ -31,6 +31,15 @@ export const Cart = () =>{
     
     useEffect(()=>{
         const updateCart = () =>{
+            const token = localStorage.getItem('api_token_user');
+
+            if(!token){
+                console.log('Token nije pronadjen')
+                setStateCount(0)
+                setStateCart(undefined)
+                return;
+            }
+
             console.log("updateCart function called");
             api("/api/user/cart/",'get',{},undefined,role)
             .then((res:ApiResponse | undefined)=>{
@@ -47,6 +56,7 @@ export const Cart = () =>{
                 
             })
         }
+        
         updateCart();
 
         const cartUpdateHandler = () =>{
@@ -60,7 +70,7 @@ export const Cart = () =>{
         return () =>{
             window.removeEventListener("cart.update", cartUpdateHandler);
         }
-    },[cart.count])
+    },[cart.count,role])
 
     const setStateCount = (newCount: number)=>{
         setCart(prevState=>({

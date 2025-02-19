@@ -69,7 +69,8 @@ export const UserProfil = () =>{
 
     const logOut = () =>{
         saveToken('user','');
-        saveRefreshToken('user','')
+        saveRefreshToken('user','');
+        localStorage.removeItem('user_id');
         navigate('/user/login')
     }
 

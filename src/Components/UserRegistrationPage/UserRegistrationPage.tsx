@@ -106,7 +106,7 @@ export const UserRegistrationPage = () =>{
                 </div>
             </div>
             
-            <div>
+            <div className='containerSecound'>
                 <div className="center">
                     <form method="post" action="">
                         <h1>Registruj se</h1>
@@ -141,7 +141,7 @@ export const UserRegistrationPage = () =>{
                             <input placeholder='unesite lozinku...' type="password" id="password" required
                                                                 value={userState.formData?.password}
                                                                 onChange={event => formInputChanged(event as any)}  /><br/>
-                            <label className='labell' htmlFor="password">(Lozinka mora sadrzati veliko slovo, malo slovo, broj i znak, i ukupno 6 karaktera...)</label>
+                            <label className='labell' htmlFor="password">(Lozinka mora sadržati malo slovo i najmanje 6 karaktera...)</label>
                         </div>
                         <div className="text_field">
                             <label htmlFor="address">Adresa</label><br />
@@ -149,7 +149,10 @@ export const UserRegistrationPage = () =>{
                                                                 value={userState.formData?.address}
                                                                 onChange={event => formInputChanged(event as any)} />
                         </div>
-                        
+                        <Alert variant="danger"
+                            className= {`registracija ${userState.message ? 'alert-danger' : 'd-none'}`}>
+                            { userState.message }
+                        </Alert>
                         <Button className="submit" variant="primary"
                                 onClick={ ()=> { doRegister() } }>
                             Registruj se
@@ -158,10 +161,7 @@ export const UserRegistrationPage = () =>{
                     </form>
                     
                 </div>
-                <Alert variant="danger"
-                       className= {userState.message ? 'alert-danger' : 'd-none'}>
-                       { userState.message }
-                </Alert>
+                
             </div>
             
         </div>

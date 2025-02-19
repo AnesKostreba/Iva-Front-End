@@ -1,10 +1,7 @@
 import './Footer.css'
-import logo from '../../Images/logo/IvaPharmLogo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstitution } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
-import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 export const Footer = () =>{
     const location = useLocation();
     const shouldRenderFooter = !location.pathname.startsWith('/administrator/login') &&
@@ -14,7 +11,7 @@ export const Footer = () =>{
     <>
         {shouldRenderFooter && (
             <>
-                <div className='footer d-flex'>
+                <div className='footer'>
                     <div className='firstFooter'>
                         <h4>Iva Pharm</h4>
                         <ul className='ulList'>

@@ -28,3 +28,12 @@
     border-top: 2px solid rgb(146, 146, 146);
     color: #040272
 }
+.footer{
+    display: flex;
+    flex-direction: row;
+}
+@media(max-width: 750px){
+    .footer{
+        flex-direction: column;
+    }
+}

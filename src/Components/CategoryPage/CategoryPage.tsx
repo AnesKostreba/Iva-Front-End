@@ -151,14 +151,17 @@ export const CategoryPage = () =>{
 
         return(
             <Col key={category.categoryId} lg='3' md='4' sm='6' xs='12' className="">
-                <div className="border d-flex">
-                    <Link to={`/category/${category.categoryId}`}  onClick={scroll} className="d-flex justify-content-center ">
-                        <img className="linkSubcategory" src={ApiConfig.PHOTO_PATH+'category/'+'apoteka-iva-pharm-i-bar.jpg'} alt="" />
-                    </Link>
-                    <CardTitle  as='p' className="text-center titleSubcategory align-items-center d-flex">
-                        {category.name}
-                    </CardTitle>
-                </div>
+                <Link to={`/category/${category.categoryId}`}  onClick={scroll} className="d-flex justify-content-center ">
+                    <div className="border d-flex w-100">
+                        
+                            <img className="linkSubcategory" src={ApiConfig.PHOTO_PATH+'category/'+'apoteka-iva-pharm-i-bar.jpg'} alt="" />
+                        
+                        <CardTitle  as='p' className="text-center titleSubcategory align-items-center d-flex">
+                            {category.name}
+                        </CardTitle>
+                        
+                    </div>
+                </Link>
             </Col>
         )
     }
@@ -168,7 +171,7 @@ export const CategoryPage = () =>{
     const showArticles = () => {
         if (categoryState.articles?.length === 0) {
             return (
-                <div>There are no articles in this category.</div>
+                <div>Ne postoje artikli u ovoj kategoriji.</div>
             );
         }
     
@@ -488,7 +491,9 @@ export const CategoryPage = () =>{
                 setArticles(articles);
                 setTotalPages(Math.ceil(res.data.totalCount / itemsPerPage));
             } else {
-                setMessage('No articles found.');
+                setArticles([])
+                setTotalPages(0)
+                // setMessage('Artikli nisu pronadjeni.');
             }
         });
     
@@ -612,7 +617,7 @@ export const CategoryPage = () =>{
     return(
         <>
         <RoledMainMenu role="user"/>
-        <div className="container-fluid d-flex mt-3 p-0">
+        <div className="container-fluid containerCategory d-flex mt-3 p-0">
             <div className="container-fluid">
                 
                 <div className="row">

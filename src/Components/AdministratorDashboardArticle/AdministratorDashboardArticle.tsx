@@ -795,7 +795,7 @@ const AdministratorDashboardArticle = () =>{
 
                     <FormGroup>
                         <FormLabel htmlFor="add-name">Naziv</FormLabel>
-                        <FormControl id="add-name" type="text" value={adminPage.addModal.name}
+                        <FormControl placeholder="Tekst mora sadržati između 5 i 128 karaktera" id="add-name" type="text" value={adminPage.addModal.name}
                                      onChange={(e) => 
                                      setAddModalStringFieldState('name', e.target.value)}>
                         </FormControl>
@@ -804,7 +804,9 @@ const AdministratorDashboardArticle = () =>{
 
                     <FormGroup>
                         <FormLabel htmlFor="add-excerpt">Kratak opis</FormLabel>
-                        <FormControl id="add-excerpt" type="text" value={adminPage.addModal.excerpt}
+                        <FormControl
+                                placeholder="Tekst mora sadržati između 10 i 255 karaktera."
+                                id="add-excerpt" type="text" value={adminPage.addModal.excerpt}
                                      onChange={(e) => 
                                      setAddModalStringFieldState('excerpt', e.target.value)}>
                         </FormControl>
@@ -812,11 +814,14 @@ const AdministratorDashboardArticle = () =>{
 
                     <FormGroup>
                         <FormLabel htmlFor="add-description">Detaljan opis</FormLabel>
-                        <FormControl id="add-description" as='textarea' value={adminPage.addModal.description}
+                        <p></p>
+                        <FormControl placeholder="Tekst mora sadržati između 64 i 10 000 karaktera." id="add-description" as='textarea' value={adminPage.addModal.description}
                                      onChange={(e) => 
                                      setAddModalStringFieldState('description', e.target.value)}
                                      rows={ 10 }>
+                                        
                         </FormControl>
+                        
                     </FormGroup>
 
                     
@@ -901,8 +906,9 @@ const AdministratorDashboardArticle = () =>{
                     </FormGroup> */}
 
                     <FormGroup>
-                        <FormLabel htmlFor="edit-name">Naziv</FormLabel>
-                        <FormControl id="edit-name" type="text" value={adminPage.editModal.name}
+                        <FormLabel htmlFor="edit-name">Naziv</FormLabel><br />
+                        <em className="fs-6 text-secondary">Naziv mora sadržati između 5 i 128 karaktera</em>
+                        <FormControl placeholder="Tekst mora sadržati između 5 i 128 karaktera." id="edit-name" type="text" value={adminPage.editModal.name}
                                      onChange={(e) => 
                                      setEditModalStringFieldState('name', e.target.value)}>
                         </FormControl>
@@ -910,7 +916,8 @@ const AdministratorDashboardArticle = () =>{
 
 
                     <FormGroup>
-                        <FormLabel htmlFor="edit-excerpt">Kratak opis</FormLabel>
+                        <FormLabel htmlFor="edit-excerpt">Kratak opis</FormLabel><br />
+                        <em className="fs-6 text-secondary">Kratak opis sadržati između 10 i 255 karaktera</em>
                         <FormControl id="edit-excerpt" type="text" value={adminPage.editModal.excerpt}
                                      onChange={(e) => 
                                      setEditModalStringFieldState('excerpt', e.target.value)}>
@@ -918,7 +925,8 @@ const AdministratorDashboardArticle = () =>{
                     </FormGroup>
 
                     <FormGroup>
-                        <FormLabel htmlFor="edit-description">Detaljan opis</FormLabel>
+                        <FormLabel htmlFor="edit-description m-0 p-0">Detaljan opis</FormLabel><br />
+                        <em className="fs-6 text-secondary">Detaljan opis mora sadržati između 64 i 10 000 karaktera</em>
                         <FormControl id="edit-description" as='textarea' value={adminPage.editModal.description}
                                      onChange={(e) => 
                                      setEditModalStringFieldState('description', e.target.value)}

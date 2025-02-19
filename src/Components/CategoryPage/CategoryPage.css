@@ -91,6 +91,7 @@
 }
 .checkbox{
     max-height: 130px;
+    padding: 5px;
     overflow-y: auto;
 }
 .btnSearchFeatures{
@@ -164,6 +165,12 @@ box-shadow: 0px 0px 11px 0px rgba(0,0,0,0.75);
         width: 100% !important;
     }
 }
+@media(min-width: 1300px){
+    .containerCategory{
+        width: 75%;
+    }
+}
+
 
 @media screen and (max-width:767px){
     /* .articlesCol{
