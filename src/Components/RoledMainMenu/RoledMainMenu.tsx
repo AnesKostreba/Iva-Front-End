@@ -203,11 +203,17 @@ export const RoledMainMenu :React.FC<RoledMainMenuProperties> = ({role}) =>{
     }
 
     const getAdminMenuItems = ():MainMenuItem[] =>{
-        return [
-            {text: 'Kontrolna tabla', link: '/administrator/dashboard'},
-            {text: 'Administrator Login', link: '/administrator/login/'},
-            {text: 'Odjavi se', link: '/administrator/logout'},
-        ];
+        if(roles === "administrator"){
+            return [
+                {text: 'Kontrolna tabla', link: '/administrator/dashboard'},
+                {text: 'Odjavi se', link: '/administrator/logout'},
+            ]
+        }else{
+            return [
+                {text: 'Administrator Login', link: '/administrator/login/'},
+            ];
+        }
+        
     }
 
     const getVisitorMenuItems = ():MainMenuItem[] =>{

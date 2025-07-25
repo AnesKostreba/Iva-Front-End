@@ -34,13 +34,11 @@ export const Cart = () =>{
             const token = localStorage.getItem('api_token_user');
 
             if(!token){
-                console.log('Token nije pronadjen')
                 setStateCount(0)
                 setStateCart(undefined)
                 return;
             }
 
-            console.log("updateCart function called");
             api("/api/user/cart/",'get',{},undefined,role)
             .then((res:ApiResponse | undefined)=>{
                 if(res?.status === 'error'){

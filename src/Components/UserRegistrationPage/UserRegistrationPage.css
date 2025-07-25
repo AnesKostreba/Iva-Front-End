@@ -111,6 +111,13 @@ form .text_field{
     font-style: italic;
     color: #919191 !important;
 }
+.field-error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 2px;
+  margin-bottom: 0px;
+}
+
 @media(max-width: 750px){
     .first{
         display: none;

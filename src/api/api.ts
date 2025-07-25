@@ -63,8 +63,6 @@ export default async function api(
             data: body, // Without JSON.stringify
             headers: headers,
         };
-        console.log('Role', role);
-        console.log('Sending request:', requestData);
 
         axios(requestData)
             .then(res => responseHandler(res, resolve))
@@ -84,7 +82,6 @@ export default async function api(
                     if (requestData.headers) {
                         requestData.headers['Authorization'] = 'Bearer ' + newToken;
                     }
-                    console.log('Retrying request with new token:', newToken);
                     return await repeatRequest(requestData, resolve);
                 }
 
@@ -154,7 +151,6 @@ export async function apiFile(
                         if(requestData.headers){
                             requestData.headers['Authorization'] = `Bearer ${newToken}`;
                         }
-                        console.log('Retrying request with new token:', newToken);
                         return await repeatRequest(requestData, resolve);
                     }
                 }
@@ -212,25 +208,20 @@ async function responseHandler(
 
 
 export async function saveToken(role:Role,token: string) {
-    console.log('Saving new token:', token);
     localStorage.setItem('api_token_'+role, token);
 }
 
 function getToken(role:Role): string {
     const token = localStorage.getItem('api_token_'+role);
-    console.log('Current token: ', token);
     return 'Bearer ' + token;
 }
 
 export function saveRefreshToken(role:Role,token: string) {
-    console.log('Saving refresh token:', token);
     localStorage.setItem('api_refresh_token_'+role, token);
 }
 
 function getRefreshToken(role:Role): string {
-    console.log('Get refresh token');
     const token = localStorage.getItem('api_refresh_token_'+role);
-    console.log('Retrieved refresh token:', token);
     return token || '';
 }
 
@@ -240,7 +231,6 @@ export function saveIdentity(identity: string) {
 
 export function getIdentity(): string {
     const token = localStorage.getItem('api_identity');
-    console.log('Get identity token: ', token);
     return 'Bearer ' + token;
 }
 
@@ -258,7 +248,6 @@ async function refreshToken(role:Role): Promise<string | null> {
         token: getRefreshToken(role),
     };
 
-    console.log('Attempting to refresh token with data:', data);
 
     const refreshTokenRequestData: AxiosRequestConfig = {
         method: 'post',
@@ -272,7 +261,6 @@ async function refreshToken(role:Role): Promise<string | null> {
 
     try {
         const response = await axios(refreshTokenRequestData);
-        console.log('Refresh token response:', response.data);
 
         if (response.data && response.data.token) {
             return response.data.token;
@@ -289,11 +277,9 @@ async function repeatRequest(
     requestData: AxiosRequestConfig<any>, 
     resolve: (value: ApiResponse) => void
 ) {
-    console.log('Repeating request with data:', requestData);
 
     try {
         const res = await axios(requestData);
-        console.log('Repeat request response:', res);
 
         let response: ApiResponse;
 

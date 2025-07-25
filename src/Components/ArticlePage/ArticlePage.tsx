@@ -199,8 +199,6 @@ export const ArticlePage = ()=>{
                             return setMessage('Try to refresh page!');
                         }
     
-                        // Log the response to see its structure
-                        console.log('API Response:', res);
     
                         if (Array.isArray(res?.data.articles)) {
                             const fetchArticles: ArticleType[] = res.data.articles.map((article: ArticlePageState) => {

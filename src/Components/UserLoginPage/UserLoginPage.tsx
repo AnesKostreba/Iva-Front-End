@@ -8,6 +8,10 @@ import { RoledMainMenu } from '../RoledMainMenu/RoledMainMenu';
 interface UserLoginPageState{
     email: string;
     password: string;
+    fieldErrors: {
+        email?: string;
+        password?: string;
+    };
     errorMessage: string;
     // isLoggedIn: boolean;
 }
@@ -19,6 +23,10 @@ export const UserLoginPage = () =>{
             email: '',
             password: '',
             errorMessage: '',
+            fieldErrors: {
+                email: "",
+                password: "",
+            }
             // isLoggedIn: false,
         }
     )
@@ -51,7 +59,36 @@ export const UserLoginPage = () =>{
     // }
 
     const doLogin = () => {
-        console.log('Starting login process');
+        const fieldErrors: any = {};
+
+        if (!userState.email) {
+            fieldErrors.email = 'Email je obavezan.';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userState.email)) {
+            fieldErrors.email = 'Email format nije ispravan.';
+        }
+        if(userState.password.length < 6){
+            fieldErrors.password = 'Lozinka mora biti duza od 6 karaktera.';
+        }
+
+        if (!userState.password) {
+            fieldErrors.password = 'Lozinka je obavezna.';
+        }
+
+        if (Object.keys(fieldErrors).length > 0) {
+            setStateUser((prev) => ({
+            ...prev,
+            fieldErrors,
+            errorMessage: ''
+            }));
+            return;
+        }
+
+        // Ako je ok — resetuj field greške
+        setStateUser((prev) => ({
+            ...prev,
+            fieldErrors: {},
+            errorMessage: ''
+        }));
         api('auth/user/login', 'post', {
             email: userState.email,
             password: userState.password,
@@ -108,17 +145,21 @@ export const UserLoginPage = () =>{
             }
         })
         .catch(error => {
-            console.error('Login error:', error); // Log the error
-            if (error.response && error.response.data && error.response.data.message) {
-                // Check if message is an array and join messages
-                let message = Array.isArray(error.response.data.message) 
-                    ? error.response.data.message.join(' ') 
-                    : error.response.data.message;
-                console.log('Error response data message:', message); // Log the response data message
-                setErrorMessage(message);
-            } else {
-                setErrorMessage('Unesite ispravno podatke i pokušajte ponovo!');
-            }
+        if (error.response && error.response.data && error.response.data.message) {
+            let message = Array.isArray(error.response.data.message)
+            ? error.response.data.message.join(' ')
+            : error.response.data.message;
+
+            setStateUser((prev) => ({
+            ...prev,
+            errorMessage: message,
+            }));
+        } else {
+            setStateUser((prev) => ({
+            ...prev,
+            errorMessage: 'Došlo je do greške. Pokušajte ponovo.'
+            }));
+        }
         });
     }
     
@@ -150,6 +191,9 @@ export const UserLoginPage = () =>{
                                                                 onChange={event => formInputChanged(event as any)
                                                                 }
                                                                 />
+                            {userState.fieldErrors?.email && (
+                                <p className="field-error">{userState.fieldErrors.email}</p>
+                            )}
                         </div>
                         <div className="text_field">
                             <label htmlFor="password">Lozinka</label><br />
@@ -158,6 +202,9 @@ export const UserLoginPage = () =>{
                                                                 value={userState?.password}
                                                                 required
                                                                 onChange={event => formInputChanged(event as any)}  />
+                            {userState.fieldErrors?.password && (
+                                <p className="field-error">{userState.fieldErrors.password}</p>
+                            )}
                         </div>
                         <Alert variant="danger" className={`customAlert ${userState.errorMessage ? '' : 'd-none'}`}>
                             {userState.errorMessage}
